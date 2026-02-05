@@ -1,0 +1,6 @@
+@Recip_EZ.Server_HostAddress = http://localhost:5263
+
+GET {{Recip_EZ.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
