@@ -36,3 +36,5 @@ Recip-EZ.Server/obj*
 */.vite/*
 */.vscode/*
 recip-ez.client/src/assets/react.svg
+*.dbmdl
+*.jfm
