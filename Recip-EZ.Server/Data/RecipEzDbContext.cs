@@ -3,17 +3,23 @@ using Recip_EZ.Server.Models;
 
 namespace Recip_EZ.Server.Data
 {
-    public class DbContext
+    public class RecipEzDbContext : DbContext
     {
-        public DbContext(DbContextOptions<DbContext> options)
+        public RecipEzDbContext(DbContextOptions<RecipEzDbContext> options)
                 : base(options)
         {
         }
 
         public DbSet<User> Users { get; set; }
-        public DbSet<InventoryItem> InventoryItems { get; set; }
+        public DbSet<Ingredient> InventoryItems { get; set; }
         public DbSet<Recipe> Recipes { get; set; } 
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
-        public DbSet<SavedRecipe> SavedRecipes { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+        }
+
     }
 }
