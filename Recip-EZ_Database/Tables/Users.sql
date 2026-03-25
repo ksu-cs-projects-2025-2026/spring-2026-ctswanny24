@@ -5,10 +5,10 @@
 	*/
 	[UserId] INT IDENTITY(1,1),
 	[Username] NVARCHAR(255) NOT NULL,
-	[PasswordHash] NVARCHAR(255) NOT NULL,
+	[Password] NVARCHAR(255) NOT NULL,
 	[FirstName] NVARCHAR(255) NOT NULL,
 	[LastName] NVARCHAR(255) NOT NULL,
 	[CreatedOn] DATETIME NOT NULL DEFAULT GETDATE(),
-	UNIQUE([Username], [PasswordHash]),
+	UNIQUE([Username], [Password]),
 	PRIMARY KEY CLUSTERED ([UserId] ASC)
 )

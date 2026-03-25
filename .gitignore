@@ -18,6 +18,8 @@ Recip-EZ.Server/obj/Debug*
 Recip-EZ.Server/bin/Debug*
 Recip-EZ.Client/obj/Debug*
 Recip-EZ.Client/bin/Debug*
+Recip-EZ_Database/bin/*
+Recip-EZ_Database/obj/*
 .vscode/*
 !.vscode/extensions.json
 .idea

@@ -1,17 +1,31 @@
-import { useState } from 'react'
-import { Navigation } from './components/navigation'
-import './App.css'
+import Navbar from './components/ui/Navbar'
+import Inventory from './pages/Inventory'
+import Recipes from './pages/Recipes'
+import Home from './pages/Home'
+import Login from './pages/Login'
+//import Styles from './components/ui/Styles.css'
  
 function App() {
-  const [count, setCount] = useState(0)
-
+    let Component
+    switch (window.location.pathname) {
+        case "/":
+            Component = Home
+            break
+        case "/inventory":
+            Component = Inventory
+            break
+        case "/recipes":
+            Component = Recipes
+            break
+        case "/login":
+            Component = Login
+            break
+    }
   return (
-    <>
-      <div>
-        <Navigation/>
-      </div>
-
-    </>
+      <>
+          <Navbar/>
+          <Component/>
+      </>
   )
 }
 export default App
