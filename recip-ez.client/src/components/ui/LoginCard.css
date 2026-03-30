@@ -1,0 +1,25 @@
+body {
+}
+
+.card {
+    background-color: steelblue;
+    border-radius: 10px;
+    padding: 3rem;
+    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+}
+
+.formContainer h2 {
+    font-size: 30px;
+    color: palegreen;
+}
+
+input {
+    margin-top: 0.25rem;
+    margin-bottom: 0.15rem;
+    padding: 0.5rem;
+    width: 100%
+}
+
+button{
+    margin-top: 0.5rem;
+}

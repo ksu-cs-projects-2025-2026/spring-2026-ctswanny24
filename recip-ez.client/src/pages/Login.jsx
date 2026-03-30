@@ -1,3 +1,12 @@
+import LoginCard from '../components/ui/LoginCard';
+import "./Login.css"
+
 export default function Login() {
-    return <h1>LOGIN PAGE</h1>
+    return (
+        <div className="formContainer">
+            <div className="loginPage">
+                <LoginCard/>
+            </div>
+        </div>
+    )
 }

@@ -23,8 +23,13 @@ function App() {
     }
   return (
       <>
-          <Navbar/>
-          <Component/>
+          <div>
+            <Navbar/>
+          </div>
+
+          <div className="componentContainer">
+            <Component/>
+          </div>
       </>
   )
 }

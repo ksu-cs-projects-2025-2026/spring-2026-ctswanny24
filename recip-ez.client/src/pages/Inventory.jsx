@@ -1,3 +1,9 @@
+// recip-ez.client\src\pages\Inventory.jsx
+
 export default function Inventory() {
-    return <h1>INVENTORY PAGE</h1>
+    return (
+        <>
+            <h1>Inventory</h1>
+        </>
+    )
 }

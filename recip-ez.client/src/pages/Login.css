@@ -1,0 +1,29 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #242424;
+}
+
+#root {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.loginPage {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.formContainer h2{
+    font-size: 30px;
+    color: palegreen;
+}
+
+.flex-col gap-6 div{
+    padding: 1rem;
+}
