@@ -1,32 +1,26 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Recip_EZ.Server.Models;
 
 namespace Recip_EZ.Server.Controllers
 {
-    public class InventoryController : Controller
+    public class InventoryItem
+    {
+        public string Name { get; set; }
+
+        public string Description { get; set; }
+
+        public string Category { get; set; }
+    }
+
+    [ApiController]
+    [Route("[controller]")]
+    public class InventoryController : ControllerBase
     {
         // GET: InventoryController
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        // GET: InventoryController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: InventoryController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         // POST: InventoryController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public IActionResult AddItem([FromBody] Ingredient data)
         {
             try
             {
@@ -34,49 +28,7 @@ namespace Recip_EZ.Server.Controllers
             }
             catch
             {
-                return View();
-            }
-        }
-
-        // GET: InventoryController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: InventoryController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: InventoryController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: InventoryController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                return Unauthorized();
             }
         }
     }

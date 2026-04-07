@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import "./LoginCard.css"
-import { Button } from "./button"
+import { Button } from "../button"
 import {
     Card,
     CardHeader,
@@ -9,7 +9,7 @@ import {
     CardDescription,
     CardContent,
     CardFooter,
-} from "./card"
+} from "../card"
 import axios from "axios";
 function LoginCard() {
 
@@ -34,7 +34,7 @@ function LoginCard() {
 
         } catch (error) {
             if (error.response && error.response.status === 401) {
-                setMessage("Invalid credentials");
+                setMessage(error.response.data.message);
             } else {
                 setMessage("An error occurred");
             }
@@ -74,9 +74,11 @@ function LoginCard() {
                                     required
                                 />
                             </div>
-                        </div>
+                    </div>
 
-                        <div>
+                    {message && <p className="loginMessage">{message}</p>}
+
+                    <div>
                             <Button type="submit" className="w-full">
                                 Login
                             </Button>

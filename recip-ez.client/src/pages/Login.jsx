@@ -1,4 +1,4 @@
-import LoginCard from '../components/ui/LoginCard';
+import LoginCard from '../components/ui/login/LoginCard';
 import "./Login.css"
 
 export default function Login() {
