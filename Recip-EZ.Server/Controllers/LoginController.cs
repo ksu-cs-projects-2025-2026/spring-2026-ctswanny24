@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Recip_EZ.Server.Models;
+using Recip_EZ.Server.Services;
 
 namespace Recip_EZ.Server.Controllers
 {
@@ -19,11 +21,19 @@ namespace Recip_EZ.Server.Controllers
         public required string Password { get; set; }
     }
 
-
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
+        readonly UserService _userService;
+
+        public LoginController(UserService userService)
+        {
+            _userService = userService;
+        }
+
+
+
         /// <summary>
         /// Authenticates a user based on the provided login credentials.
         /// </summary>
@@ -48,11 +58,23 @@ namespace Recip_EZ.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Experimenting with DB connection. This Get request accesses the db and retrieves all users and brings that to the front end.
+        /// THIS WILL ONLY WORK WHILE THE DB IS SMALL IN SCALE.
+        /// </summary>
+        /// <returns>IActionResult with the JSON of the db response</returns>
+        [HttpGet("users")]
+        public async Task<IActionResult> GetAllUsers()
+        {
+            var users = _userService.GetAllUsers();
+            return Ok(users);
+        }
+
         private bool Authenticate(LoginRequest data)
         {
-            // Implement your authentication logic here (e.g., EVENTUALLY check against a database)
-            //TEMP IMPLEMENTATION 
-            return(data.Username == "caden@gmail.com" && data.Password == "1234z");
+            User user = _userService.GetUser(data.Username, data.Password);
+            
+            return(data.Username == user.Username);
 
         }
     }

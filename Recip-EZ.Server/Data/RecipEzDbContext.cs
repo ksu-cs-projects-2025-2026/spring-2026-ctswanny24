@@ -8,7 +8,6 @@ namespace Recip_EZ.Server.Data
         public RecipEzDbContext(DbContextOptions<RecipEzDbContext> options)
                 : base(options)
         {
-
         }
 
         public DbSet<User> Users { get; set; }

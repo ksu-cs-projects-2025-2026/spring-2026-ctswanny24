@@ -1,2 +1,7 @@
 body {
 }
+
+.div recipesContainer {
+    display: flex;
+    justify-content: center;
+}

@@ -17,6 +17,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddDbContext<RecipEzDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddScoped<Recip_EZ.Server.Services.UserService>();
+builder.Services.AddScoped<Recip_EZ.Server.Services.RecipeService>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

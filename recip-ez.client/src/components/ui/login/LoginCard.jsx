@@ -16,6 +16,7 @@ function LoginCard() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
+    const [users, setUsers] = useState([]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -23,7 +24,7 @@ function LoginCard() {
         const loginData = { username: email, password: password };
 
         try {
-            const response = await axios.post("https://localhost:7111/login", loginData);
+            const response = await axios.post("https://localhost:7111/api/login", loginData);
 
             if (response.data.success) {
                 setMessage("Login success");
@@ -40,6 +41,18 @@ function LoginCard() {
             }
         }
     }
+
+    const getAllUsers = async (e) => {
+        try {
+            e.preventDefault();
+            const response = await axios.get("https://localhost:7111/api/login/users");
+            setUsers(response.data);
+
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    }
+
 
 
     return (
@@ -78,12 +91,21 @@ function LoginCard() {
 
                     {message && <p className="loginMessage">{message}</p>}
 
-                    <div>
+                        <div>
                             <Button type="submit" className="w-full">
                                 Login
                             </Button>
                         </div>
                 </form>
+
+                <div>
+                    <Button type="submit" onClick={getAllUsers}>Get All Users</Button>
+                    {users.map(user => (
+                        <h4 key={user.id}>
+                            User: {user.firstName} {user.lastName} Username: {user.username}
+                        </h4>
+                    ))}
+                </div>
                 </CardContent>
             </Card>
     );
