@@ -15,7 +15,7 @@ namespace Recip_EZ.Server.Services
 
         public List<Recipe> GetFirstFiveRecipes()
         {
-            var recipe = _context.Recipes.Take(5).ToList();
+            var recipe = _context.Recipes.Take(10).ToList();
 
             if (!recipe.Any())
             {

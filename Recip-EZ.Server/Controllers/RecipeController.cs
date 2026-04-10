@@ -2,6 +2,7 @@
 using Recip_EZ.Server.DTOs;
 using Recip_EZ.Server.Models;
 using Recip_EZ.Server.Services;
+using System.Text.Json;
 
 namespace Recip_EZ.Server.Controllers
 {
@@ -23,7 +24,7 @@ namespace Recip_EZ.Server.Controllers
             {
                 var queryResult = _recipeService.GetFirstFiveRecipes();
                 List<RecipeDTO> placeholders = ToDTO(queryResult);
-                return Ok(queryResult);
+                return Ok(placeholders);
             }
             catch (Exception ex)
             {
@@ -41,11 +42,11 @@ namespace Recip_EZ.Server.Controllers
                 {
                     RecipeId = item.RecipeId,
                     RecipeName = item.RecipeName,
-                    Ingredients = item.Ingredients.Trim('[', ']').Split(',').ToList(),
-                    Instructions = item.Instructions.Trim('[', ']').Split(',').ToList(),
+                    Ingredients = JsonSerializer.Deserialize<List<string>>(item.Ingredients) ?? new List<string>(),
+                    Instructions = JsonSerializer.Deserialize<List<string>>(item.Instructions) ?? new List<string>(),
                     URL = item.URL,
                     Source = item.Source,
-                    RawIngredientList = item.RawIngredientList.Trim('[', ']').Split(',').ToList()
+                    RawIngredientList = JsonSerializer.Deserialize<List<string>>(item.RawIngredientList) ?? new List<string>()
                 });
             }
 

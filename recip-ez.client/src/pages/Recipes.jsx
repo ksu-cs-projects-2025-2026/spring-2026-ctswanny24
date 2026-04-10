@@ -1,6 +1,7 @@
 import RecipeItemCard from "../components/ui/recipes/RecipeItemCard"
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import Grid from '@mui/material/Grid';
 
 export default function Recipes() {
 
@@ -26,10 +27,13 @@ export default function Recipes() {
 
 
     return (
-        <div class="recipesContainer">
+        <Grid container rowSpacing={5} columnSpacing={2}>
             {recipes.map(recipe => (
-                <RecipeItemCard key={recipe.recipeId} recipe={recipe} />
+                <Grid key={recipe.recipeId}>
+                    <RecipeItemCard recipe={recipe} />
+                </Grid>
             ))}
-        </div>
+        </Grid>
+
     )
 }
