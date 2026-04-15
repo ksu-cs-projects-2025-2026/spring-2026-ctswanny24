@@ -20,6 +20,8 @@ Recip-EZ.Client/obj/Debug*
 Recip-EZ.Client/bin/Debug*
 Recip-EZ_Database/bin/*
 Recip-EZ_Database/obj/*
+Recip-EZ.Server/Data/Dataset_CSV/*
+
 .vscode/*
 !.vscode/extensions.json
 .idea
@@ -29,6 +31,8 @@ Recip-EZ_Database/obj/*
 *.njsproj
 *.sln
 *.sw?
+
+
 
 
 # Questionable Files

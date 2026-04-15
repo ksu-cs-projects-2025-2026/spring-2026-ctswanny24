@@ -14,7 +14,7 @@ namespace Recip_EZ.Server.Services
 
         public List<Ingredient> GetUserInventory()
         {
-            List<Ingredient> inventory = _context.InventoryItems.ToList();
+            List<Ingredient> inventory = _context.Ingredients.ToList();
 
             if (!inventory.Any())
             {

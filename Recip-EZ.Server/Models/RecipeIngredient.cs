@@ -1,29 +1,27 @@
-﻿using Recip_EZ.Server.Interfaces;
-using Recip_EZ.Server.Enums;
+﻿using Recip_EZ.Server.Enums;
 
 namespace Recip_EZ.Server.Models
 {
-    public class RecipeIngredient : IIngredient
+    public class RecipeIngredient
     {
         /// <summary>
         /// The id of the recipe Ingredient from the database.
         /// </summary>
-        public int Id { get; init; }
+        public int RecipeIngredientId { get; init; }
+
+        public int RecipeId { get; init; }
         
         /// <summary>
         /// Name of the ingredient
         /// </summary>
         public string Name { get; init; }
-        
-        /// <summary>
-        /// Gets the unit of measurement for the ingredient.
-        /// </summary>
-        public Unit Unit { get; init; }
-        
+                
         /// <summary>
         /// Quantity of the ingredient needed for the recipe.
         /// </summary>
-        public float Quantity { get; init; }
+        public double Quantity { get; init; }
+
+        public Unit Unit { get; init; }
 
         /// <summary>
         /// Specific prep instructions for the ingredient. NOT REQUIRED. 

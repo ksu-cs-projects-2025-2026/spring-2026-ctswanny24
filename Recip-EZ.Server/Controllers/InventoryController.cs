@@ -20,7 +20,7 @@ namespace Recip_EZ.Server.Controllers
         // GET: InventoryController
         // POST: InventoryController/Create
         [HttpPost]
-        public IActionResult AddItem([FromBody] Ingredient data)
+        public IActionResult AddItem([FromBody] Models.Ingredient data)
         {
             try
             {

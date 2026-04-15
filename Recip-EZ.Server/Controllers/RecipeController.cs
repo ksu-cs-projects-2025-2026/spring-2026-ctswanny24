@@ -32,6 +32,11 @@ namespace Recip_EZ.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Private helper method to turn db returned item into a recipeDTO
+        /// </summary>
+        /// <param name="response">Recipe List returned from the db</param>
+        /// <returns>Returns new list of RecipeDTO </returns>
         private List<RecipeDTO> ToDTO(List<Recipe> response)
         {
             List<RecipeDTO> newList = new List<RecipeDTO>();

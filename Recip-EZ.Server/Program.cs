@@ -1,5 +1,6 @@
 using Recip_EZ.Server.Data;
 using Microsoft.EntityFrameworkCore;
+using CsvHelper.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,12 +33,20 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var context = scope.ServiceProvider.GetRequiredService<RecipEzDbContext>();
+
+    var seeder = new DbSeeder(context);
+    //seeder.Seed();
 }
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
 app.UseHttpsRedirection();
 
