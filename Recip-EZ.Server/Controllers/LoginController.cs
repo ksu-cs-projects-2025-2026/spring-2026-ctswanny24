@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Recip_EZ.Server.Models;
 using Recip_EZ.Server.Services;
+using System.ComponentModel.Design;
 
 namespace Recip_EZ.Server.Controllers
 {
     public class LoginResponse
     {
+        public int UserId { get; init; }
         public bool Success { get; set; }
         public string? Token { get; set; }
         public string Message { get; set; }
@@ -44,11 +46,12 @@ namespace Recip_EZ.Server.Controllers
         [HttpPost]
         public IActionResult Login([FromBody] LoginRequest loginData)
         {
+            User user = FetchUser(loginData);
 
-            if (Authenticate(loginData))
+            if (user.Username == loginData.Username && user.Password == loginData.Password)
             {
                 Console.WriteLine("Login Success!!!");
-                return Ok(new LoginResponse { Success = true, Token = "fake-jwt-token", Message = "Login Successful" });
+                return Ok(new LoginResponse { Success = true, UserId = user.UserId, Message = "Login Successful" });
             }
             else
             {
@@ -70,12 +73,11 @@ namespace Recip_EZ.Server.Controllers
             return Ok(users);
         }
 
-        private bool Authenticate(LoginRequest data)
+        private User FetchUser(LoginRequest data)
         {
-            User user = _userService.GetUser(data.Username, data.Password);
-            
-            return(data.Username == user.Username);
+            User? user = _userService.GetUser(data.Username, data.Password);
 
+            return (user);
         }
     }
 }

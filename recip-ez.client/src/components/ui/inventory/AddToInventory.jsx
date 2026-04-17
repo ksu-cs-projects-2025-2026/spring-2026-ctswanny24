@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 function AddInventoryItem() {
     const [ingredients, setIngredients] = useState([]);
@@ -12,7 +14,7 @@ function AddInventoryItem() {
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
-                const response = await axios.get("https://localhost:7111/api/ingredients");
+                const response = await axios.get("https://localhost:7111/api/Inventory/ingredients");
                 setIngredients(response.data);
             } catch (err) {
                 console.error(err);
@@ -50,15 +52,18 @@ function AddInventoryItem() {
             return;
         }
 
+        const userId = localStorage.getItem("userId");
+
         const payload = {
+            userId: parseInt(userId),
             ingredientId: parseInt(ingredientId),
             quantity: parseFloat(quantity),
             unit: unit
         };
 
         try {
-            await axios.post("https://localhost:7111/api/inventory", payload);
-            setMessage("Item added successfully");
+            const response = await axios.post("https://localhost:7111/api/Inventory/add", payload);
+            setMessage(response.data.message);
 
             // reset form
             setIngredientId("");
@@ -76,18 +81,23 @@ function AddInventoryItem() {
 
             {/* Ingredient Dropdown */}
             <div>
-                <label>Ingredient:</label>
-                <select
-                    value={ingredientId}
-                    onChange={(e) => setIngredientId(e.target.value)}
-                >
-                    <option value="">Select ingredient</option>
-                    {ingredients.map(i => (
-                        <option key={i.ingredientId} value={i.ingredientId}>
-                            {i.name}
-                        </option>
-                    ))}
-                </select>
+                <Autocomplete
+                    disablePortal
+                    options={ingredients}
+                    getOptionLabel={(option) => option.name}
+                    value={ingredients.find(i => i.ingredientId === parseInt(ingredientId)) || null}
+                    renderInput={(params) => (
+                        <TextField {...params} label="Ingredient"
+                            sx={{
+                                input: { color: "white" },
+                                label: { color: "white" }
+                            }}
+                        />
+                    )}
+                    onChange={(event, newValue) => {
+                        setIngredientId(newValue ? newValue.ingredientId : "");
+                    }}
+                />
             </div>
 
             {/* Quantity */}

@@ -1,34 +1,77 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using Recip_EZ.Server.DTOs;
+using Recip_EZ.Server.Enums;
 using Recip_EZ.Server.Models;
+using Recip_EZ.Server.Services;
+using System.Diagnostics.Contracts;
 
 namespace Recip_EZ.Server.Controllers
 {
-    public class InventoryItem
+    public class InventoryPayload
     {
-        public string Name { get; set; }
+        public required int UserId { get; set; }
 
-        public string Description { get; set; }
+        public required int IngredientId { get; set; }
 
-        public string Category { get; set; }
+        public required float Quantity { get; set; }
+
+        public required string Unit { get; set; }
+    }
+
+    public class InventoryResponse
+    {
+        public bool Success { get; set; }
+
+        public string Message { get; set; }
     }
 
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class InventoryController : ControllerBase
     {
-        // GET: InventoryController
-        // POST: InventoryController/Create
-        [HttpPost]
-        public IActionResult AddItem([FromBody] Models.Ingredient data)
+        readonly InventoryService _service;
+
+        public InventoryController(InventoryService service)
+        {
+            _service = service;
+        }
+
+        [HttpGet("ingredients")]
+        public IActionResult PopulateIngredientList()
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var result = _service.GetIngredients();
+                return Ok(result);
             }
-            catch
+            catch (Exception ex)
             {
-                return Unauthorized();
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost("add")]
+        public IActionResult AddIngredient([FromBody] InventoryPayload item)
+        {
+            UserInventory inventoryItem = new UserInventory()
+            {
+                UserId = item.UserId,
+                IngredientId = item.IngredientId,
+                Unit = Enum.Parse<Unit>(item.Unit),
+                Quantity = item.Quantity,
+                DateAdded = DateTime.UtcNow
+            };
+
+            bool result = _service.AddItem(inventoryItem);
+            if (result)
+            {
+                return Ok(new InventoryResponse(){ Success = true, Message = "Item added to inventory" });
+            }
+            else
+            {
+                return BadRequest(new InventoryResponse() { Success = false, Message = "Something went wrong. Item has NOT been added" });
             }
         }
     }

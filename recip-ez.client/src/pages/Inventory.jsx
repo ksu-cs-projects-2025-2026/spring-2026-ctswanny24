@@ -11,17 +11,10 @@ export default function Inventory() {
                 <Grid size={4}>
                     <AddInventoryItem/>
                 </Grid>
-
-                <Grid size={3}>
-                    <InventoryAdditionCard/>
-                </Grid>
                 <Grid container spacing={2}>
                     <Grid size={10}>
                     <InventoryItemCard/>
                     </Grid>
-                </Grid>
-                <Grid size={5}>
-                    <h1>Inventory Space</h1>
                 </Grid>
             </Grid>
         </>

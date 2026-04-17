@@ -28,6 +28,7 @@ function LoginCard() {
 
             if (response.data.success) {
                 setMessage("Login success");
+                localStorage.setItem("userId", response.data.userId);
             }
             else {
                 setMessage("Login failed");

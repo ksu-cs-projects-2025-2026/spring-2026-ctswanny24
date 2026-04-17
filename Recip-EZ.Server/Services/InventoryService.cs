@@ -1,4 +1,5 @@
-﻿using Recip_EZ.Server.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using Recip_EZ.Server.Data;
 using Recip_EZ.Server.Models;
 
 namespace Recip_EZ.Server.Services
@@ -12,18 +13,25 @@ namespace Recip_EZ.Server.Services
                 _context = context;
             }
 
-        public List<Ingredient> GetUserInventory()
+        public bool AddItem(UserInventory item)
         {
-            List<Ingredient> inventory = _context.Ingredients.ToList();
+            try
+            {
+                _context.UserInventories.Add(item);
+                _context.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
 
-            if (!inventory.Any())
-            {
-                throw new Exception("Inventory Not Found");
-            }
-            else
-            {
-                return inventory;
-            }
+        public List<Ingredient> GetIngredients()
+        {
+            List<Ingredient> inventory = _context.Ingredients.Take(5).ToList();
+
+            return inventory;
         }
 
     }
