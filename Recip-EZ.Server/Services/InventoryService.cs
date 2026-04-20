@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Recip_EZ.Server.Data;
+using Recip_EZ.Server.DTOs;
 using Recip_EZ.Server.Models;
+using Recip_EZ.Server.Enums;
 
 namespace Recip_EZ.Server.Services
 {
@@ -29,9 +32,28 @@ namespace Recip_EZ.Server.Services
 
         public List<Ingredient> GetIngredients()
         {
-            List<Ingredient> inventory = _context.Ingredients.Take(5).ToList();
+            List<Ingredient> ingredients = _context.Ingredients.ToList();
+            return ingredients;
+        }
 
-            return inventory;
+        public List<UserInventoryDTO> GetInventory(int id)
+        {
+            var result = _context.UserInventories
+                    .Where(ui => ui.UserId == id)
+                    .Join(_context.Ingredients,
+                        ui => ui.IngredientId,
+                        i => i.IngredientId,
+                        (ui, i) => new UserInventoryDTO
+                        {
+                            UserInventoryId = ui.UserInventoryId,
+                            IngredientId = i.IngredientId,
+                            IngredientName = i.Name!,
+                            Quantity = ui.Quantity,
+                            Unit = ui.Unit
+                        })
+                    .ToList();
+
+            return result;
         }
 
     }

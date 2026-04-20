@@ -12,6 +12,11 @@ function AddInventoryItem() {
 
     // 🔹 Fetch ingredients from backend
     useEffect(() => {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            return;
+        }
+
         const fetchIngredients = async () => {
             try {
                 const response = await axios.get("https://localhost:7111/api/Inventory/ingredients");

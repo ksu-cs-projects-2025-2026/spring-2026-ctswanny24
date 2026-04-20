@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Identity.Client;
 using Recip_EZ.Server.DTOs;
@@ -24,8 +25,11 @@ namespace Recip_EZ.Server.Controllers
     {
         public bool Success { get; set; }
 
-        public string Message { get; set; }
+        public string? Message { get; set; }
+
+        public List<UserInventoryDTO>? Inventory { get; set; }
     }
+
 
     [ApiController]
     [Route("api/[controller]")]
@@ -74,5 +78,20 @@ namespace Recip_EZ.Server.Controllers
                 return BadRequest(new InventoryResponse() { Success = false, Message = "Something went wrong. Item has NOT been added" });
             }
         }
+
+        [HttpGet("userInventory")]
+        public IActionResult FetchUserInventory([FromQuery] int userId)
+        {
+            try
+            {
+                var result = _service.GetInventory(userId);
+                return Ok(new InventoryResponse() { Success = true, Message = "Ingredients successfully fetched", Inventory = result});
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new InventoryResponse() { Success = false, Message = $"Failed to fetch Ingredients: Exception: {ex.Message}" });
+            }
+        }
+
     }
 }
