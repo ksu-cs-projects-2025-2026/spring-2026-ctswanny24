@@ -6,6 +6,15 @@ using System.Text.Json;
 
 namespace Recip_EZ.Server.Controllers
 {
+    public class CuratedRecipesResponse
+    {
+        public bool Success { get; set; }
+
+        public string Message { get; set; } = string.Empty;
+
+        public List<CuratedRecipeDTO> Recipes { get; set; } = new();
+    }
+
     /// <summary>
     /// Controller class for all recipe related endpoints. This includes fetching recipes, adding recipes, deleting recipes, and updating recipes.
     /// </summary>
@@ -37,6 +46,43 @@ namespace Recip_EZ.Server.Controllers
             catch (Exception ex)
             {
                 return NotFound(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Returns recipes ranked by how well the user's inventory matches each recipe's raw ingredient list.
+        /// </summary>
+        /// <param name="userId">User whose inventory is used for curation.</param>
+        /// <param name="limit">Maximum number of recipes to return.</param>
+        /// <param name="minimumMatchPercentage">Minimum percentage match required for a recipe to be returned.</param>
+        /// <returns>Curated recipes with match details.</returns>
+        [HttpGet("curated")]
+        public IActionResult FetchCuratedRecipes(
+            [FromQuery] int userId,
+            [FromQuery] int limit = 25,
+            [FromQuery] double minimumMatchPercentage = 0)
+        {
+            try
+            {
+                var result = _service.GetCuratedRecipesForUser(userId, limit, minimumMatchPercentage);
+
+                return Ok(new CuratedRecipesResponse
+                {
+                    Success = true,
+                    Message = result.Count > 0
+                        ? "Curated recipes fetched successfully."
+                        : "No recipe matches found yet. Add more ingredients to your inventory to improve matching.",
+                    Recipes = result
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new CuratedRecipesResponse
+                {
+                    Success = false,
+                    Message = ex.Message,
+                    Recipes = new List<CuratedRecipeDTO>()
+                });
             }
         }
 

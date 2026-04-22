@@ -31,17 +31,35 @@ namespace Recip_EZ.Server.Controllers
     }
 
 
+    /// <summary>
+    /// Controller for all Inventory related endpoints. 
+    /// This will handle all requests related to the user's inventory of ingredients, such as adding items, fetching the inventory list, and deleting items from the inventory.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class InventoryController : ControllerBase
     {
+        #region Fields
+
         readonly InventoryService _service;
+
+        #endregion
+
+        #region Constructor(s)
 
         public InventoryController(InventoryService service)
         {
             _service = service;
         }
 
+        #endregion
+
+        #region Endpoints
+
+        /// <summary>
+        /// Gets the ingredients list to populate the dropdown menu in the frontend when adding an ingredient to the inventory.
+        /// </summary>
+        /// <returns>List of ingredients</returns>
         [HttpGet("ingredients")]
         public IActionResult PopulateIngredientList()
         {
@@ -56,6 +74,11 @@ namespace Recip_EZ.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Logic to add an ingredient to the user's inventory.
+        /// </summary>
+        /// <param name="item">The inventory item to add</param>
+        /// <returns>Action result indicating success or failure</returns>
         [HttpPost("add")]
         public IActionResult AddIngredient([FromBody] InventoryPayload item)
         {
@@ -92,6 +115,11 @@ namespace Recip_EZ.Server.Controllers
             }
         }
 
+        /// <summary>
+        /// Fetches the user's inventory list, which includes all the ingredients they have added to their inventory, along with details such as quantity, unit, and expiration date (if added).
+        /// </summary>
+        /// <param name="userId">The ID of the user whose inventory is being fetched</param>
+        /// <returns>Action result containing the user's inventory</returns>
         [HttpGet("userInventory")]
         public IActionResult FetchUserInventory([FromQuery] int userId)
         {
@@ -106,6 +134,13 @@ namespace Recip_EZ.Server.Controllers
             }
         }
 
+
+        /// <summary>
+        /// Deletes the specified inventory item from the user's inventory.
+        /// This is based on the id passed in through the URL, which is the UserInventoryId of the item to be deleted.
+        /// </summary>
+        /// <param name="id">The ID of the inventory item to delete</param>
+        /// <returns>Action result indicating success or failure</returns>
         [HttpDelete("{id}")]
         public IActionResult DeleteInventoryItem(int id)
         {
@@ -120,5 +155,6 @@ namespace Recip_EZ.Server.Controllers
             }
         }
 
+        #endregion
     }
 }

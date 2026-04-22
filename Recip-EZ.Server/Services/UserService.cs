@@ -1,4 +1,6 @@
-﻿using Recip_EZ.Server.Data;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Identity.Client;
+using Recip_EZ.Server.Data;
 using Recip_EZ.Server.Models;
 
 namespace Recip_EZ.Server.Services
@@ -69,8 +71,11 @@ namespace Recip_EZ.Server.Services
 
         #region Helper Methods
 
-        
-
+        //This is something that will be implemented in V1.0 for more security.
+        public IActionResult AuthenticateUser(string username, string password)
+        {
+            return new JsonResult(new { Success = true, Message = "Authentication successful" });
+        }
         #endregion
 
     }

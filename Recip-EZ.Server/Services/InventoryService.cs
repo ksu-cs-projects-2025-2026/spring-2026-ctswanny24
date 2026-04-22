@@ -53,6 +53,8 @@ namespace Recip_EZ.Server.Services
             }
         }
 
+        #region Read Operations
+
         /// <summary>
         /// Retrieves all ingredients from the data source.
         /// </summary>
@@ -92,6 +94,8 @@ namespace Recip_EZ.Server.Services
 
             return result;
         }
+
+        #endregion
 
         //Placeholder method for V1.0 feature to edit an item in the user's inventory.
         public void EditItem(UserInventory item)

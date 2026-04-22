@@ -1,7 +1,44 @@
-body {
+.recipesPage {
+    display: grid;
+    gap: 1.75rem;
+    padding: 1.5rem;
 }
 
-.div recipesContainer {
-    display: flex;
-    justify-content: center;
+.recipesHeader {
+    padding: 1.5rem;
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at top left, rgba(255, 204, 128, 0.4), transparent 32%),
+        linear-gradient(135deg, #fff6df 0%, #ffe8cf 100%);
+    box-shadow: 0 18px 44px rgba(94, 64, 16, 0.12);
+}
+
+.recipesHeader h1 {
+    margin: 0.25rem 0 0.5rem;
+    color: #5a3716;
+}
+
+.recipesEyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #a45a12;
+}
+
+.recipesMessage {
+    margin: 0;
+    max-width: 60ch;
+    color: #6d4b29;
+}
+
+@media (max-width: 768px) {
+    .recipesPage {
+        padding: 1rem;
+    }
+
+    .recipesHeader {
+        padding: 1.2rem;
+    }
 }
