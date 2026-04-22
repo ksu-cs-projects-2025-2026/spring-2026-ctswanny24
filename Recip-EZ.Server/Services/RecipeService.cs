@@ -9,7 +9,13 @@ namespace Recip_EZ.Server.Services
 {
     public class RecipeService
     {
+        #region Fields
+
         private readonly RecipEzDbContext _context;
+
+        #endregion
+
+        #region Constructor(s)
 
         /// <summary>
         /// Creates the RecipeService Layer. Where the DbContext is stored and can be used
@@ -19,6 +25,10 @@ namespace Recip_EZ.Server.Services
         {
             _context = context;
         }
+
+        #endregion
+
+        #region CRUD Methods
 
         /// <summary>
         /// Method to get ALL recipes in the Database (If for some reason you need to do that)
@@ -93,7 +103,11 @@ namespace Recip_EZ.Server.Services
             }
         }
 
+        #endregion
 
+        #region Helper Methods
+
+        //Future method for scoring algorithm. V1.0 addition.
         public int ScoreRecipe()
         {
             /*Business Logic to be created and used LATER */
@@ -152,6 +166,6 @@ namespace Recip_EZ.Server.Services
         //    _context.SaveChanges();
         //}
 
-
+        #endregion
     }
 }

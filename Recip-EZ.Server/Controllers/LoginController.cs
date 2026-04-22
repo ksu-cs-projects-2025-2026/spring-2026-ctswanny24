@@ -22,19 +22,24 @@ namespace Recip_EZ.Server.Controllers
         public required string Username { get; set; }
         public required string Password { get; set; }
     }
-
+    /// <summary>
+    /// Controller for all Login and Authentication related endpoints.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class LoginController : ControllerBase
     {
         readonly UserService _userService;
 
+        /// <summary>
+        /// Constructor to allow for the use of the UserService in the methods of this controller. 
+        /// This is where the connection to the database is established for this controller through the service layer.
+        /// </summary>
+        /// <param name="userService">The UserService instance to be used by this controller</param>
         public LoginController(UserService userService)
         {
             _userService = userService;
         }
-
-
 
         /// <summary>
         /// Authenticates a user based on the provided login credentials.

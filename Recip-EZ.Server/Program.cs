@@ -21,6 +21,7 @@ builder.Services.AddDbContext<RecipEzDbContext>(options =>
 builder.Services.AddScoped<Recip_EZ.Server.Services.UserService>();
 builder.Services.AddScoped<Recip_EZ.Server.Services.RecipeService>();
 builder.Services.AddScoped<Recip_EZ.Server.Services.InventoryService>();
+builder.Services.AddScoped<Recip_EZ.Server.Services.IngredientAliasService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
