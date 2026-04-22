@@ -93,5 +93,19 @@ namespace Recip_EZ.Server.Controllers
             }
         }
 
+        [HttpDelete("{id}")]
+        public IActionResult DeleteInventoryItem(int id)
+        {
+            try
+            {
+                _service.DeleteItem(id);
+                return Ok(new { Success = true, Message = "Item Deleted" });
+            }
+            catch(Exception ex)
+            {
+                return NotFound(new { Success = false, Message = ex.Message });
+            }
+        }
+
     }
 }

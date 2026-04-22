@@ -56,5 +56,18 @@ namespace Recip_EZ.Server.Services
             return result;
         }
 
+        public void DeleteItem(int id)
+        {
+            var item = _context.UserInventories.FirstOrDefault(x => x.UserInventoryId == id);
+
+            if(item == null)
+            {
+                throw new Exception("Item not found");
+            }
+
+            _context.UserInventories.Remove(item);
+            _context.SaveChanges();
+        }
+
     }
 }

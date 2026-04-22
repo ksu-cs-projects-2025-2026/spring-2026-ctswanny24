@@ -42,6 +42,12 @@ export default function Inventory() {
         fetchInventory();
     }, []);
 
+    const handleDelete = (id) => {
+        setInventory(prev =>
+            prev.filter(item => item.userInventoryId !== id)
+        );
+    };
+
 
     return (
         <>
@@ -52,8 +58,11 @@ export default function Inventory() {
                 </Grid>
                 <Grid container spacing={2}>
                     {inventory.map(item => (
-                        <Grid>
-                            <InventoryItemCard ingredient={item} />
+                        <Grid item key={item.userInventoryId}>
+                            <InventoryItemCard
+                                inventoryItem={item}
+                                ingredient={item}
+                                onDelete={handleDelete} />
                         </Grid>))}
                 </Grid>
             </Grid>
