@@ -48,13 +48,17 @@ export default function Inventory() {
         );
     };
 
+    const handleAdd = (item) => {
+        setInventory(prev => [...prev, item]);
+    };
+
 
     return (
         <>
             {message && <p>{message}</p> }
             <Grid container spacing={2}>
                 <Grid size={4}>
-                    <AddInventoryItem/>
+                    <AddInventoryItem onAdd={handleAdd} />
                 </Grid>
                 <Grid container spacing={2}>
                     {inventory.map(item => (

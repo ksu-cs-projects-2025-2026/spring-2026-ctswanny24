@@ -3,14 +3,13 @@ import axios from "axios";
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
-function AddInventoryItem() {
+function AddInventoryItem({ onAdd }) {
     const [ingredients, setIngredients] = useState([]);
     const [ingredientId, setIngredientId] = useState("");
     const [quantity, setQuantity] = useState("");
     const [unit, setUnit] = useState("");
     const [message, setMessage] = useState("");
 
-    // 🔹 Fetch ingredients from backend
     useEffect(() => {
         const userId = localStorage.getItem("userId");
         if (!userId) {
@@ -29,7 +28,6 @@ function AddInventoryItem() {
         fetchIngredients();
     }, []);
 
-    // 🔹 Unit enum (must match backend exactly)
     const units = [
         "Piece",
         "Cup",
@@ -46,7 +44,6 @@ function AddInventoryItem() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 🔥 Frontend validation
         if (!ingredientId || !quantity || !unit) {
             setMessage("All fields are required");
             return;
@@ -58,6 +55,9 @@ function AddInventoryItem() {
         }
 
         const userId = localStorage.getItem("userId");
+        if (!userId) {
+            return;
+        }
 
         const payload = {
             userId: parseInt(userId),
@@ -69,8 +69,10 @@ function AddInventoryItem() {
         try {
             const response = await axios.post("https://localhost:7111/api/Inventory/add", payload);
             setMessage(response.data.message);
+            if(response.data.success && response.data.inventory) {
+                onAdd(response.data.inventory[0]);
+            }
 
-            // reset form
             setIngredientId("");
             setQuantity("");
             setUnit("");
@@ -84,7 +86,6 @@ function AddInventoryItem() {
         <form onSubmit={handleSubmit}>
             <h2>Add Inventory Item</h2>
 
-            {/* Ingredient Dropdown */}
             <div>
                 <Autocomplete
                     disablePortal
@@ -105,7 +106,6 @@ function AddInventoryItem() {
                 />
             </div>
 
-            {/* Quantity */}
             <div>
                 <label>Quantity:</label>
                 <input
@@ -116,7 +116,6 @@ function AddInventoryItem() {
                 />
             </div>
 
-            {/* Unit Dropdown */}
             <div>
                 <label>Unit:</label>
                 <select

@@ -15,6 +15,7 @@ namespace Recip_EZ.Server.Data
         public DbSet<Recipe> Recipes { get; set; } 
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<UserInventory> UserInventories { get; set; }
+        public DbSet<IngredientAlias> Aliases { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

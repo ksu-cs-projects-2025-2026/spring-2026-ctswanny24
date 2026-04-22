@@ -6,23 +6,31 @@ using System.Text.Json;
 
 namespace Recip_EZ.Server.Controllers
 {
+    /// <summary>
+    /// Controller class for all recipe related endpoints. This includes fetching recipes, adding recipes, deleting recipes, and updating recipes.
+    /// </summary>
     [ApiController]
     [Route("api/[controller]")]
     public class RecipeController : ControllerBase
     {
-        readonly RecipeService _recipeService;
+        readonly RecipeService _service;
 
         public RecipeController(RecipeService recipeService)
         {
-            _recipeService = recipeService;
+            _service = recipeService;
         }
 
+        /// <summary>
+        /// Used for the display of recipes in the initial state of the app. 
+        /// *Not used for the user's personal recipe collection, but rather to show the user what the app is capable of.
+        /// </summary>
+        /// <returns>Either a list of the placeholder recipes, OR exception message</returns>
         [HttpGet("placeholders")]
         public IActionResult FetchPlaceholders()
         {
             try
             {
-                var queryResult = _recipeService.GetFirstFiveRecipes();
+                var queryResult = _service.GetAllRecipes();
                 List<RecipeDTO> placeholders = ToDTO(queryResult);
                 return Ok(placeholders);
             }
@@ -43,16 +51,7 @@ namespace Recip_EZ.Server.Controllers
 
             foreach (var item in response)
             {
-                newList.Add(new RecipeDTO
-                {
-                    RecipeId = item.RecipeId,
-                    RecipeName = item.RecipeName,
-                    Ingredients = JsonSerializer.Deserialize<List<string>>(item.Ingredients) ?? new List<string>(),
-                    Instructions = JsonSerializer.Deserialize<List<string>>(item.Instructions) ?? new List<string>(),
-                    URL = item.URL,
-                    Source = item.Source,
-                    RawIngredientList = JsonSerializer.Deserialize<List<string>>(item.RawIngredientList) ?? new List<string>()
-                });
+                newList.Add(_service.ToDTO(item));
             }
 
             return newList;

@@ -9,24 +9,24 @@ namespace Recip_EZ.Server.Services
 {
     public class InventoryService
     {
-            private readonly RecipEzDbContext _context;
+        private readonly RecipEzDbContext _context;
 
-            public InventoryService(RecipEzDbContext context)
-            {
-                _context = context;
-            }
+        public InventoryService(RecipEzDbContext context)
+        {
+            _context = context;
+        }
 
-        public bool AddItem(UserInventory item)
+        public UserInventory AddItem(UserInventory item)
         {
             try
             {
                 _context.UserInventories.Add(item);
                 _context.SaveChanges();
-                return true;
+                return item;
             }
             catch
             {
-                return false;
+                return null;
             }
         }
 
@@ -60,7 +60,7 @@ namespace Recip_EZ.Server.Services
         {
             var item = _context.UserInventories.FirstOrDefault(x => x.UserInventoryId == id);
 
-            if(item == null)
+            if (item == null)
             {
                 throw new Exception("Item not found");
             }
@@ -69,5 +69,14 @@ namespace Recip_EZ.Server.Services
             _context.SaveChanges();
         }
 
+        public string GetIngredientName(int id)
+        {
+            var ingredient = _context.Ingredients.FirstOrDefault(x => x.IngredientId == id);
+            if (ingredient == null)
+            {
+                throw new Exception("Ingredient not found");
+            }
+            return ingredient.Name!;
+        }
     }
 }

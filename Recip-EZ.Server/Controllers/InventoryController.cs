@@ -68,14 +68,27 @@ namespace Recip_EZ.Server.Controllers
                 DateAdded = DateTime.UtcNow
             };
 
-            bool result = _service.AddItem(inventoryItem);
-            if (result)
+            UserInventory result = _service.AddItem(inventoryItem);
+            if (result == null)
             {
-                return Ok(new InventoryResponse(){ Success = true, Message = "Item added to inventory" });
+                return BadRequest(new InventoryResponse() { Success = false, Message = "Something went wrong. Item has NOT been added" });
             }
             else
             {
-                return BadRequest(new InventoryResponse() { Success = false, Message = "Something went wrong. Item has NOT been added" });
+                var dto = new UserInventoryDTO()
+                {
+
+                    UserInventoryId = result.UserInventoryId,
+                    UserId = result.UserId,
+                    IngredientId = result.IngredientId,
+                    IngredientName = _service.GetIngredientName(result.IngredientId),
+                    Unit = result.Unit,
+                    Quantity = result.Quantity,
+                    DateAdded = result.DateAdded,
+                    ExpirationDate = result.ExpirationDate
+                };
+
+                return Ok(new InventoryResponse(){ Success = true, Message = "Item added to inventory", Inventory = new List<UserInventoryDTO>() { dto } });
             }
         }
 
