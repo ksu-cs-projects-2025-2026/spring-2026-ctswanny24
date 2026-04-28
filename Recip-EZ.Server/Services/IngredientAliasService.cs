@@ -1,5 +1,7 @@
-﻿using Recip_EZ.Server.Data;
+using Microsoft.EntityFrameworkCore;
+using Recip_EZ.Server.Data;
 using Recip_EZ.Server.Models;
+using System.Text.RegularExpressions;
 
 namespace Recip_EZ.Server.Services
 {
@@ -8,6 +10,38 @@ namespace Recip_EZ.Server.Services
         #region Fields
 
         private readonly RecipEzDbContext _context;
+
+        private static readonly HashSet<string> IgnoredAliasWords = new(StringComparer.OrdinalIgnoreCase)
+        {
+            "a",
+            "an",
+            "and",
+            "boneless",
+            "cooked",
+            "crushed",
+            "diced",
+            "dried",
+            "extra",
+            "fresh",
+            "fried",
+            "grated",
+            "ground",
+            "large",
+            "medium",
+            "minced",
+            "of",
+            "optional",
+            "or",
+            "raw",
+            "roasted",
+            "shredded",
+            "skinless",
+            "sliced",
+            "small",
+            "taste",
+            "to",
+            "virgin"
+        };
 
         #endregion
 
@@ -27,44 +61,63 @@ namespace Recip_EZ.Server.Services
         #region CRUD Methods
 
         /// <summary>
-        /// Adds the normalized ingredient names as aliases. 
-        /// This helps with matching ingredients that may have different forms (e.g., "tomatoes" vs "tomato") and removes common descriptors like "raw" or "cooked". 
-        /// It also ensures the original name is included as an alias in lowercase for consistent matching.
-        /// PRETTY VITAL FOR THE FUNCTIONALITY OF THE ALGORITHMIC COMPONENTS, SO BE CAREFUL WITH CHANGES TO THIS METHOD.
+        /// Populates the alias table using the shared alias-generation rules. Safe to run multiple times.
         /// </summary>
         public void AddToAliases()
         {
-            var ingredients = _context.Ingredients.ToList();
-            foreach (var i in ingredients)
+            var ingredients = _context.Ingredients
+                .AsNoTracking()
+                .Where(i => !string.IsNullOrWhiteSpace(i.Name))
+                .ToList();
+
+            var existingAliases = _context.IngredientAliases
+                .AsNoTracking()
+                .ToList()
+                .GroupBy(alias => alias.IngredientId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group
+                        .Select(alias => alias.AliasName.Trim().ToLowerInvariant())
+                        .ToHashSet(StringComparer.OrdinalIgnoreCase));
+
+            List<IngredientAlias> aliasesToAdd = new();
+
+            foreach (var ingredient in ingredients)
             {
-                var normalized = Normalize(i.Name);
-
-                bool exists = _context.Aliases.Any(a =>
-                    a.IngredientId == i.IngredientId &&
-                    a.AliasName.ToLower() == normalized);
-
-                if (!exists)
+                if (ingredient.Name == null)
                 {
-                    _context.Aliases.Add(new IngredientAlias
-                    {
-                        IngredientId = i.IngredientId,
-                        AliasName = normalized
-                    });
+                    continue;
                 }
 
-                bool originalExists = _context.Aliases.Any(a =>
-                    a.IngredientId == i.IngredientId &&
-                    a.AliasName.ToLower() == i.Name.ToLower());
+                var knownAliases = existingAliases.GetValueOrDefault(
+                    ingredient.IngredientId,
+                    new HashSet<string>(StringComparer.OrdinalIgnoreCase));
 
-                if (!originalExists)
+                foreach (var alias in GetAliasesForIngredientName(ingredient.Name))
                 {
-                    _context.Aliases.Add(new IngredientAlias
+                    if (knownAliases.Contains(alias))
                     {
-                        IngredientId = i.IngredientId,
-                        AliasName = i.Name.ToLower()
+                        continue;
+                    }
+
+                    aliasesToAdd.Add(new IngredientAlias
+                    {
+                        IngredientId = ingredient.IngredientId,
+                        AliasName = alias
                     });
+
+                    knownAliases.Add(alias);
                 }
+
+                existingAliases[ingredient.IngredientId] = knownAliases;
             }
+
+            if (aliasesToAdd.Count == 0)
+            {
+                return;
+            }
+
+            _context.IngredientAliases.AddRange(aliasesToAdd);
             _context.SaveChanges();
         }
 
@@ -73,33 +126,120 @@ namespace Recip_EZ.Server.Services
         #region Helper Methods
 
         /// <summary>
-        /// Normalizing helper method to make the ingredient names more consistent for matching. 
-        /// This method removes common descriptors like "raw", "cooked", "roasted", and "fried", and also handles plural forms by converting them to singular (e.g., "tomatoes" to "tomato").
-        /// SUBJECT TO CHANGE A BIT FOR IMPROVEMENT OF MATCHING ALGORITHM, BUT THIS IS THE BASIC IDEA.
+        /// Creates a set of consistent aliases for an ingredient phrase so inventory items and recipes can be matched
+        /// through the same normalization pipeline.
         /// </summary>
-        /// <param name="name">Name of the item to be normalized</param>
-        /// <returns>Normalized name</returns>
-        private string Normalize(string name)
+        /// <param name="name">Ingredient phrase to normalize into aliases.</param>
+        /// <returns>Distinct, normalized aliases ordered by insertion.</returns>
+        public HashSet<string> GetAliasesForIngredientName(string? name)
         {
-            name = name.Trim().ToLower();
+            var aliases = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-            //Used to replace the common prep descriptors. This could cause problems with matching.
-            name = name.Replace("raw", "")
-                .Replace("cooked", "")
-                .Replace("roasted", "")
-                .Replace("fried", "");
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return aliases;
+            }
 
-            if (name.EndsWith("ies"))
-                name = name.Substring(0, name.Length - 3) + "y"; // berries → berry
-            else if (name.EndsWith("es"))
-                name = name.Substring(0, name.Length - 2); // tomatoes → tomato (mostly works)
-            else if (name.EndsWith("s") && !name.EndsWith("ss"))
-                name = name.Substring(0, name.Length - 1); // eggs → egg
+            var cleanedPhrase = CleanPhrase(name);
+            AddAlias(aliases, cleanedPhrase);
 
-            return name;
+            var normalizedWords = GetNormalizedWords(name);
+            AddAlias(aliases, string.Join(' ', normalizedWords));
+
+            if (normalizedWords.Count >= 2)
+            {
+                AddAlias(aliases, string.Join(' ', normalizedWords.TakeLast(2)));
+            }
+
+            if (normalizedWords.Count >= 3)
+            {
+                AddAlias(aliases, string.Join(' ', normalizedWords.TakeLast(3)));
+            }
+
+            return aliases;
+        }
+
+        /// <summary>
+        /// Produces the main normalized phrase for an ingredient.
+        /// </summary>
+        /// <param name="name">Ingredient phrase to normalize.</param>
+        /// <returns>Normalized ingredient phrase.</returns>
+        public string NormalizeIngredient(string? name)
+        {
+            return string.Join(' ', GetNormalizedWords(name));
+        }
+
+        private List<string> GetNormalizedWords(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return new List<string>();
+            }
+
+            var cleanedPhrase = CleanPhrase(name);
+
+            return cleanedPhrase
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Where(word => !IgnoredAliasWords.Contains(word))
+                .Select(SingularizeWord)
+                .Where(word => !string.IsNullOrWhiteSpace(word))
+                .ToList();
+        }
+
+        private string CleanPhrase(string name)
+        {
+            var cleanedPhrase = name.Trim().ToLowerInvariant();
+            cleanedPhrase = cleanedPhrase.Replace("&", " and ");
+            cleanedPhrase = Regex.Replace(cleanedPhrase, @"[\d]", " ");
+            cleanedPhrase = Regex.Replace(cleanedPhrase, @"[^\w\s]", " ");
+            cleanedPhrase = Regex.Replace(cleanedPhrase, @"\s+", " ").Trim();
+            return cleanedPhrase;
+        }
+
+        private void AddAlias(HashSet<string> aliases, string? alias)
+        {
+            if (string.IsNullOrWhiteSpace(alias))
+            {
+                return;
+            }
+
+            aliases.Add(alias.Trim().ToLowerInvariant());
+        }
+
+        private string SingularizeWord(string word)
+        {
+            if (string.IsNullOrWhiteSpace(word) || word.Length <= 2)
+            {
+                return word;
+            }
+
+            if (word.EndsWith("ies", StringComparison.OrdinalIgnoreCase) && word.Length > 3)
+            {
+                return word[..^3] + "y";
+            }
+
+            if (word.EndsWith("oes", StringComparison.OrdinalIgnoreCase) && word.Length > 3)
+            {
+                return word[..^2];
+            }
+
+            if (word.EndsWith("es", StringComparison.OrdinalIgnoreCase) &&
+                word.Length > 3 &&
+                !word.EndsWith("ses", StringComparison.OrdinalIgnoreCase))
+            {
+                return word[..^2];
+            }
+
+            if (word.EndsWith("s", StringComparison.OrdinalIgnoreCase) &&
+                word.Length > 3 &&
+                !word.EndsWith("ss", StringComparison.OrdinalIgnoreCase))
+            {
+                return word[..^1];
+            }
+
+            return word;
         }
 
         #endregion
-
     }
 }

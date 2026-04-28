@@ -3,7 +3,6 @@ using Recip_EZ.Server.Data;
 using Recip_EZ.Server.DTOs;
 using Recip_EZ.Server.Models;
 using System.Text.Json;
-using System.Text.RegularExpressions;
 
 namespace Recip_EZ.Server.Services
 {
@@ -16,40 +15,19 @@ namespace Recip_EZ.Server.Services
             public required HashSet<string> MatchTerms { get; init; }
         }
 
+        private sealed class RecipeIngredientCandidate
+        {
+            public required string Original { get; init; }
+
+            public required HashSet<string> MatchTerms { get; init; }
+
+            public required string CanonicalTerm { get; init; }
+        }
+
         #region Fields
 
         private readonly RecipEzDbContext _context;
-
-        private static readonly HashSet<string> IgnoredIngredientWords = new(StringComparer.OrdinalIgnoreCase)
-        {
-            "a",
-            "an",
-            "and",
-            "boneless",
-            "cooked",
-            "crushed",
-            "diced",
-            "dried",
-            "extra",
-            "fresh",
-            "fried",
-            "grated",
-            "ground",
-            "large",
-            "medium",
-            "minced",
-            "of",
-            "optional",
-            "raw",
-            "roasted",
-            "shredded",
-            "skinless",
-            "sliced",
-            "small",
-            "taste",
-            "to",
-            "virgin"
-        };
+        private readonly IngredientAliasService _ingredientAliasService;
 
         #endregion
 
@@ -59,9 +37,11 @@ namespace Recip_EZ.Server.Services
         /// Creates the RecipeService Layer. Where the DbContext is stored and can be used
         /// </summary>
         /// <param name="context">Db Context</param>
-        public RecipeService(RecipEzDbContext context)
+        /// <param name="ingredientAliasService">Shared alias/normalization service.</param>
+        public RecipeService(RecipEzDbContext context, IngredientAliasService ingredientAliasService)
         {
             _context = context;
+            _ingredientAliasService = ingredientAliasService;
         }
 
         #endregion
@@ -163,6 +143,7 @@ namespace Recip_EZ.Server.Services
             limit = limit <= 0 ? 25 : limit;
             minimumMatchPercentage = Math.Clamp(minimumMatchPercentage, 0, 100);
 
+            //Grabs all the distinct inventory ingredients corresponding to the specific userId.
             var inventoryIngredients = _context.UserInventories
                 .Where(ui => ui.UserId == userId)
                 .Join(_context.Ingredients,
@@ -176,16 +157,19 @@ namespace Recip_EZ.Server.Services
                 .Distinct()
                 .ToList();
 
+            //If that userInventory is empty, return empty list.
             if (inventoryIngredients.Count == 0)
             {
                 return new List<CuratedRecipeDTO>();
             }
 
+            //Now, get all of the ids of the inventory ingredients.
             var inventoryIngredientIds = inventoryIngredients
                 .Select(item => item.IngredientId)
                 .ToList();
 
-            var aliasesByIngredientId = _context.Aliases
+            //Now grab all the aliases for the ingredients in the inventory
+            var aliasesByIngredientId = _context.IngredientAliases
                 .Where(alias => inventoryIngredientIds.Contains(alias.IngredientId))
                 .AsNoTracking()
                 .ToList()
@@ -194,6 +178,7 @@ namespace Recip_EZ.Server.Services
                     group => group.Key,
                     group => group.Select(alias => alias.AliasName).ToList());
 
+            //
             var inventoryCandidates = inventoryIngredients
                 .Select(item => BuildInventoryCandidate(
                     item.IngredientName,
@@ -250,13 +235,9 @@ namespace Recip_EZ.Server.Services
             var recipeDto = ToDTO(recipe);
             var distinctRecipeIngredients = recipeDto.RawIngredientList
                 .Where(item => !string.IsNullOrWhiteSpace(item))
-                .Select(item => new
-                {
-                    Original = item.Trim(),
-                    Normalized = NormalizeIngredient(item)
-                })
-                .Where(item => !string.IsNullOrWhiteSpace(item.Normalized))
-                .GroupBy(item => item.Normalized)
+                .Select(item => BuildRecipeIngredientCandidate(item))
+                .Where(item => !string.IsNullOrWhiteSpace(item.CanonicalTerm))
+                .GroupBy(item => item.CanonicalTerm)
                 .Select(group => group.First())
                 .ToList();
 
@@ -265,7 +246,7 @@ namespace Recip_EZ.Server.Services
 
             foreach (var recipeIngredient in distinctRecipeIngredients)
             {
-                var matchingInventoryIngredient = FindBestInventoryMatch(recipeIngredient.Normalized, inventoryCandidates);
+                var matchingInventoryIngredient = FindBestInventoryMatch(recipeIngredient.MatchTerms, inventoryCandidates);
 
                 if (matchingInventoryIngredient == null)
                 {
@@ -304,15 +285,31 @@ namespace Recip_EZ.Server.Services
             };
         }
 
+        //Helps create a new item that contains all aliases in a hash set for the ingredient that is passed in.
+        private RecipeIngredientCandidate BuildRecipeIngredientCandidate(string rawIngredient)
+        {
+            var matchTerms = _ingredientAliasService.GetAliasesForIngredientName(rawIngredient);
+            var canonicalTerm = _ingredientAliasService.NormalizeIngredient(rawIngredient);
+
+            return new RecipeIngredientCandidate
+            {
+                Original = rawIngredient.Trim(),
+                MatchTerms = matchTerms,
+                CanonicalTerm = canonicalTerm
+            };
+        }
+
+        //
         private InventoryIngredientCandidate BuildInventoryCandidate(string ingredientName, IEnumerable<string> aliases)
         {
-            var matchTerms = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-
-            AddMatchTerm(matchTerms, ingredientName);
+            var matchTerms = _ingredientAliasService.GetAliasesForIngredientName(ingredientName);
 
             foreach (var alias in aliases)
             {
-                AddMatchTerm(matchTerms, alias);
+                foreach (var generatedAlias in _ingredientAliasService.GetAliasesForIngredientName(alias))
+                {
+                    matchTerms.Add(generatedAlias);
+                }
             }
 
             return new InventoryIngredientCandidate
@@ -323,11 +320,11 @@ namespace Recip_EZ.Server.Services
         }
 
         private InventoryIngredientCandidate? FindBestInventoryMatch(
-            string normalizedRecipeIngredient,
+            HashSet<string> recipeIngredientTerms,
             IEnumerable<InventoryIngredientCandidate> inventoryCandidates)
         {
             var exactMatch = inventoryCandidates
-                .FirstOrDefault(candidate => candidate.MatchTerms.Contains(normalizedRecipeIngredient));
+                .FirstOrDefault(candidate => candidate.MatchTerms.Overlaps(recipeIngredientTerms));
 
             if (exactMatch != null)
             {
@@ -338,8 +335,10 @@ namespace Recip_EZ.Server.Services
                 .Select(candidate => new
                 {
                     Candidate = candidate,
-                    Score = candidate.MatchTerms
-                        .Select(term => ScorePhraseMatch(normalizedRecipeIngredient, term))
+                    Score = recipeIngredientTerms
+                        .SelectMany(recipeTerm => candidate.MatchTerms,
+                            (recipeTerm, candidateTerm) => ScorePhraseMatch(recipeTerm, candidateTerm))
+                        .DefaultIfEmpty(0)
                         .Max()
                 })
                 .Where(item => item.Score > 0)
@@ -347,67 +346,6 @@ namespace Recip_EZ.Server.Services
                 .ThenBy(item => item.Candidate.DisplayName.Length)
                 .Select(item => item.Candidate)
                 .FirstOrDefault();
-        }
-
-        private void AddMatchTerm(HashSet<string> matchTerms, string? value)
-        {
-            var normalized = NormalizeIngredient(value);
-
-            if (!string.IsNullOrWhiteSpace(normalized))
-            {
-                matchTerms.Add(normalized);
-            }
-        }
-
-        private string NormalizeIngredient(string? ingredient)
-        {
-            if (string.IsNullOrWhiteSpace(ingredient))
-            {
-                return string.Empty;
-            }
-
-            var cleanedIngredient = ingredient.Trim().ToLowerInvariant();
-            cleanedIngredient = cleanedIngredient.Replace("&", " and ");
-            cleanedIngredient = Regex.Replace(cleanedIngredient, @"[\d]", " ");
-            cleanedIngredient = Regex.Replace(cleanedIngredient, @"[^\w\s]", " ");
-
-            var normalizedWords = cleanedIngredient
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .Where(word => !IgnoredIngredientWords.Contains(word))
-                .Select(SingularizeWord)
-                .Where(word => !string.IsNullOrWhiteSpace(word))
-                .ToList();
-
-            return string.Join(' ', normalizedWords);
-        }
-
-        private string SingularizeWord(string word)
-        {
-            if (string.IsNullOrWhiteSpace(word) || word.Length <= 2)
-            {
-                return word;
-            }
-
-            if (word.EndsWith("ies", StringComparison.OrdinalIgnoreCase) && word.Length > 3)
-            {
-                return word[..^3] + "y";
-            }
-
-            if (word.EndsWith("es", StringComparison.OrdinalIgnoreCase) &&
-                word.Length > 3 &&
-                !word.EndsWith("ses", StringComparison.OrdinalIgnoreCase))
-            {
-                return word[..^2];
-            }
-
-            if (word.EndsWith("s", StringComparison.OrdinalIgnoreCase) &&
-                word.Length > 3 &&
-                !word.EndsWith("ss", StringComparison.OrdinalIgnoreCase))
-            {
-                return word[..^1];
-            }
-
-            return word;
         }
 
         private int ScorePhraseMatch(string recipeIngredient, string candidateTerm)

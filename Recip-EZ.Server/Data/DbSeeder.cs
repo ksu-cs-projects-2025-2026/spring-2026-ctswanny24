@@ -21,22 +21,22 @@ namespace Recip_EZ.Server.Data
 
         private void SeedUsers()
         {
-            if(_context.Users.Any())
+            if (_context.Users.Any())
             {
                 return;
             }
 
-            var lines = File.ReadAllLines("");
-            foreach(var line in lines)
+            var lines = File.ReadAllLines("Data/Dataset_CSV/userlogin.csv").Skip(1);
+            foreach (var line in lines)
             {
                 var cols = line.Split(',');
                 var user = new User()
-                {
-                    Username = cols[0],
-                    Password = cols[1],
-                    FirstName = cols[2],
-                    LastName = cols[3],
-                    CreatedOn = DateTime.Now
+                { 
+                    Username = cols[1],
+                    Password = cols[2],
+                    FirstName = cols[3],
+                    LastName = cols[4],
+                    CreatedOn = DateTime.Parse(cols[5]),
                 };
                 _context.Users.Add(user);
             }
@@ -46,11 +46,11 @@ namespace Recip_EZ.Server.Data
         {
             if (_context.Ingredients.Any()) return;
 
-            string fileName = "Data/Dataset_CSV/FOOD-DATA-GROUP";
+            string fileName;
 
-            for(int i = 0; i < 5; i++)
+            for (int i = 1; i <= 5; i++)
             {
-                fileName += $"{i}.csv";
+                fileName = $"Data/Dataset_CSV/FOOD-DATA-GROUP{i}.csv";
                 var lines = File.ReadAllLines(fileName).Skip(1); // Skip header line
 
                 foreach (var line in lines)
@@ -76,22 +76,43 @@ namespace Recip_EZ.Server.Data
             {
                 return;
             }
-            var lines = File.ReadAllLines("Data/Dataset_CSV/recipes.csv");
-            foreach (var line in lines)
+            using (var reader = new StreamReader("Data/Dataset_CSV/recipes.csv"))
             {
-                var cols = line.Split(',');
-                var recipe = new Recipe()
+                //Just so the format line is not used.
+                reader.ReadLine();
+
+                var batch = new List<Recipe>();
+                while (!reader.EndOfStream)
                 {
-                    RecipeName = cols[0],
-                    Ingredients = cols[1],
-                    Instructions = cols[2],
-                    URL = cols[3],
-                    Source = cols[4],
-                    RawIngredientList = cols[5]
-                };
-                _context.Recipes.Add(recipe);
+                    var line = reader.ReadLine();
+                    var recipe = Parse(line);
+
+                    batch.Add(recipe);
+
+                    if(batch.Count >= 1500)
+                    {
+                        _context.Recipes.AddRange(batch);
+                        _context.SaveChanges();
+                        break;
+                        //batch.Clear();
+                    }
+                }
             }
-            _context.SaveChanges();
+        }
+
+        private Recipe Parse(string line)
+        {
+            var cols = line.Split(',');
+            var recipe = new Recipe()
+            {
+                RecipeName = cols[0],
+                Ingredients = cols[1],
+                Instructions = cols[2],
+                URL = cols[3],
+                Source = cols[4],
+                RawIngredientList = cols[5]
+            };
+            return recipe;
         }
     }
 }

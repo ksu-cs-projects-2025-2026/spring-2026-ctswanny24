@@ -15,8 +15,11 @@ builder.Services.AddCors(options =>
     });
 });
 
+
 builder.Services.AddDbContext<RecipEzDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 builder.Services.AddScoped<Recip_EZ.Server.Services.UserService>();
 builder.Services.AddScoped<Recip_EZ.Server.Services.RecipeService>();
@@ -34,12 +37,27 @@ var app = builder.Build();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
+
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<RecipEzDbContext>();
 
+    context.Database.EnsureDeleted();
+    context.Database.EnsureCreated();
+
+    var seeder = new DbSeeder(context);
+
+    seeder.Seed();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<RecipEzDbContext>();
+    var ingredientAliasService = scope.ServiceProvider.GetRequiredService<Recip_EZ.Server.Services.IngredientAliasService>();
+
     var seeder = new DbSeeder(context);
     //seeder.Seed();
+    ingredientAliasService.AddToAliases();
 }
 
     // Configure the HTTP request pipeline.
