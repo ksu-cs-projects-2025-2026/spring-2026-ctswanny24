@@ -1,4 +1,6 @@
-﻿using Recip_EZ.Server.Models;
+﻿using Microsoft.IdentityModel.Tokens;
+using Recip_EZ.Server.Enums;
+using Recip_EZ.Server.Models;
 using System.Net.WebSockets;
 
 namespace Recip_EZ.Server.Data
@@ -17,6 +19,7 @@ namespace Recip_EZ.Server.Data
             SeedUsers();
             SeedIngredients();
             SeedRecipes();
+            SeedUserInventory();
         }
 
         private void SeedUsers()
@@ -85,7 +88,7 @@ namespace Recip_EZ.Server.Data
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    var recipe = Parse(line);
+                    var recipe = ParseRecipe(line);
 
                     batch.Add(recipe);
 
@@ -100,7 +103,31 @@ namespace Recip_EZ.Server.Data
             }
         }
 
-        private Recipe Parse(string line)
+        private void SeedUserInventory()
+        {
+            if (_context.UserInventories.Any())
+            {
+                return;
+            }
+
+            using(var reader = new StreamReader("Data/Dataset_CSV/userinventory.csv"))
+            {
+                reader.ReadLine();
+
+                while (!reader.EndOfStream) 
+                {
+                    var line = reader.ReadLine();
+                    var inventoryItem = ParseUserInventory(line);
+
+                    _context.UserInventories.Add(inventoryItem);
+                }
+
+                _context.SaveChanges();
+                return;
+            }
+        }
+
+        private Recipe ParseRecipe(string line)
         {
             var cols = line.Split(',');
             var recipe = new Recipe()
@@ -113,6 +140,20 @@ namespace Recip_EZ.Server.Data
                 RawIngredientList = cols[5]
             };
             return recipe;
+        }
+
+        private UserInventory ParseUserInventory(string line)
+        {
+            var cols = line.Split(',');
+            return new UserInventory()
+            {
+                UserId = Int32.Parse(cols[1]),
+                IngredientId = Int32.Parse(cols[2]),
+                Unit = Enum.Parse<Unit>(cols[3]),
+                Quantity = Double.Parse(cols[4]),
+                DateAdded = DateTime.Parse(cols[5]),
+                ExpirationDate = string.IsNullOrEmpty(cols[6]) ? null : DateTime.Parse(cols[6])
+            };
         }
     }
 }
