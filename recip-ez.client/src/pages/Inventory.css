@@ -1,4 +1,196 @@
+.inventoryPage {
+    display: grid;
+    gap: 1.4rem;
+}
 
+.inventoryHeader {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.25rem;
+    align-items: end;
+    text-align: left;
+    background:
+        radial-gradient(circle at top right, rgba(198, 229, 203, 0.35), transparent 25%),
+        linear-gradient(135deg, #fff6e8 0%, #ffe9cf 100%);
+}
 
-body {
+.inventoryEyebrow {
+    margin: 0 0 0.45rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: #b06d1e;
+}
+
+.inventoryHeader h1 {
+    margin: 0;
+    max-width: 16ch;
+    color: #4e2d1a;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 0.98;
+}
+
+.inventoryHeaderStats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+    min-width: 320px;
+}
+
+.inventoryHeaderStats div {
+    display: grid;
+    gap: 0.2rem;
+    padding: 1rem 1.1rem;
+    border-radius: 20px;
+    background: rgba(255, 250, 244, 0.74);
+    border: 1px solid rgba(112, 79, 41, 0.1);
+}
+
+.inventoryHeaderStats strong {
+    font-size: 1.6rem;
+    color: #2f5b46;
+}
+
+.inventoryHeaderStats span,
+.inventoryCollectionHeader p,
+.inventoryMessage,
+.inventoryEmptyState p {
+    color: #76523c;
+}
+
+.inventoryMessage {
+    margin: 0;
+    padding: 0 0.25rem;
+}
+
+.inventoryLayout {
+    display: grid;
+    grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+    gap: 1.4rem;
+    align-items: start;
+}
+
+.inventorySidebar,
+.inventoryCollection {
+    text-align: left;
+}
+
+.inventoryForm {
+    display: grid;
+    gap: 1rem;
+}
+
+.inventoryFormHeader {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.inventoryFormHeader p {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: #b06d1e;
+}
+
+.inventoryFormHeader h2 {
+    margin: 0;
+    color: #4e2d1a;
+}
+
+.inventoryFormHeader span {
+    color: #78553e;
+}
+
+.inventoryFormField {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.inventoryFormField label {
+    color: #5e3a25;
+    font-weight: 700;
+}
+
+.inventoryFormSplit {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+
+.inventoryFormField input,
+.inventoryFormField select {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(116, 84, 48, 0.16);
+    background: rgba(255, 251, 246, 0.95);
+    color: #452c1e;
+}
+
+.inventoryFormField input:focus,
+.inventoryFormField select:focus {
+    outline: 2px solid rgba(47, 91, 70, 0.24);
+    border-color: rgba(47, 91, 70, 0.35);
+}
+
+.inventorySubmitButton {
+    padding: 0.95rem 1.2rem;
+    border: none;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2f5b46 0%, #578b65 100%);
+    color: #fff7ef;
+    font-weight: 700;
+    box-shadow: 0 15px 28px rgba(47, 91, 70, 0.18);
+}
+
+.inventoryFormMessage {
+    margin: 0;
+    color: #75523b;
+}
+
+.inventoryCollectionHeader {
+    margin-bottom: 1rem;
+}
+
+.inventoryCollectionHeader h2,
+.inventoryEmptyState h3 {
+    margin: 0;
+    color: #4e2d1a;
+}
+
+.inventoryCollectionHeader p,
+.inventoryEmptyState p {
+    margin: 0.35rem 0 0;
+}
+
+.inventoryEmptyState {
+    padding: 1.4rem;
+    border-radius: 22px;
+    background: linear-gradient(180deg, rgba(255, 248, 238, 0.95), rgba(253, 240, 224, 0.92));
+    border: 1px dashed rgba(145, 106, 67, 0.22);
+}
+
+@media (max-width: 980px) {
+    .inventoryHeader,
+    .inventoryLayout {
+        grid-template-columns: 1fr;
+        display: grid;
+    }
+
+    .inventoryHeaderStats {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 640px) {
+    .inventoryHeaderStats {
+        grid-template-columns: 1fr;
+    }
+
+    .inventoryFormSplit {
+        grid-template-columns: 1fr;
+    }
 }

@@ -105,7 +105,7 @@ namespace Recip_EZ.Server.Controllers
                     UserId = result.UserId,
                     IngredientId = result.IngredientId,
                     IngredientName = _service.GetIngredientName(result.IngredientId),
-                    Unit = result.Unit,
+                    Unit = (Unit)result.Unit,
                     Quantity = result.Quantity,
                     DateAdded = result.DateAdded,
                     ExpirationDate = result.ExpirationDate

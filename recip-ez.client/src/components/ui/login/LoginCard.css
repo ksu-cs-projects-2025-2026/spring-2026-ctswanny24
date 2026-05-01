@@ -1,25 +1,105 @@
-body {
+.loginCard {
+    width: 100%;
+    min-height: 100%;
+    border-radius: 28px;
+    padding: 0.6rem;
+    background: linear-gradient(180deg, rgba(255, 252, 247, 0.96), rgba(252, 239, 224, 0.94));
+    box-shadow: 0 22px 48px rgba(100, 71, 34, 0.12);
 }
 
-.card {
-    background-color: steelblue;
-    border-radius: 10px;
-    padding: 3rem;
-    box-shadow: 0 5px 5px rgba(0,0,0,0.1);
+.loginCardHeader {
+    text-align: left;
 }
 
-.formContainer h2 {
-    font-size: 30px;
-    color: palegreen;
+.loginCardEyebrow {
+    margin: 0 0 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.76rem;
+    font-weight: 800;
+    color: #a86722;
 }
 
-input {
-    margin-top: 0.25rem;
-    margin-bottom: 0.15rem;
-    padding: 0.5rem;
-    width: 100%
+.loginCardTitle {
+    font-size: 1.7rem;
+    color: #4b2b18;
 }
 
-button{
-    margin-top: 0.5rem;
+.loginCardContent {
+    display: grid;
+    gap: 1.2rem;
+}
+
+.loginForm {
+    display: grid;
+    gap: 1rem;
+}
+
+.loginField {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.loginField label {
+    font-weight: 700;
+    color: #603a24;
+}
+
+.loginField input {
+    width: 100%;
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(114, 83, 47, 0.15);
+    background: rgba(255, 252, 248, 0.96);
+    color: #41291c;
+}
+
+.loginField input:focus {
+    outline: 2px solid rgba(47, 91, 70, 0.24);
+    border-color: rgba(47, 91, 70, 0.34);
+}
+
+.loginMessage {
+    margin: 0;
+    color: #7a543d;
+}
+
+.loginPrimaryButton {
+    height: 3rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #2f5b46 0%, #508266 100%);
+    color: #fff8f0;
+    font-weight: 700;
+}
+
+.loginPrimaryButton:hover {
+    background: linear-gradient(135deg, #274c3b 0%, #47765d 100%);
+}
+
+.loginDebugPanel {
+    display: grid;
+    gap: 0.9rem;
+    text-align: left;
+}
+
+.loginUserList {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.loginUserRow {
+    display: grid;
+    gap: 0.15rem;
+    padding: 0.9rem 1rem;
+    border-radius: 18px;
+    background: rgba(255, 247, 237, 0.82);
+    border: 1px solid rgba(118, 85, 50, 0.1);
+}
+
+.loginUserRow strong {
+    color: #4d2c1a;
+}
+
+.loginUserRow span {
+    color: #78543d;
 }

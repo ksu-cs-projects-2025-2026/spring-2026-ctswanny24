@@ -3,7 +3,7 @@ import Inventory from './pages/Inventory'
 import Recipes from './pages/Recipes'
 import Home from './pages/Home'
 import Login from './pages/Login'
-//import Styles from './components/ui/Styles.css'
+import './App.css'
  
 function App() {
     let Component
@@ -20,17 +20,20 @@ function App() {
         case "/login":
             Component = Login
             break
+        default:
+            Component = Home
+            break
     }
   return (
-      <>
-          <div>
+      <div className="appShell">
+          <div className="siteNavWrap">
             <Navbar/>
           </div>
 
-          <div className="componentContainer">
+          <main className="appContent">
             <Component/>
-          </div>
-      </>
+          </main>
+      </div>
   )
 }
 export default App

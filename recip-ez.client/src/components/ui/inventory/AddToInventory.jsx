@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 function AddInventoryItem({ onAdd }) {
     const [ingredients, setIngredients] = useState([]);
@@ -45,23 +45,24 @@ function AddInventoryItem({ onAdd }) {
         e.preventDefault();
 
         if (!ingredientId || !quantity || !unit) {
-            setMessage("All fields are required");
+            setMessage("Choose an ingredient, quantity, and unit before saving.");
             return;
         }
 
         if (quantity <= 0) {
-            setMessage("Quantity must be greater than 0");
+            setMessage("Quantity must be greater than 0.");
             return;
         }
 
         const userId = localStorage.getItem("userId");
         if (!userId) {
+            setMessage("Log in first to edit your inventory.");
             return;
         }
 
         const payload = {
-            userId: parseInt(userId),
-            ingredientId: parseInt(ingredientId),
+            userId: parseInt(userId, 10),
+            ingredientId: parseInt(ingredientId, 10),
             quantity: parseFloat(quantity),
             unit: unit
         };
@@ -69,7 +70,8 @@ function AddInventoryItem({ onAdd }) {
         try {
             const response = await axios.post("https://localhost:7111/api/Inventory/add", payload);
             setMessage(response.data.message);
-            if(response.data.success && response.data.inventory) {
+
+            if (response.data.success && response.data.inventory) {
                 onAdd(response.data.inventory[0]);
             }
 
@@ -78,25 +80,34 @@ function AddInventoryItem({ onAdd }) {
             setUnit("");
         } catch (err) {
             console.error(err);
-            setMessage("Error adding item");
+            setMessage("Something went wrong while adding the ingredient.");
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>Add Inventory Item</h2>
+        <form className="inventoryForm" onSubmit={handleSubmit}>
+            <div className="inventoryFormHeader">
+                <p>Add ingredient</p>
+                <h2>Update your pantry</h2>
+                <span>Capture what you already have so recipe curation can work with real kitchen data.</span>
+            </div>
 
-            <div>
+            <div className="inventoryFormField">
+                <label>Ingredient</label>
                 <Autocomplete
                     disablePortal
                     options={ingredients}
                     getOptionLabel={(option) => option.name}
-                    value={ingredients.find(i => i.ingredientId === parseInt(ingredientId)) || null}
+                    value={ingredients.find((item) => item.ingredientId === parseInt(ingredientId, 10)) || null}
                     renderInput={(params) => (
-                        <TextField {...params} label="Ingredient"
+                        <TextField
+                            {...params}
+                            placeholder="Search for an ingredient"
                             sx={{
-                                input: { color: "white" },
-                                label: { color: "white" }
+                                "& .MuiOutlinedInput-root": {
+                                    borderRadius: "18px",
+                                    backgroundColor: "rgba(255, 251, 246, 0.95)"
+                                }
                             }}
                         />
                     )}
@@ -106,34 +117,34 @@ function AddInventoryItem({ onAdd }) {
                 />
             </div>
 
-            <div>
-                <label>Quantity:</label>
-                <input
-                    type="number"
-                    step="0.1"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                />
+            <div className="inventoryFormSplit">
+                <div className="inventoryFormField">
+                    <label>Quantity</label>
+                    <input
+                        type="number"
+                        step="0.1"
+                        value={quantity}
+                        placeholder="2"
+                        onChange={(e) => setQuantity(e.target.value)}
+                    />
+                </div>
+
+                <div className="inventoryFormField">
+                    <label>Unit</label>
+                    <select value={unit} onChange={(e) => setUnit(e.target.value)}>
+                        <option value="">Select unit</option>
+                        {units.map((entry) => (
+                            <option key={entry} value={entry}>
+                                {entry}
+                            </option>
+                        ))}
+                    </select>
+                </div>
             </div>
 
-            <div>
-                <label>Unit:</label>
-                <select
-                    value={unit}
-                    onChange={(e) => setUnit(e.target.value)}
-                >
-                    <option value="">Select unit</option>
-                    {units.map(u => (
-                        <option key={u} value={u}>
-                            {u}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            <button className="inventorySubmitButton" type="submit">Add to inventory</button>
 
-            <button type="submit">Add Item</button>
-
-            {message && <p>{message}</p>}
+            {message && <p className="inventoryFormMessage">{message}</p>}
         </form>
     );
 }

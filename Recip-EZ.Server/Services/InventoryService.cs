@@ -88,7 +88,7 @@ namespace Recip_EZ.Server.Services
                             IngredientId = i.IngredientId,
                             IngredientName = i.Name!,
                             Quantity = ui.Quantity,
-                            Unit = ui.Unit
+                            Unit = (Unit)ui.Unit
                         })
                     .ToList();
 
