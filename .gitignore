@@ -16,12 +16,16 @@ dist-ssr
 .vs
 Recip-EZ.Server/obj/Debug*
 Recip-EZ.Server/bin/Debug*
+Recip-EZ.Tests/obj*
+Recip-EZ.Tests/bin*
 Recip-EZ.Client/obj/Debug*
 Recip-EZ.Client/bin/Debug*
 Recip-EZ_Database/bin/*
 Recip-EZ_Database/obj/*
 Recip-EZ.Server/Data/Dataset_CSV/*
 Recip-EZ.Server/Data/Dataset_CSV.zip
+.dotnet/.dotnet/
+.nuget/packages/
 
 .vscode/*
 !.vscode/extensions.json
