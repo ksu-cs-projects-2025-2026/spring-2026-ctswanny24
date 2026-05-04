@@ -21,6 +21,7 @@ Recip-EZ.Client/bin/Debug*
 Recip-EZ_Database/bin/*
 Recip-EZ_Database/obj/*
 Recip-EZ.Server/Data/Dataset_CSV/*
+Recip-EZ.Server/Data/Dataset_CSV.zip
 
 .vscode/*
 !.vscode/extensions.json
