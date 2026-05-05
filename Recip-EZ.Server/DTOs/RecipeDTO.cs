@@ -1,4 +1,6 @@
-﻿namespace Recip_EZ.Server.DTOs
+﻿using Recip_EZ.Server.Models;
+
+namespace Recip_EZ.Server.DTOs
 {
     public class RecipeDTO
     {
@@ -33,6 +35,12 @@
         /// Description of the recipe.
         /// </summary>
         public List<string> RawIngredientList { get; init; }
+
+        public List<Ingredient>? CoreIngredients { get; set; }
+
+        public List<Ingredient>? SupportIngredients { get; set; }
+
+        public List<Ingredient>? OptionalIngredients { get; set; }
 
         }
     }

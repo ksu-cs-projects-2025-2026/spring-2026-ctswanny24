@@ -40,7 +40,9 @@ namespace Recip_EZ.Server.Services
             "small",
             "taste",
             "to",
-            "virgin"
+            "virgin",
+            "low fat",
+            "no fat"
         };
 
         #endregion
@@ -144,11 +146,31 @@ namespace Recip_EZ.Server.Services
             AddAlias(aliases, cleanedPhrase);
 
             var normalizedWords = GetNormalizedWords(name);
-            AddAlias(aliases, string.Join(' ', normalizedWords));
+
+            if(normalizedWords.Count == 0)
+            {
+                return aliases;
+            }
+
+            var singularPhrase = string.Join(' ', normalizedWords);
+            AddAlias(aliases, singularPhrase);
+
+            var pluralWords = normalizedWords.Select(PluralizeWord).ToList();
+            var pluralPhrase = string.Join(' ', pluralWords);
+            AddAlias(aliases, pluralPhrase);
+
+            var lastWord = normalizedWords.Last();
+            AddAlias(aliases, lastWord);
+            AddAlias(aliases, PluralizeWord(lastWord));
 
             if (normalizedWords.Count >= 2)
             {
-                AddAlias(aliases, string.Join(' ', normalizedWords.TakeLast(2)));
+                var lastTwoSingular = string.Join(' ', normalizedWords.TakeLast(2));
+                var lastTwoPlural = string.Join(' ', normalizedWords.TakeLast(2).Select((word, index) =>
+                    index == 1 ? PluralizeWord(word) : word));
+
+                AddAlias(aliases, lastTwoSingular);
+                AddAlias(aliases, lastTwoPlural);
             }
 
             if (normalizedWords.Count >= 3)
@@ -239,6 +261,38 @@ namespace Recip_EZ.Server.Services
 
             return word;
         }
+
+        private string PluralizeWord(string word)
+        {
+            if (string.IsNullOrWhiteSpace(word) || word.Length <= 2)
+            {
+                return word;
+            }
+
+            if (word.EndsWith("y", StringComparison.OrdinalIgnoreCase) &&
+                word.Length > 1 &&
+                !"aeiou".Contains(char.ToLowerInvariant(word[^2])))
+            {
+                return word[..^1] + "ies";
+            }
+
+            if (word.EndsWith("o", StringComparison.OrdinalIgnoreCase))
+            {
+                return word + "es";
+            }
+
+            if (word.EndsWith("s", StringComparison.OrdinalIgnoreCase) ||
+                word.EndsWith("x", StringComparison.OrdinalIgnoreCase) ||
+                word.EndsWith("z", StringComparison.OrdinalIgnoreCase) ||
+                word.EndsWith("ch", StringComparison.OrdinalIgnoreCase) ||
+                word.EndsWith("sh", StringComparison.OrdinalIgnoreCase))
+            {
+                return word + "es";
+            }
+
+            return word + "s";
+        }
+
 
         #endregion
     }

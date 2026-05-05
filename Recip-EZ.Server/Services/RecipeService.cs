@@ -226,7 +226,10 @@ namespace Recip_EZ.Server.Services
                 Instructions = JsonSerializer.Deserialize<List<string>>(item.Instructions ?? "[]") ?? new List<string>(),
                 URL = item.URL ?? string.Empty,
                 Source = item.Source ?? string.Empty,
-                RawIngredientList = JsonSerializer.Deserialize<List<string>>(item.RawIngredientList ?? "[]") ?? new List<string>()
+                RawIngredientList = JsonSerializer.Deserialize<List<string>>(item.RawIngredientList ?? "[]") ?? new List<string>(),
+                CoreIngredients = new List<Ingredient>(),
+                SupportIngredients = new List<Ingredient>(),
+                OptionalIngredients = new List<Ingredient>()
             };
         }
 
@@ -379,5 +382,56 @@ namespace Recip_EZ.Server.Services
         }
 
         #endregion
+
+        //Curation Logic V2
+        //Attempted Heuristic Matching. 
+        //Core: Proteins, Carbs/Starch, Primary Produce (potatoes, greens, etc.), Structural baking ingredients (yeast, flour, sugar), Major sauce bases (tomato sauce, cream, etc.)
+        //Supporting: Secondary produce (onions, peppers, etc.), Spices, Liquids (broth, milk, etc.), cheese/dairy, minor baking ingredients (baking powder, cocoa, etc.), butter/cream
+        //Optional: Spices and Garnishes, anything that is "to taste".
+        //Each recipe contains many different ingredients in the "raw ingredient" list. This is the basis for this algorithm, and it will checking each list for core ingredients. 
+        //Usually, the first few items are the core ingredients, but this is not always the case. So, the algorithm will be checking each ingredient and scoring it based on the presence of core, supporting, and optional ingredients.
+        
+        //The three scores for the presence of core, supporting, and optional ingredients will be combined in some way to create an overall score for the recipe.
+        private double _coreScore = 0;
+        private double _coreWeight = 0.6;
+
+        private double _supportingScore = 0;
+        private double _supportingWeight = 0.3;
+
+        private double _optionalScore = 0;
+        private double _optionalWeight = 0.1;
+
+
+        public List<CuratedRecipeDTO> ComplicatedCuration(int userId, int limit = 25, double minimumMatchPercentage = 0)
+        {
+            //Step 1: Get all recipes from the database. 
+            var recipes = _context.Recipes
+                .AsNoTracking()
+                .ToList()
+                .Select(recipe => ToDTO(recipe))
+                .ToList();
+
+            var ingredients = _context.Ingredients
+                .Join(_context.IngredientAliases, i => i.IngredientId, a => a.IngredientId, (i, a) => new { i, a })
+                .AsNoTracking()
+                .ToList();
+
+
+            foreach (var recipe in recipes)
+            {
+                for (int i = 0; i < recipe.RawIngredientList.Count; i++)
+                {
+                    //Going through every ingredient in the raw ingredient list and building a candidate that contains all of the match terms for that ingredient.
+                    var recipeIngredient = BuildRecipeIngredientCandidate(recipe.RawIngredientList[i]);
+
+                    var j = FindBestInventoryMatch(recipeIngredient.MatchTerms, new List<InventoryIngredientCandidate>());
+
+                    //Use the MatchTerms of the recipe ingredient to find the best matching inventory ingredient candidate. 
+                    //This will be used to determine if the ingredient is present in the inventory and to calculate the scores for core, supporting, and optional ingredients based on the presence of matching inventory ingredients.
+                }
+            }
+            /*Business Logic to be created and used LATER */
+            return new List<CuratedRecipeDTO>();
+        }
     }
 }
