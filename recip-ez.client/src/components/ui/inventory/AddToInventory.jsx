@@ -11,11 +11,6 @@ function AddInventoryItem({ onAdd }) {
     const [message, setMessage] = useState("");
 
     useEffect(() => {
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-            return;
-        }
-
         const fetchIngredients = async () => {
             try {
                 const response = await axios.get("https://localhost:7111/api/Inventory/ingredients");
@@ -54,14 +49,7 @@ function AddInventoryItem({ onAdd }) {
             return;
         }
 
-        const userId = localStorage.getItem("userId");
-        if (!userId) {
-            setMessage("Log in first to edit your inventory.");
-            return;
-        }
-
         const payload = {
-            userId: parseInt(userId, 10),
             ingredientId: parseInt(ingredientId, 10),
             quantity: parseFloat(quantity),
             unit: unit
@@ -80,6 +68,12 @@ function AddInventoryItem({ onAdd }) {
             setUnit("");
         } catch (err) {
             console.error(err);
+
+            if (err.response?.status === 401) {
+                setMessage("Log in first to edit your inventory.");
+                return;
+            }
+
             setMessage("Something went wrong while adding the ingredient.");
         }
     };

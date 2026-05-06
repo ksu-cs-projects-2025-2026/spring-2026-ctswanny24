@@ -1,5 +1,3 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 using Recip_EZ.Server.Data;
 using Recip_EZ.Server.Models;
 
@@ -45,38 +43,16 @@ namespace Recip_EZ.Server.Services
 
         /// <summary>
         /// Attempts to retrieve a user from the db based on the provided username and password.
-        /// Very Primative and Insecure method for authenticating users, but it serves as a starting point for development and testing purposes.
         /// </summary>
         /// <param name="username">The username of the user to retrieve</param>
         /// <param name="password">The password of the user to retrieve</param>
-        /// <returns>The user with the specified username and password</returns>
-        /// <exception cref="Exception">Thrown when no user is found with the specified username and password</exception>
-        public User GetUser(string username, string password)
+        /// <returns>The matched user, or null when credentials are invalid.</returns>
+        public User? GetUser(string username, string password)
         {
-            User? user = _context.Users
-                .FirstOrDefault<User>(u=> u.Username == username && u.Password == password);
-
-            if(user == null)
-            {
-                throw new Exception($"User with username {username} not found.");
-            }
-            else
-            {
-                return user;
-            }
-
+            return _context.Users
+                .FirstOrDefault(u => u.Username == username && u.Password == password);
         }
 
         #endregion
-
-        #region Helper Methods
-
-        //This is something that will be implemented in V1.0 for more security.
-        public IActionResult AuthenticateUser(string username, string password)
-        {
-            return new JsonResult(new { Success = true, Message = "Authentication successful" });
-        }
-        #endregion
-
     }
 }

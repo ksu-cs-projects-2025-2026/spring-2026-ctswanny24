@@ -13,34 +13,9 @@ export default function Recipes() {
         let mounted = true;
 
         const fetchRecipes = async () => {
-            const userId = localStorage.getItem("userId");
-
-            if (!userId) {
-                setMessage("Log in to unlock personalized matches. Sample recipes are shown for now.");
-
-                try {
-                    const response = await axios.get("https://localhost:7111/api/recipe/placeholders");
-
-                    if (mounted) {
-                        setRecipes(response.data);
-                        setIsCuratedView(false);
-                    }
-                }
-                catch (error) {
-                    if (mounted) {
-                        setMessage("Unable to fetch recipes right now.");
-                    }
-
-                    console.error("Error fetching placeholder recipes:", error);
-                }
-
-                return;
-            }
-
             try {
                 const response = await axios.get("https://localhost:7111/api/recipe/curated", {
                     params: {
-                        userId: parseInt(userId, 10),
                         limit: 24,
                         minimumMatchPercentage: 0
                     }
@@ -53,7 +28,11 @@ export default function Recipes() {
                 }
             }
             catch (error) {
-                console.error("Error fetching curated recipes:", error);
+                if (error.response?.status === 401) {
+                    setMessage("Log in to unlock personalized matches. Sample recipes are shown for now.");
+                } else {
+                    console.error("Error fetching curated recipes:", error);
+                }
 
                 try {
                     const fallbackResponse = await axios.get("https://localhost:7111/api/recipe/placeholders");
@@ -61,7 +40,9 @@ export default function Recipes() {
                     if (mounted) {
                         setRecipes(fallbackResponse.data);
                         setIsCuratedView(false);
-                        setMessage("Curated recipes could not be loaded, so sample recipes are being shown instead.");
+                        if (error.response?.status !== 401) {
+                            setMessage("Curated recipes could not be loaded, so sample recipes are being shown instead.");
+                        }
                     }
                 }
                 catch (fallbackError) {

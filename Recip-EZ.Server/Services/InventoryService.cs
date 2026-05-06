@@ -111,9 +111,9 @@ namespace Recip_EZ.Server.Services
         /// Thrown when the item is not found.
         /// Ideally shouldn't be happening, but just in case something goes wrong, we can catch it and display an error message to the user.
         /// </exception>
-        public void DeleteItem(int id)
+        public void DeleteItem(int id, int userId)
         {
-            var item = _context.UserInventories.FirstOrDefault(x => x.UserInventoryId == id);
+            var item = _context.UserInventories.FirstOrDefault(x => x.UserInventoryId == id && x.UserId == userId);
 
             if (item == null)
             {

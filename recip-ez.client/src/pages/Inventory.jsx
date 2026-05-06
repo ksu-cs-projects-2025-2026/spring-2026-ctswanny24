@@ -12,16 +12,7 @@ export default function Inventory() {
     useEffect(() => {
         const fetchInventory = async () => {
             try {
-                const userId = localStorage.getItem("userId");
-
-                if (userId == null) {
-                    setMessage("Log in to start building your pantry inventory.");
-                    return;
-                }
-
-                const response = await axios.get("https://localhost:7111/api/Inventory/userInventory", {
-                    params: { userId: userId }
-                });
+                const response = await axios.get("https://localhost:7111/api/Inventory/userInventory");
 
                 if (response.data.success) {
                     setInventory(response.data.inventory);
@@ -32,6 +23,11 @@ export default function Inventory() {
                 }
             }
             catch (error) {
+                if (error.response?.status === 401) {
+                    setMessage("Log in to start building your pantry inventory.");
+                    return;
+                }
+
                 setMessage(error.message);
             }
         };

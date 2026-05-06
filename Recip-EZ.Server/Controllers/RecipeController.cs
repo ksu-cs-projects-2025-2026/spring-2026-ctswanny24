@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Recip_EZ.Server.DTOs;
 using Recip_EZ.Server.Models;
 using Recip_EZ.Server.Services;
-using System.Text.Json;
+using System.Security.Claims;
 
 namespace Recip_EZ.Server.Controllers
 {
@@ -50,22 +51,31 @@ namespace Recip_EZ.Server.Controllers
         }
 
         /// <summary>
-        /// Returns recipes ranked by how well the user's inventory matches each recipe's raw ingredient list.
+        /// Returns recipes ranked by how well the authenticated user's inventory matches each recipe's raw ingredient list.
         /// </summary>
-        /// <param name="userId">User whose inventory is used for curation.</param>
         /// <param name="limit">Maximum number of recipes to return.</param>
         /// <param name="minimumMatchPercentage">Minimum percentage match required for a recipe to be returned.</param>
         /// <returns>Curated recipes with match details.</returns>
+        [Authorize]
         [HttpGet("curated")]
         public IActionResult FetchCuratedRecipes(
-            [FromQuery] int userId,
             [FromQuery] int limit = 25,
             [FromQuery] double minimumMatchPercentage = 0)
         {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!int.TryParse(userIdClaim, out var userId))
+            {
+                return Unauthorized(new CuratedRecipesResponse
+                {
+                    Success = false,
+                    Message = "Authentication required."
+                });
+            }
+
             try
             {
-                //var result = _service.GetCuratedRecipesForUser(userId, limit, minimumMatchPercentage);
-                var result = _service.ComplicatedCuration(userId, limit, minimumMatchPercentage);
+                var result = _service.GetCuratedRecipesForUser(userId, limit, minimumMatchPercentage);
+                //var result = _service.ComplicatedCuration(userId, limit, minimumMatchPercentage);
 
                 return Ok(new CuratedRecipesResponse
                 {

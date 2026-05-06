@@ -1,19 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Identity.Client;
 using Recip_EZ.Server.DTOs;
 using Recip_EZ.Server.Enums;
 using Recip_EZ.Server.Models;
 using Recip_EZ.Server.Services;
-using System.Diagnostics.Contracts;
+using System.Security.Claims;
 
 namespace Recip_EZ.Server.Controllers
 {
     public class InventoryPayload
     {
-        public required int UserId { get; set; }
-
         public required int IngredientId { get; set; }
 
         public required float Quantity { get; set; }
@@ -29,7 +25,6 @@ namespace Recip_EZ.Server.Controllers
 
         public List<UserInventoryDTO>? Inventory { get; set; }
     }
-
 
     /// <summary>
     /// Controller for all Inventory related endpoints. 
@@ -79,54 +74,62 @@ namespace Recip_EZ.Server.Controllers
         /// </summary>
         /// <param name="item">The inventory item to add</param>
         /// <returns>Action result indicating success or failure</returns>
+        [Authorize]
         [HttpPost("add")]
         public IActionResult AddIngredient([FromBody] InventoryPayload item)
         {
+            if (!TryGetAuthenticatedUserId(out var userId))
+            {
+                return Unauthorized(new InventoryResponse { Success = false, Message = "Authentication required." });
+            }
+
             UserInventory inventoryItem = new UserInventory()
             {
-                UserId = item.UserId,
+                UserId = userId,
                 IngredientId = item.IngredientId,
                 Unit = Enum.Parse<Unit>(item.Unit),
                 Quantity = item.Quantity,
                 DateAdded = DateTime.UtcNow
             };
 
-            UserInventory result = _service.AddItem(inventoryItem);
+            UserInventory? result = _service.AddItem(inventoryItem);
             if (result == null)
             {
                 return BadRequest(new InventoryResponse() { Success = false, Message = "Something went wrong. Item has NOT been added" });
             }
-            else
+
+            var dto = new UserInventoryDTO()
             {
-                var dto = new UserInventoryDTO()
-                {
+                UserInventoryId = result.UserInventoryId,
+                UserId = result.UserId,
+                IngredientId = result.IngredientId,
+                IngredientName = _service.GetIngredientName(result.IngredientId),
+                Unit = (Unit)result.Unit,
+                Quantity = result.Quantity,
+                DateAdded = result.DateAdded,
+                ExpirationDate = result.ExpirationDate
+            };
 
-                    UserInventoryId = result.UserInventoryId,
-                    UserId = result.UserId,
-                    IngredientId = result.IngredientId,
-                    IngredientName = _service.GetIngredientName(result.IngredientId),
-                    Unit = (Unit)result.Unit,
-                    Quantity = result.Quantity,
-                    DateAdded = result.DateAdded,
-                    ExpirationDate = result.ExpirationDate
-                };
-
-                return Ok(new InventoryResponse(){ Success = true, Message = "Item added to inventory", Inventory = new List<UserInventoryDTO>() { dto } });
-            }
+            return Ok(new InventoryResponse() { Success = true, Message = "Item added to inventory", Inventory = new List<UserInventoryDTO>() { dto } });
         }
 
         /// <summary>
-        /// Fetches the user's inventory list, which includes all the ingredients they have added to their inventory, along with details such as quantity, unit, and expiration date (if added).
+        /// Fetches the authenticated user's inventory list.
         /// </summary>
-        /// <param name="userId">The ID of the user whose inventory is being fetched</param>
         /// <returns>Action result containing the user's inventory</returns>
+        [Authorize]
         [HttpGet("userInventory")]
-        public IActionResult FetchUserInventory([FromQuery] int userId)
+        public IActionResult FetchUserInventory()
         {
+            if (!TryGetAuthenticatedUserId(out var userId))
+            {
+                return Unauthorized(new InventoryResponse { Success = false, Message = "Authentication required." });
+            }
+
             try
             {
                 var result = _service.GetInventory(userId);
-                return Ok(new InventoryResponse() { Success = true, Message = "Ingredients successfully fetched", Inventory = result});
+                return Ok(new InventoryResponse() { Success = true, Message = "Ingredients successfully fetched", Inventory = result });
             }
             catch (Exception ex)
             {
@@ -134,27 +137,37 @@ namespace Recip_EZ.Server.Controllers
             }
         }
 
-
         /// <summary>
-        /// Deletes the specified inventory item from the user's inventory.
-        /// This is based on the id passed in through the URL, which is the UserInventoryId of the item to be deleted.
+        /// Deletes the specified inventory item from the authenticated user's inventory.
         /// </summary>
         /// <param name="id">The ID of the inventory item to delete</param>
         /// <returns>Action result indicating success or failure</returns>
+        [Authorize]
         [HttpDelete("{id}")]
         public IActionResult DeleteInventoryItem(int id)
         {
+            if (!TryGetAuthenticatedUserId(out var userId))
+            {
+                return Unauthorized(new { Success = false, Message = "Authentication required." });
+            }
+
             try
             {
-                _service.DeleteItem(id);
+                _service.DeleteItem(id, userId);
                 return Ok(new { Success = true, Message = "Item Deleted" });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return NotFound(new { Success = false, Message = ex.Message });
             }
         }
 
         #endregion
+
+        private bool TryGetAuthenticatedUserId(out int userId)
+        {
+            var claimValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.TryParse(claimValue, out userId);
+        }
     }
 }

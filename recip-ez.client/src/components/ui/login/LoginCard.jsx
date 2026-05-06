@@ -26,7 +26,6 @@ function LoginCard() {
 
             if (response.data.success) {
                 setMessage("Login successful. Your kitchen is ready.");
-                localStorage.setItem("userId", response.data.userId);
             }
             else {
                 setMessage("Login failed.");
