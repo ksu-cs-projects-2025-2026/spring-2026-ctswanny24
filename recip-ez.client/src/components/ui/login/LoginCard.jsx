@@ -14,7 +14,6 @@ function LoginCard() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
-    const [users, setUsers] = useState([]);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -26,6 +25,7 @@ function LoginCard() {
 
             if (response.data.success) {
                 setMessage("Login successful. Your kitchen is ready.");
+                window.location.href = "/";
             }
             else {
                 setMessage("Login failed.");
@@ -36,16 +36,6 @@ function LoginCard() {
             } else {
                 setMessage("An error occurred while signing in.");
             }
-        }
-    };
-
-    const getAllUsers = async (e) => {
-        try {
-            e.preventDefault();
-            const response = await axios.get("https://localhost:7111/api/login/users");
-            setUsers(response.data);
-        } catch (error) {
-            console.error("Error fetching users:", error);
         }
     };
 
@@ -91,23 +81,6 @@ function LoginCard() {
                         Login
                     </Button>
                 </form>
-
-                <div className="loginDebugPanel">
-                    <Button type="button" variant="outline" onClick={getAllUsers}>
-                        Show seeded users
-                    </Button>
-
-                    {users.length > 0 && (
-                        <div className="loginUserList">
-                            {users.map((user) => (
-                                <div key={user.userId} className="loginUserRow">
-                                    <strong>{user.firstName} {user.lastName}</strong>
-                                    <span>{user.username}</span>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
             </CardContent>
         </Card>
     );

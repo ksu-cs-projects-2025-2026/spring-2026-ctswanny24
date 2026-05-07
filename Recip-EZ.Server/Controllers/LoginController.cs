@@ -32,6 +32,8 @@ namespace Recip_EZ.Server.Controllers
         public int UserId { get; set; }
 
         public string Username { get; set; } = string.Empty;
+
+        public string Name { get; set; } = string.Empty;
     }
 
     /// <summary>
@@ -99,7 +101,8 @@ namespace Recip_EZ.Server.Controllers
         public IActionResult Me()
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var username = User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
+            var username = User.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
+            var name = User.FindFirstValue(ClaimTypes.Name) ?? string.Empty;
 
             if (!int.TryParse(userIdClaim, out var userId))
             {
@@ -110,7 +113,8 @@ namespace Recip_EZ.Server.Controllers
             {
                 Success = true,
                 UserId = userId,
-                Username = username
+                Username = username,
+                Name = name
             });
         }
 
@@ -135,10 +139,13 @@ namespace Recip_EZ.Server.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var duration = _config.GetValue<int>("Jwt:DurationInMinutes");
 
+            var name = user.FirstName + " " + user.LastName;
+
             var claims = new[]
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
-                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Name, name),
+                new Claim(ClaimTypes.Email, user.Username),
                 new Claim(JwtRegisteredClaimNames.Sub, user.Username),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

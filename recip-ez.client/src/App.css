@@ -88,6 +88,21 @@
   background: #244737;
 }
 
+.navMenuTrigger {
+  padding: 0.72rem 1.1rem !important;
+  border-radius: 999px !important;
+  background: #2f5b46 !important;
+  color: #f9f4ec !important;
+  box-shadow: 0 12px 22px rgba(47, 91, 70, 0.2) !important;
+  text-transform: none !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+}
+
+.navMenuTrigger:hover {
+  background: #244737 !important;
+}
+
 .appContent {
   max-width: 1180px;
   margin: 0 auto;
