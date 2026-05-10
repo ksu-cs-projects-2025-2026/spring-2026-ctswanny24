@@ -38,6 +38,10 @@ namespace Recip_EZ.Server.Models
         /// Description of the recipe.
         /// </summary>
         public string? RawIngredientList { get; init; }
+
+        public string? CanonIngredients { get; init; }
+
+        public string? Priorities { get; init; }
         
     }
 }

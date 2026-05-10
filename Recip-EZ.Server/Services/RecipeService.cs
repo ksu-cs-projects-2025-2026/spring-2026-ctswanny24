@@ -1,6 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.IdentityModel.Tokens;
 using Recip_EZ.Server.Data;
 using Recip_EZ.Server.DTOs;
+using Recip_EZ.Server.Enums;
 using Recip_EZ.Server.Models;
 using System.Text.Json;
 
@@ -28,6 +31,7 @@ namespace Recip_EZ.Server.Services
 
         private readonly RecipEzDbContext _context;
         private readonly IngredientAliasService _ingredientAliasService;
+        private readonly MatchingService _matchingService;
 
         #endregion
 
@@ -38,10 +42,11 @@ namespace Recip_EZ.Server.Services
         /// </summary>
         /// <param name="context">Db Context</param>
         /// <param name="ingredientAliasService">Shared alias/normalization service.</param>
-        public RecipeService(RecipEzDbContext context, IngredientAliasService ingredientAliasService)
+        public RecipeService(RecipEzDbContext context, IngredientAliasService ingredientAliasService, MatchingService matchingService)
         {
             _context = context;
             _ingredientAliasService = ingredientAliasService;
+            _matchingService = matchingService;
         }
 
         #endregion
@@ -131,85 +136,7 @@ namespace Recip_EZ.Server.Services
             return recipes;
         }
 
-        /// <summary>
-        /// Gets curated recipes for the specified user based on ingredient overlap with the user's inventory.
-        /// </summary>
-        /// <param name="userId">The user whose inventory should be compared to the recipe ingredient lists.</param>
-        /// <param name="limit">Maximum number of curated recipes to return.</param>
-        /// <param name="minimumMatchPercentage">Optional threshold from 0 to 100 for filtering out weak matches.</param>
-        /// <returns>Sorted list of curated recipes for the user.</returns>
-        public List<CuratedRecipeDTO> GetCuratedRecipesForUser(int userId, int limit = 25, double minimumMatchPercentage = 0)
-        {
-            limit = limit <= 0 ? 25 : limit;
-            minimumMatchPercentage = Math.Clamp(minimumMatchPercentage, 0, 100);
-
-            //Grabs all the distinct inventory ingredients corresponding to the specific userId.
-            var inventoryIngredients = _context.UserInventories
-                .Where(ui => ui.UserId == userId)
-                .Join(_context.Ingredients,
-                    ui => ui.IngredientId,
-                    ingredient => ingredient.IngredientId,
-                    (ui, ingredient) => new
-                    {
-                        ingredient.IngredientId,
-                        IngredientName = ingredient.Name ?? string.Empty
-                    })
-                .Distinct()
-                .ToList();
-
-            //If that userInventory is empty, return empty list.
-            if (inventoryIngredients.Count == 0)
-            {
-                return new List<CuratedRecipeDTO>();
-            }
-
-            //Now, get all of the ids of the inventory ingredients.
-            var inventoryIngredientIds = inventoryIngredients
-                .Select(item => item.IngredientId)
-                .ToList();
-
-            //Now grab all the aliases for the ingredients in the inventory
-            var aliasesByIngredientId = _context.IngredientAliases
-                .Where(alias => inventoryIngredientIds.Contains(alias.IngredientId))
-                .AsNoTracking()
-                .ToList()
-                .GroupBy(alias => alias.IngredientId)
-                .ToDictionary(
-                    group => group.Key,
-                    group => group.Select(alias => alias.AliasName).ToList());
-
-            //
-            var inventoryCandidates = inventoryIngredients
-                .Select(item => BuildInventoryCandidate(
-                    item.IngredientName,
-                    aliasesByIngredientId.GetValueOrDefault(item.IngredientId, new List<string>())))
-                .ToList();
-
-            return _context.Recipes
-                .AsNoTracking()
-                .ToList()
-                .Select(recipe => BuildCuratedRecipe(recipe, inventoryCandidates))
-                .Where(recipe => recipe.TotalIngredientCount > 0)
-                .Where(recipe => recipe.MatchedIngredientCount > 0)
-                .Where(recipe => recipe.MatchPercentage >= minimumMatchPercentage)
-                .OrderByDescending(recipe => recipe.CanMakeNow)
-                .ThenByDescending(recipe => recipe.MatchPercentage)
-                .ThenBy(recipe => recipe.MissingIngredientCount)
-                .ThenBy(recipe => recipe.RecipeName)
-                .Take(limit)
-                .ToList();
-        }
-
         #endregion
-
-        #region Helper Methods
-
-        //Future method for scoring algorithm. V1.0 addition.
-        public int ScoreRecipe()
-        {
-            /*Business Logic to be created and used LATER */
-            return 0;
-        }
 
         /// <summary>
         /// Helper method to change Recipe item into RecipeDTO item. Mainly used to convert the stringified lists of ingredients and instructions into actual lists that can be used in the GUI
@@ -218,6 +145,13 @@ namespace Recip_EZ.Server.Services
         /// <returns>RecipeDTO item for Recipe</returns>
         public RecipeDTO ToDTO(Recipe item)
         {
+            var priorities = JsonSerializer.Deserialize<List<string>>(item.Priorities ?? "[]") ?? new List<string>();
+            var priorityEnums = new List<Priority>();
+            foreach (var priority in priorities)
+            {
+                priorityEnums.Add((Priority)Enum.Parse(typeof(Priority), priority, true));
+            }
+
             return new RecipeDTO
             {
                 RecipeId = item.RecipeId,
@@ -227,161 +161,14 @@ namespace Recip_EZ.Server.Services
                 URL = item.URL ?? string.Empty,
                 Source = item.Source ?? string.Empty,
                 RawIngredientList = JsonSerializer.Deserialize<List<string>>(item.RawIngredientList ?? "[]") ?? new List<string>(),
+                CanonIngredients = JsonSerializer.Deserialize<List<string>>(item.CanonIngredients ?? "[]") ?? new List<string>(),
+                Priorities = priorityEnums,
                 CoreIngredients = new List<Ingredient>(),
                 SupportIngredients = new List<Ingredient>(),
                 OptionalIngredients = new List<Ingredient>()
             };
         }
 
-        private CuratedRecipeDTO BuildCuratedRecipe(Recipe recipe, List<InventoryIngredientCandidate> inventoryCandidates)
-        {
-            var recipeDto = ToDTO(recipe);
-            var distinctRecipeIngredients = recipeDto.RawIngredientList
-                .Where(item => !string.IsNullOrWhiteSpace(item))
-                .Select(item => BuildRecipeIngredientCandidate(item))
-                .Where(item => !string.IsNullOrWhiteSpace(item.CanonicalTerm))
-                .GroupBy(item => item.CanonicalTerm)
-                .Select(group => group.First())
-                .ToList();
-
-            List<string> matchedIngredients = new();
-            List<string> missingIngredients = new();
-
-            foreach (var recipeIngredient in distinctRecipeIngredients)
-            {
-                var matchingInventoryIngredient = FindBestInventoryMatch(recipeIngredient.MatchTerms, inventoryCandidates);
-
-                if (matchingInventoryIngredient == null)
-                {
-                    missingIngredients.Add(recipeIngredient.Original);
-                    continue;
-                }
-
-                matchedIngredients.Add(recipeIngredient.Original);
-            }
-
-            var totalIngredientCount = distinctRecipeIngredients.Count;
-            var matchedIngredientCount = matchedIngredients.Count;
-            var missingIngredientCount = missingIngredients.Count;
-            var matchPercentage = totalIngredientCount == 0
-                ? 0
-                : Math.Round((double)matchedIngredientCount / totalIngredientCount * 100, 1);
-
-            return new CuratedRecipeDTO
-            {
-                RecipeId = recipeDto.RecipeId,
-                RecipeName = recipeDto.RecipeName,
-                Ingredients = recipeDto.Ingredients,
-                Instructions = recipeDto.Instructions,
-                URL = recipeDto.URL,
-                Source = recipeDto.Source,
-                RawIngredientList = recipeDto.RawIngredientList,
-                MatchedIngredients = matchedIngredients,
-                MissingIngredients = missingIngredients,
-                MatchedIngredientCount = matchedIngredientCount,
-                MissingIngredientCount = missingIngredientCount,
-                TotalIngredientCount = totalIngredientCount,
-                MatchPercentage = matchPercentage,
-                CanMakeNow = totalIngredientCount > 0 && missingIngredientCount == 0,
-                IsCloseMatch = missingIngredientCount > 0 &&
-                               (missingIngredientCount <= 2 || matchPercentage >= 60)
-            };
-        }
-
-        //Helps create a new item that contains all aliases in a hash set for the ingredient that is passed in.
-        private RecipeIngredientCandidate BuildRecipeIngredientCandidate(string rawIngredient)
-        {
-            var matchTerms = _ingredientAliasService.GetAliasesForIngredientName(rawIngredient);
-            var canonicalTerm = _ingredientAliasService.NormalizeIngredient(rawIngredient);
-
-            return new RecipeIngredientCandidate
-            {
-                Original = rawIngredient.Trim(),
-                MatchTerms = matchTerms,
-                CanonicalTerm = canonicalTerm
-            };
-        }
-
-        //
-        private InventoryIngredientCandidate BuildInventoryCandidate(string ingredientName, IEnumerable<string> aliases)
-        {
-            var matchTerms = _ingredientAliasService.GetAliasesForIngredientName(ingredientName);
-
-            foreach (var alias in aliases)
-            {
-                foreach (var generatedAlias in _ingredientAliasService.GetAliasesForIngredientName(alias))
-                {
-                    matchTerms.Add(generatedAlias);
-                }
-            }
-
-            return new InventoryIngredientCandidate
-            {
-                DisplayName = ingredientName,
-                MatchTerms = matchTerms
-            };
-        }
-
-        private InventoryIngredientCandidate? FindBestInventoryMatch(
-            HashSet<string> recipeIngredientTerms,
-            IEnumerable<InventoryIngredientCandidate> inventoryCandidates)
-        {
-            var exactMatch = inventoryCandidates
-                .FirstOrDefault(candidate => candidate.MatchTerms.Overlaps(recipeIngredientTerms));
-
-            if (exactMatch != null)
-            {
-                return exactMatch;
-            }
-
-            return inventoryCandidates
-                .Select(candidate => new
-                {
-                    Candidate = candidate,
-                    Score = recipeIngredientTerms
-                        .SelectMany(recipeTerm => candidate.MatchTerms,
-                            (recipeTerm, candidateTerm) => ScorePhraseMatch(recipeTerm, candidateTerm))
-                        .DefaultIfEmpty(0)
-                        .Max()
-                })
-                .Where(item => item.Score > 0)
-                .OrderByDescending(item => item.Score)
-                .ThenBy(item => item.Candidate.DisplayName.Length)
-                .Select(item => item.Candidate)
-                .FirstOrDefault();
-        }
-
-        private int ScorePhraseMatch(string recipeIngredient, string candidateTerm)
-        {
-            if (string.IsNullOrWhiteSpace(recipeIngredient) || string.IsNullOrWhiteSpace(candidateTerm))
-            {
-                return 0;
-            }
-
-            if (recipeIngredient.Equals(candidateTerm, StringComparison.OrdinalIgnoreCase))
-            {
-                return 100;
-            }
-
-            var recipeWords = recipeIngredient
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-            var candidateWords = candidateTerm
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-            var sharedWords = recipeWords.Intersect(candidateWords, StringComparer.OrdinalIgnoreCase).Count();
-
-            if (sharedWords >= 2 && sharedWords == Math.Min(recipeWords.Count, candidateWords.Count))
-            {
-                return sharedWords * 10;
-            }
-
-            return 0;
-        }
-
-        #endregion
 
         //Curation Logic V2
         //Attempted Heuristic Matching. 
@@ -390,50 +177,285 @@ namespace Recip_EZ.Server.Services
         //Optional: Spices and Garnishes, anything that is "to taste".
         //Each recipe contains many different ingredients in the "raw ingredient" list. This is the basis for this algorithm, and it will checking each list for core ingredients. 
         //Usually, the first few items are the core ingredients, but this is not always the case. So, the algorithm will be checking each ingredient and scoring it based on the presence of core, supporting, and optional ingredients.
-        
+
         //The three scores for the presence of core, supporting, and optional ingredients will be combined in some way to create an overall score for the recipe.
-        private double _coreScore = 0;
         private double _coreWeight = 0.6;
-
-        private double _supportingScore = 0;
         private double _supportingWeight = 0.3;
-
-        private double _optionalScore = 0;
         private double _optionalWeight = 0.1;
+
+        private sealed class InventoryItem
+        {
+            public int IngredientId { get; init; }
+            public string IngredientName { get; init; } = string.Empty;
+        }
 
 
         public List<CuratedRecipeDTO> ComplicatedCuration(int userId, int limit = 25, double minimumMatchPercentage = 0)
         {
-            //Step 1: Get all recipes from the database. 
-            var recipes = _context.Recipes
+            //Get the inventory for the user and also get the aliases for each ingredient.
+            var inventory = GetUserInventory(userId);
+
+            if(!inventory.Any())
+            {
+                return new List<CuratedRecipeDTO>();
+            }
+
+            //Get the normalized aliases for each ingredient in the inventory.
+            Dictionary<int, HashSet<string>> inventoryAliases = GetInventoryAliases(inventory);
+            var recipes = GetAllRecipesAsDTO();
+
+
+            //Do the same normalization methods for recipe ingredients.
+            //Each recipe will have a dictionary where the key is the ingredient index in the raw ingredient list and the value is a hash set of all aliases for that ingredient.
+            Dictionary<int, Dictionary<int, HashSet<string>>> recipeAliasCollection = GetRecipeIngredientAliases(recipes);
+
+            Dictionary<int, List<int>> recipeMatchResults = new Dictionary<int, List<int>>();
+
+            foreach(var recipe in recipeAliasCollection)
+            {
+                List<int> matchedIngredients = _matchingService.FindExactMatch(inventoryAliases, recipe.Value);
+                recipeMatchResults.Add(recipe.Key, matchedIngredients);
+            }
+
+            List<CuratedRecipeDTO> curatedRecipes = new List<CuratedRecipeDTO>();
+
+            foreach(RecipeDTO recipe in recipes)
+            {
+                curatedRecipes.Add(ToRecipeDTO(recipe, recipeMatchResults[recipe.RecipeId]));
+            }
+
+            return curatedRecipes;
+        }
+
+        /// <summary>
+        /// Gets the user inventory list for the specified userId.
+        /// </summary>
+        /// <param name="userId">UserId</param>
+        /// <returns>List of InventoryItem objects representing the user's inventory</returns>
+        private List<InventoryItem> GetUserInventory(int userId)
+        {
+            return _context.Ingredients.AsNoTracking().Join(_context.UserInventories.Where(ui => ui.UserId == userId),
+                ingredient => ingredient.IngredientId,
+                ui => ui.IngredientId,
+                (ingredient, ui) => new InventoryItem
+                {
+                    IngredientId = ingredient.IngredientId,
+                    IngredientName = ingredient.Name ?? string.Empty
+                })
+                .Distinct()
+                .ToList();
+        }
+
+        /// <summary>
+        /// Grabs every recipe and converts it to a DTO
+        /// </summary>
+        /// <returns>List of RecipeDTO objects representing the recipes</returns>
+        private List<RecipeDTO> GetAllRecipesAsDTO()
+        {
+            return _context.Recipes
                 .AsNoTracking()
                 .ToList()
                 .Select(recipe => ToDTO(recipe))
                 .ToList();
-
-            var ingredients = _context.Ingredients
-                .Join(_context.IngredientAliases, i => i.IngredientId, a => a.IngredientId, (i, a) => new { i, a })
-                .AsNoTracking()
-                .ToList();
-
-
-            foreach (var recipe in recipes)
-            {
-                for (int i = 0; i < recipe.RawIngredientList.Count; i++)
-                {
-                    //Going through every ingredient in the raw ingredient list and building a candidate that contains all of the match terms for that ingredient.
-                    var recipeIngredient = BuildRecipeIngredientCandidate(recipe.RawIngredientList[i]);
-
-                    var j = FindBestInventoryMatch(recipeIngredient.MatchTerms, new List<InventoryIngredientCandidate>());
-
-                    //Use the MatchTerms of the recipe ingredient to find the best matching inventory ingredient candidate. 
-                    //This will be used to determine if the ingredient is present in the inventory and to calculate the scores for core, supporting, and optional ingredients based on the presence of matching inventory ingredients.
-                }
-            }
-            /*Business Logic to be created and used LATER */
-            return new List<CuratedRecipeDTO>();
         }
 
+        /// <summary>
+        /// Creates a dictionary for all ingredient aliases of the items in the inventory.
+        /// </summary>
+        /// <param name="inventory">Current Inventory of the User</param>
+        /// <returns>Dictionary where the key is the ingredientID and the value is a hash set of all aliases for that ingredient</returns>
+        private Dictionary<int, HashSet<String>> GetInventoryAliases(List<InventoryItem> inventory)
+        {
+            //Create a dictionary where the key is the ingredientId and the value is a hash set of all aliases for that ingredient.
+            //This will be used to quickly look up the aliases for each ingredient in the inventory when scoring the recipes.
+            var inventoryAliases = new Dictionary<int, HashSet<string>>();
 
+            //For each ingredient in the inventory, get the aliases and add them to the dictionary.
+            foreach (var ingredient in inventory)
+            {
+                inventoryAliases.Add(ingredient.IngredientId, _ingredientAliasService.GetAliasesForIngredientName(ingredient.IngredientName));
+            }
+
+            return inventoryAliases;
+        }
+
+        /// <summary>
+        /// Builds a mapping of recipe and ingredient identifiers to their associated ingredient alias sets for a
+        /// collection of recipes.
+        /// </summary>
+        /// <remarks>Each inner dictionary maps the zero-based index of an ingredient in the recipe's
+        /// canonical ingredient list to a set of alias names for that ingredient. Recipes without canonical ingredients
+        /// are skipped.</remarks>
+        /// <param name="recipes">A list of recipe data transfer objects for which to retrieve ingredient alias mappings. Cannot be null.</param>
+        /// <returns>A dictionary where each key is a recipe identifier and each value is a dictionary mapping ingredient indices
+        /// to sets of alias strings for that ingredient. The returned dictionary is empty if no valid recipes are
+        /// provided.</returns>
+        private Dictionary<int, Dictionary<int, HashSet<string>>> GetRecipeIngredientAliases(List<RecipeDTO> recipes)
+        {
+            //THIS IS A DICTIONARY FOR EACH RECIPE.
+            //THE KEY IS THE RECIPE ID AND THE VALUE IS THE DICTIONARY FOR ALL THE INGREDIENTS AND THEIR CORRESPONDING ALIAS HASH SETS
+            Dictionary<int, Dictionary<int, HashSet<string>>> recipeAliasLists = new Dictionary<int, Dictionary<int, HashSet<string>>>();
+
+            //Go through each recipe.
+            foreach (var recipe in recipes)
+            {
+                //If there's no item in the recipe canonIngredients(even though there shouldn't be) continue to next recipe.
+                if (recipe.CanonIngredients == null || recipe.CanonIngredients.Count == 0)
+                {
+                    continue;
+                }
+
+                //Add a new hashset for ingredient aliases for each ingredient in each recipe.
+                //The key is the index of the ingredient in the canonIngredients list and the value is the hashset of aliases for that ingredient.
+                var recipeIngredientAliases = new Dictionary<int, HashSet<string>>();
+                for(int i = 0; i < recipe.CanonIngredients.Count; i++)
+                {
+                    recipeIngredientAliases.Add(i, _ingredientAliasService.GetAliasesForIngredientName(recipe.CanonIngredients[i]));
+                }
+
+                //Add the recipe dictionary to the main dictionary with the recipe ID as the key and the ingredient alias dictionary as the value.
+                recipeAliasLists.Add(recipe.RecipeId, recipeIngredientAliases);
+            }
+
+            return recipeAliasLists;
+        }
+
+        /// <summary>
+        /// Converts a Recipe object and a list of matched ingredient indexes to a CuratedRecipeDTO instance.
+        /// </summary>
+        /// <param name="recipe">The Recipe object to convert. Cannot be null.</param>
+        /// <param name="matchedIndexes">A list of zero-based indexes indicating which ingredients in the recipe matched the search criteria. Cannot
+        /// be null.</param>
+        /// <returns>A CuratedRecipeDTO representing the provided recipe and the specified matched ingredient indexes.</returns>
+        private CuratedRecipeDTO ToRecipeDTO(RecipeDTO recipe, List<int> matchedIndexes)
+        {
+            List<string> matchedCoreIngredients = new List<string>();
+            List<string> missingCoreIngredients = new List<string>();
+
+            List<string> matchedSupportingIngredients = new List<string>();
+            List<string> missingSupportingIngredients = new List<string>();
+
+            List<string> matchedOptionalIngredients = new List<string>();
+            List<string> missingOptionalIngredients = new List<string>();
+
+
+            for (int i = 0; i < recipe.CanonIngredients?.Count; i++)
+            {
+                switch(recipe.Priorities[i])
+                {
+                    case Priority.Core:
+                        if (matchedIndexes.Contains(i))
+                        {
+                            matchedCoreIngredients.Add(recipe.CanonIngredients[i]);
+                        }
+                        else
+                        {
+                            missingCoreIngredients.Add(recipe.CanonIngredients[i]);
+                        }
+                        break;
+                    case Priority.Supporting:
+                        if (matchedIndexes.Contains(i))
+                        {
+                            matchedSupportingIngredients.Add(recipe.CanonIngredients[i]);
+                        }
+                        else
+                        {
+                            missingSupportingIngredients.Add(recipe.CanonIngredients[i]);
+                        }
+                        break;
+                    case Priority.Optional:
+                        if (matchedIndexes.Contains(i))
+                        {
+                            matchedOptionalIngredients.Add(recipe.CanonIngredients[i]);
+                        }
+                        else
+                        {
+                            missingOptionalIngredients.Add(recipe.CanonIngredients[i]);
+                        }
+                        break;
+                }
+
+
+            }
+
+            List<int> counts = new List<int>();
+            counts.Add(matchedCoreIngredients.Count);
+            counts.Add(missingCoreIngredients.Count);
+
+            counts.Add(matchedSupportingIngredients.Count);
+            counts.Add(missingSupportingIngredients.Count);
+
+            counts.Add(matchedOptionalIngredients.Count);
+            counts.Add(missingOptionalIngredients.Count);
+
+            List<double> scores = ScoreRecipe(counts);
+
+            CuratedRecipeDTO curatedRecipeDTO = new CuratedRecipeDTO()
+            {
+                RecipeId = recipe.RecipeId,
+                RecipeName = recipe.RecipeName!,
+                Ingredients = recipe.Ingredients!,
+                Instructions = recipe.Instructions!,
+                URL = recipe.URL!,
+                Source = recipe.Source!,
+                RawIngredientList = recipe.RawIngredientList!,
+                MatchedIngredients = matchedIndexes.Select(index => recipe.CanonIngredients![index]).ToList(),
+                MissingIngredients = recipe.CanonIngredients!.Where((ingredient, index) => !matchedIndexes.Contains(index)).ToList(),
+                MatchedIngredientCount = matchedIndexes.Count,
+                MissingIngredientCount = (recipe.CanonIngredients?.Count ?? 0) - matchedIndexes.Count,
+                TotalIngredientCount = recipe.CanonIngredients?.Count ?? 0,
+                MatchPercentage = ((double)matchedIndexes.Count / (recipe.CanonIngredients?.Count ?? 1)) * 100, // Avoid division by zero
+                CanMakeNow = (scores[0] >= 0.75),
+                IsCloseMatch = ((double)matchedIndexes.Count / (recipe.CanonIngredients?.Count ?? 1)) >= 0.5, // Arbitrary threshold for "close match"
+                MatchedCoreIngredients = matchedCoreIngredients,
+                MissingCoreIngredients = missingCoreIngredients,
+                MatchedSupportingIngredients = matchedSupportingIngredients,
+                MissingSupportingIngredients = missingSupportingIngredients,
+                MatchedOptionalIngredients = matchedOptionalIngredients,
+                MissingOptionalIngredients = missingOptionalIngredients,
+                Score = scores[0],
+                CoreScore = scores[1],
+                SupportingScore = scores[2],
+                OptionalScore = scores[3],
+            };
+
+            return curatedRecipeDTO;
+
+        }
+
+        /// <summary>
+        /// This calcualtes the scores for the recipe. 
+        /// Core Score: (matched core ingredient count) / (matched core ingredient count + missing core ingredient count)
+        /// Supporting Score: (matched supporting ingredient count) / (matched supporting ingredient count + missing supporting ingredient count)
+        /// Optional Score: (matched optional ingredient count) / (matched optional ingredient count + missing optional ingredient count)
+        /// Final Heuristic Score: (core score * core weight) + (supporting score * supporting weight) + (optional score * optional weight)
+        /// </summary>
+        /// <param name="matchedCoreCount">The number of matched core ingredients.</param>
+        /// <param name="matchedSupportingIngredients">The number of matched supporting ingredients.</param>
+        /// <param name="matchedOptionalIngredients">The number of matched optional ingredients.</param>
+        /// <param name="missingCoreCount">The number of missing core ingredients.</param>
+        /// <param name="missingSupportingCount">The number of missing supporting ingredients.</param>
+        /// <param name="missingOptionalCount">The number of missing optional ingredients.</param>
+        /// <returns>A list of scores: [heuristicScore, coreScore, supportingScore, optionalScore]</returns>
+        private List<double> ScoreRecipe(List<int> counts)
+        {
+            List<double> scores = new List<double>();
+
+            double coreScore = (double)counts[0] / (counts[0] + counts[1]);
+
+            double supportingScore = (double)counts[2] / (counts[2] + counts[3]);
+
+            double optionalScore = (double)counts[4] / (counts[4] + counts[5]);
+
+            //Calculate the final heuristic score using the weights for each category. The weights can be adjusted to give more or less importance to each category.
+            double heuristicScore = (coreScore * _coreWeight) + (supportingScore * _supportingWeight) + (optionalScore * _optionalWeight);
+
+            scores.Add(heuristicScore);
+            scores.Add(coreScore);
+            scores.Add(supportingScore);
+            scores.Add(optionalScore);
+
+            return scores;
+        }
     }
 }

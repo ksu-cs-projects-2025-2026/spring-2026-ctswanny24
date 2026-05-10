@@ -40,7 +40,7 @@ namespace Recip_EZ.Server.Controllers
         {
             try
             {
-                var queryResult = _service.GetAllRecipes();
+                var queryResult = _service.GetNRecipes(24);
                 List<RecipeDTO> placeholders = ToDTO(queryResult);
                 return Ok(placeholders);
             }
@@ -74,7 +74,7 @@ namespace Recip_EZ.Server.Controllers
 
             try
             {
-                var result = _service.GetCuratedRecipesForUser(userId, limit, minimumMatchPercentage);
+                var result = _service.ComplicatedCuration(userId, limit, minimumMatchPercentage);
                 //var result = _service.ComplicatedCuration(userId, limit, minimumMatchPercentage);
 
                 return Ok(new CuratedRecipesResponse

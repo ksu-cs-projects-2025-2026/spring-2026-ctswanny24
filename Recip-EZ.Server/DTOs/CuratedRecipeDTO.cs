@@ -31,5 +31,25 @@ namespace Recip_EZ.Server.DTOs
         public bool CanMakeNow { get; init; }
 
         public bool IsCloseMatch { get; init; }
+
+        public double Score { get; init; }
+
+        public double CoreScore { get; init; }
+
+        public double SupportingScore { get; init; }
+
+        public double OptionalScore { get; init; }
+
+        public List<string> MatchedCoreIngredients { get; init; } = new();
+
+        public List<string> MissingCoreIngredients { get; init; } = new();
+
+        public List<string> MatchedSupportingIngredients { get; init; } = new();
+
+        public List<string> MissingSupportingIngredients { get; init; } = new();
+
+        public List<string> MatchedOptionalIngredients { get; init; } = new();
+
+        public List<string> MissingOptionalIngredients { get; init; } = new();
     }
 }

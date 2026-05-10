@@ -19,6 +19,8 @@ namespace Recip_EZ.Server.Data
             Map(m => m.Link).Name("link");
             Map(m => m.Source).Name("source");
             Map(m => m.NER).Name("NER");
+            Map(m => m.CanonIngredients).Name("CanonIngredients");
+            Map(m => m.Priorities).Name("Priority");
         }
     }
 
@@ -31,6 +33,8 @@ namespace Recip_EZ.Server.Data
         public string Link { get; set; }
         public string Source { get; set; }
         public string NER { get; set; }
+        public string CanonIngredients { get; set; }
+        public string Priorities { get; set; }
     }
 
 
@@ -91,7 +95,7 @@ namespace Recip_EZ.Server.Data
 
                     var ingredient = new Ingredient()
                     {
-                        Name = cols[2]
+                        Name = cols[1]
                     };
 
                     _context.Ingredients.Add(ingredient);
@@ -108,7 +112,7 @@ namespace Recip_EZ.Server.Data
             {
                 return;
             }
-            using (var reader = new StreamReader("Data/Dataset_CSV/recipes.csv"))
+            using (var reader = new StreamReader("Data/Dataset_CSV/recipesChunk1.csv"))
             {
                 var config = new CsvConfiguration(CultureInfo.InvariantCulture)
                 {
@@ -125,7 +129,7 @@ namespace Recip_EZ.Server.Data
                         var recipe = ParseRecipe(record);
                         batch.Add(recipe);
 
-                        if(batch.Count >= 1500)
+                        if(batch.Count >= 3000)
                         {
                             _context.Recipes.AddRange(batch);
                             _context.SaveChanges();
@@ -170,7 +174,9 @@ namespace Recip_EZ.Server.Data
                 Instructions = r.Directions,
                 URL = r.Link,
                 Source = r.Source,
-                RawIngredientList = r.NER
+                RawIngredientList = r.NER,
+                CanonIngredients = r.CanonIngredients,
+                Priorities = r.Priorities
             };
             return recipe;
         }

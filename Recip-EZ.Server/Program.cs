@@ -64,6 +64,7 @@ builder.Services.AddScoped<Recip_EZ.Server.Services.UserService>();
 builder.Services.AddScoped<Recip_EZ.Server.Services.RecipeService>();
 builder.Services.AddScoped<Recip_EZ.Server.Services.InventoryService>();
 builder.Services.AddScoped<Recip_EZ.Server.Services.IngredientAliasService>();
+builder.Services.AddScoped < Recip_EZ.Server.Services.MatchingService>();
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

@@ -1,4 +1,5 @@
 ﻿using Recip_EZ.Server.Models;
+using Recip_EZ.Server.Enums;
 
 namespace Recip_EZ.Server.DTOs
 {
@@ -12,29 +13,33 @@ namespace Recip_EZ.Server.DTOs
         /// <summary>
         /// Name of the recipe
         /// </summary>
-        public string RecipeName { get; init; }
+        public string? RecipeName { get; init; }
 
-        public List<string> Ingredients { get; init; }
+        public List<string>? Ingredients { get; init; }
 
         /// <summary>
         /// Instructions for the recipe
         /// </summary>
-        public List<string> Instructions { get; init; }
+        public List<string>? Instructions { get; init; }
 
         /// <summary>
         /// URL to access the recipe online.
         /// </summary>
-        public string URL { get; init; }
+        public string? URL { get; init; }
 
         /// <summary>
         /// Source from where the recipe was obtained.
         /// </summary>
-        public string Source { get; init; }
+        public string? Source { get; init; }
 
         /// <summary>
         /// Description of the recipe.
         /// </summary>
-        public List<string> RawIngredientList { get; init; }
+        public List<string>? RawIngredientList { get; init; }
+
+        public List<string>? CanonIngredients { get; init; }
+
+        public List<Priority>? Priorities { get; init; }
 
         public List<Ingredient>? CoreIngredients { get; set; }
 

@@ -41,8 +41,11 @@ namespace Recip_EZ.Server.Services
             "taste",
             "to",
             "virgin",
-            "low fat",
-            "no fat"
+            "low",
+            "no",
+            "fat",
+            "free",
+            "reduced"
         };
 
         #endregion
@@ -63,15 +66,19 @@ namespace Recip_EZ.Server.Services
         #region CRUD Methods
 
         /// <summary>
-        /// Populates the alias table using the shared alias-generation rules. Safe to run multiple times.
+        /// Populates the alias table based on the INGREDIENTS db. DIFFERENT FROM THE RECIPE.
         /// </summary>
         public void AddToAliases()
         {
+            //Grabs the list of ingredients that aren't null
             var ingredients = _context.Ingredients
                 .AsNoTracking()
                 .Where(i => !string.IsNullOrWhiteSpace(i.Name))
                 .ToList();
 
+            //Grabs the current list of Aliases and groups them into dictionaries based on ingredientId
+            //I.e. parmesean cheese and its aliases are stored in dictionary at ingredient id 15
+            //and the HashSet of aliases is contained in that dictionary there
             var existingAliases = _context.IngredientAliases
                 .AsNoTracking()
                 .ToList()
@@ -82,43 +89,55 @@ namespace Recip_EZ.Server.Services
                         .Select(alias => alias.AliasName.Trim().ToLowerInvariant())
                         .ToHashSet(StringComparer.OrdinalIgnoreCase));
 
+            //Creates a list of aliases that will need to be added during this logic
             List<IngredientAlias> aliasesToAdd = new();
 
+            //Iterate through EACH ingredient.
             foreach (var ingredient in ingredients)
             {
+                //Checks for nulls
                 if (ingredient.Name == null)
                 {
                     continue;
                 }
 
+                //Grabs the hash set of the aliases for the current ingredient.
                 var knownAliases = existingAliases.GetValueOrDefault(
                     ingredient.IngredientId,
                     new HashSet<string>(StringComparer.OrdinalIgnoreCase));
 
+                //Now, a list of aliases for the ingredient is conducted.
+                //This foreach will go through every one that is generated to see if there is a new one.
                 foreach (var alias in GetAliasesForIngredientName(ingredient.Name))
                 {
+                    //If it's already known, continue
                     if (knownAliases.Contains(alias))
                     {
                         continue;
                     }
 
+                    //Else, add a new alias
                     aliasesToAdd.Add(new IngredientAlias
                     {
                         IngredientId = ingredient.IngredientId,
                         AliasName = alias
                     });
 
+                    //Add new alias to the known aliases
                     knownAliases.Add(alias);
                 }
 
+                //Now, include the new knownAliases for this ingredient into the dictionary
                 existingAliases[ingredient.IngredientId] = knownAliases;
             }
 
+            //If no new aliases were created, return
             if (aliasesToAdd.Count == 0)
             {
                 return;
             }
 
+            //Else, add the new aliases to the db.
             _context.IngredientAliases.AddRange(aliasesToAdd);
             _context.SaveChanges();
         }
@@ -135,17 +154,23 @@ namespace Recip_EZ.Server.Services
         /// <returns>Distinct, normalized aliases ordered by insertion.</returns>
         public HashSet<string> GetAliasesForIngredientName(string? name)
         {
+            //Create a new hash set for all the aliases
             var aliases = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
+            //Check to make sure no null or white space is being passed in
             if (string.IsNullOrWhiteSpace(name))
             {
                 return aliases;
             }
 
+            //Clean the ingredient phrase.
             var cleanedPhrase = CleanPhrase(name);
+
+            //Add the cleaned phrase into the aliases
             AddAlias(aliases, cleanedPhrase);
 
-            var normalizedWords = GetNormalizedWords(name);
+            //Now normalize the word
+            var normalizedWords = GetNormalizedWords(cleanedPhrase);
 
             if(normalizedWords.Count == 0)
             {
@@ -158,10 +183,6 @@ namespace Recip_EZ.Server.Services
             var pluralWords = normalizedWords.Select(PluralizeWord).ToList();
             var pluralPhrase = string.Join(' ', pluralWords);
             AddAlias(aliases, pluralPhrase);
-
-            var lastWord = normalizedWords.Last();
-            AddAlias(aliases, lastWord);
-            AddAlias(aliases, PluralizeWord(lastWord));
 
             if (normalizedWords.Count >= 2)
             {
@@ -191,30 +212,79 @@ namespace Recip_EZ.Server.Services
             return string.Join(' ', GetNormalizedWords(name));
         }
 
+        /// <summary>
+        /// Returns a list of normalized words extracted from the specified name, excluding ignored words and applying
+        /// singularization.
+        /// </summary>
+        /// <remarks>Normalization includes cleaning the phrase, splitting into words, removing ignored
+        /// words, and converting words to their singular form.</remarks>
+        /// <param name="name">The input string from which to extract and normalize words. Can be null or whitespace.</param>
+        /// <returns>A list of normalized words derived from the input. Returns an empty list if the input is null or contains
+        /// only whitespace.</returns>
         private List<string> GetNormalizedWords(string? name)
         {
+            //Ensure the name is not null
             if (string.IsNullOrWhiteSpace(name))
             {
                 return new List<string>();
             }
 
-            var cleanedPhrase = CleanPhrase(name);
+            //var cleanedPhrase = CleanPhrase(name);
 
-            return cleanedPhrase
-                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                .Where(word => !IgnoredAliasWords.Contains(word))
-                .Select(SingularizeWord)
-                .Where(word => !string.IsNullOrWhiteSpace(word))
-                .ToList();
+            //Split the name into multiple strings
+            var cleanedWords = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            //Create a final list to return
+            List<string> finalNormalized = new List<string>();
+
+            //Go through each cleaned word
+            foreach(var word in cleanedWords)
+            {
+                //Check if it is somehow null or whitespace
+                if (string.IsNullOrWhiteSpace(word))
+                {
+                    continue;
+                }
+
+                //Singularize the word
+                var singularWord = SingularizeWord(word);
+
+                //If either the normal word or singular word is NOT an ignored word (from the list above)
+                //It will be added to the list of final normalized words
+                if (!IgnoredAliasWords.Contains(word) || !IgnoredAliasWords.Contains(singularWord))
+                {
+                    //finalNormalized.Add(word);
+                    finalNormalized.Add(singularWord);
+                }
+            }
+
+            //Return the final list.
+            return finalNormalized;
         }
 
+        /// <summary>
+        /// Cleans the phrase to scrub out all digits, extra symbols, and errant spaces
+        /// </summary>
+        /// <param name="name">Ingredient Name</param>
+        /// <returns>Cleaned ingredient name</returns>
         private string CleanPhrase(string name)
         {
+            //Trim the phrase and make it all lowercase.
             var cleanedPhrase = name.Trim().ToLowerInvariant();
+
+            //Replace certain symbols with their alternatives
             cleanedPhrase = cleanedPhrase.Replace("&", " and ");
+
+            //If there's a digit, replace it with a space
             cleanedPhrase = Regex.Replace(cleanedPhrase, @"[\d]", " ");
+
+            //All punctuation is replaced with a space
             cleanedPhrase = Regex.Replace(cleanedPhrase, @"[^\w\s]", " ");
+
+            //Normalizes all errant spaces created by the previous logic
             cleanedPhrase = Regex.Replace(cleanedPhrase, @"\s+", " ").Trim();
+
+            //Return a cleaned phrase with no digits or punctuation.
             return cleanedPhrase;
         }
 
@@ -228,6 +298,11 @@ namespace Recip_EZ.Server.Services
             aliases.Add(alias.Trim().ToLowerInvariant());
         }
 
+        /// <summary>
+        /// Singularizes a word that may or may not be plural
+        /// </summary>
+        /// <param name="word">Word to be singularized</param>
+        /// <returns>singularized word</returns>
         private string SingularizeWord(string word)
         {
             if (string.IsNullOrWhiteSpace(word) || word.Length <= 2)
@@ -262,6 +337,11 @@ namespace Recip_EZ.Server.Services
             return word;
         }
 
+        /// <summary>
+        /// Pluralizes a word that may or may not be plural
+        /// </summary>
+        /// <param name="word"></param>
+        /// <returns></returns>
         private string PluralizeWord(string word)
         {
             if (string.IsNullOrWhiteSpace(word) || word.Length <= 2)
