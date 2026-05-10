@@ -1,0 +1,342 @@
+ID,Food Name,Calories
+1,Abalone,89
+2,Alaska King Crab,137
+3,American Cheese Spread,46
+4,American Shad,362
+5,Anchovy,37
+6,Anchovy Canned In Oil,8
+7,Anejo Cheese,492
+8,Apple Butter,35
+9,Apple Crisp,454
+10,Apricot Jam,48
+11,Arroz Con Abichuelas,223
+12,Arroz Con Grandules,209
+13,Arroz Con Leche,369
+14,Asadero Cheese,402
+15,Atlantic Croaker,82
+16,Atlantic Croaker Fried,192
+17,Baked Beans,310
+18,Bass,90
+19,Bean Ham Soup,198
+20,Beef Broth Powder,8
+21,Beef Broth Soup,17
+22,Beef Mushroom Soup,186
+23,Beef Noodle Soup,168
+24,Beef Stock,31
+25,Beef Vegetable Soup,120
+26,Big Mac,563
+27,Big N Tasty,524
+28,Biscuit,185
+29,Biscuit Large,310
+30,Biscuit,261
+31,Black Bean Soup,234
+32,Blue Crab,44
+33,Blue Mussels,236
+34,Bluefin Tuna,158
+35,Bluefish,186
+36,Brick Cheese,111
+37,Brie Cheese,100
+38,Burbot,104
+39,Butterfish,47
+40,Caay Cheese,106
+41,Camembert Cheese,90
+42,Caramel Custard Flan,444
+43,Carp,276
+44,Catfish,198
+45,Catfish Fried,199
+46,Caviar,42
+47,Cheddar Cheese,113
+48,Cheese Lasagna,316
+49,Cheese Pizza,285
+50,Cheese Pizza,278
+51,Cheese Pizza,260
+52,Cheese Ravioli Canned,186
+53,Cheese Soup,203
+54,Cheese Spread,708
+55,Cheese Tortellini,332
+56,Cheeseburger,292
+57,Cheeseburger,380
+58,Cheeseburger,313
+59,Chicken Bouillon Dry,11
+60,Chicken Box,70
+61,Chicken Broth,12
+62,Chicken Broth Dry,10
+63,Chicken Broth Soup,78
+64,Chicken Chow Mein,513
+65,Chicken Crispy Breast,375
+66,Chicken Crispy Drumsticks,156
+67,Chicken Crispy Wings,148
+68,Chicken Dumplings Soup,235
+69,Chicken Gravy,188
+70,Chicken Gumbo Soup,113
+71,Chicken Mcnuggets,48
+72,Chicken Mushroom Chowder Soup,431
+73,Chicken Mushroom Soup,126
+74,Chicken Noodle Soup,145
+75,Chicken Pot Pie,598
+76,Chicken Rice Soup,127
+77,Chicken Soup,174
+78,Chicken Spread,88
+79,Chicken Stock,86
+80,Chicken Strips,105
+81,Chicken Vegetable Soup,148
+82,Chihuahua Cheese,494
+83,Chili Beef Soup,308
+84,Chili Con Carne,271
+85,Chili Without Beans Canned,283
+86,Chinook Salmon,710
+87,Chinook Salmon Smoked,159
+88,Chips,151
+89,Chocolate Hazelnut Spread,100
+90,Chocolate Milk Dessert,229
+91,Chocolate Mousse,338
+92,Chum Salmon,238
+93,Chum Salmon Canned,520
+94,Chunky Peanut Butter,94
+95,Cisco,77
+96,Cisco Smoked,50
+97,Clam Chowder Soup,154
+98,Clams,195
+99,Clams Canned,227
+100,Clams Fried,19
+101,Cod,189
+102,Cod Canned,328
+103,Coho Salmon,254
+104,Conch Baked,165
+105,Consomme Dry,17
+106,Corn Dog,195
+107,Corn Pasta,176
+108,Crab Soup,95
+109,Crayfish,14
+110,Cream Cheese,33
+111,Cream Of Asparagus Soup,174
+112,Cream Of Celery Soup,181
+113,Cream Of Chicken Soup,227
+114,Cream Of Mushroom Soup,199
+115,Cream Of Onion Soup,268
+116,Cream Of Potato Soup,186
+117,Cream Of Rice Coup,127
+118,Cream Of Shrimp Soup,181
+119,Crispy Chicken Breast,214
+120,Crispy Chicken Drumstick,70
+121,Crispy Chicken Strips,129
+122,Crispy Chicken Thigh,163
+123,Crispy Chicken Wing,104
+124,Cusk,106
+125,Cuttlefish,34
+126,Dolphinfish,173
+127,Double Cheeseburger,643
+128,Double Hamburger,942
+129,Double Whopper,942
+130,Drum,236
+131,Dulce De Leche,60
+132,Dungeness Crab,140
+133,Eastern Oyster,8
+134,Eastern Oyster Canned,110
+135,Eastern Oyster Fried,29
+136,Eel,221
+137,Egg Drop Soup,65
+138,Egg Mix,30
+139,Egg White Delight,250
+140,Escarole Soup,61
+141,Falafel,57
+142,Feta Cheese,80
+143,Filet O Fish,378
+144,Fish Broth,39
+145,Fish Fillet Fried,211
+146,Fish Sticks,78
+147,Fish Stock,40
+148,Florida Pompano,185
+149,Flounder,112
+150,French Fries,222
+151,French Fries,207
+152,French Fries,378
+153,French Toast Sticks,73
+154,Fried Rice,228
+155,Fruit Jam,56
+156,Gazpacho Soup,70
+157,Gelatin Dessert,167
+158,General Tsos Chicken,1578
+159,Gjetost Cheese,1058
+160,Goat Cheese,102
+161,Gouda Cheese,100
+162,Green Pea Soup,320
+163,Greenland Halibut,760
+164,Grouper,238
+165,Gruyere Cheese,116
+166,Haddock,139
+167,Haddock Smoked,33
+168,Halibut,362
+169,Ham And Cheese Spread,37
+170,Hamburger,255
+171,Hamburger,258
+172,Hamburger,251
+173,Hand Breaded Chicken Tenders,57
+174,Herring,290
+175,Herring Kippered,87
+176,Honey,64
+177,Hot Sour Soup,91
+178,Hotcakes,113
+179,Hotcakes Sausage,776
+180,Hotdog,383
+181,Hushpuppies,512
+182,Jellyfish Dried,21
+183,Ladyfingers,103
+184,Lasagna,166
+185,Limburger Cheese,98
+186,Ling,168
+187,Lingcod,271
+188,Little India Little Lunch,164
+189,Lobster,125
+190,Macaroni Cheese,310
+191,Mackerel,230
+192,Mcchicken,358
+193,Meat Ravioli Canned,259
+194,Meat Vegetable Pizza,332
+195,Mexican Cheese,316
+196,Milkfish,48
+197,Minestrone Soup,167
+198,Monkfish,24
+199,Mozzarella Cheese,124
+200,Mozzarella Steak Fried,102
+201,Muenster Cheese,486
+202,Mullet,140
+203,Mushroom Barley Soup,186
+204,Neufchatel Cheese,215
+205,Northern Pike,349
+206,Ocean Perch,50
+207,Octopus,81
+208,Onion Rings,379
+209,Onion Rings Fried,27
+210,Onion Soup,113
+211,Orange Marmalade,49
+212,Orange Roughy,26
+213,Oyster,41
+214,Oyster Fried,61
+215,Oyster Stew Soup,118
+216,Parmesan Cheese,46
+217,Pea Soup,161
+218,Peanut Butter,88
+219,Peanut Spread,101
+220,Pepper Jack Cheese,75
+221,Pepperoni Pizza,313
+222,Pepperoni Pizza,308
+223,Pepperoni Pizza,269
+224,Pepperpot Soup,100
+225,Perch,54
+226,Pimento Cheese,525
+227,Pink Salmon,376
+228,Pink Salmon Canned,530
+229,Poached Egg,72
+230,Pollock,356
+231,Port Salut Cheese,465
+232,Potato Wedges,379
+233,Pout,278
+234,Provolone Cheese,386
+235,Pulled Pork In Barbecue Sauce,418
+236,Pumpkin Seed Sunfish,42
+237,Pupusas Con Queso,300
+238,Pupusas Del Cerdo,283
+239,Quarter Pounder,417
+240,Queen Crab,62
+241,Queso Blanco Cheese,366
+242,Queso Fresco Cheese,365
+243,Queso Seco Cheese,315
+244,Rainbow Smelt,31
+245,Rainbow Trout,115
+246,Ramen Noodle Soup Dry,371
+247,Red Salmon Sockeye Filets Smoked,373
+248,Refried Red Beans,336
+249,Requeijao Cremoso Light,49
+250,Ricotta Cheese,30
+251,Rockfish,167
+252,Roe,39
+253,Romano Cheese,19
+254,Roquefort Cheese,314
+255,Sablefish,754
+256,Salmon,778
+257,Salmon Canned,520
+258,Salmon Nuggets,60
+259,Salt Mackerel,415
+260,Sardine Canned In Oil,310
+261,Sardines In Tomato Sauce Canned,165
+262,Sausage Biscuit,440
+263,Sausage Mcgriddles,421
+264,Sausage Pizza,325
+265,Savoury Noodle One Pan Dinner Tandaco,172
+266,Scallop,10
+267,Scallop Imitation,28
+268,Scallops,11
+269,Scallops Fried,64
+270,Scotch Broth,197
+271,Scup,121
+272,Sea Bass,125
+273,Seatrout,248
+274,Shark,51
+275,Shark Fin Soup,99
+276,Sheepshead,246
+277,Shrimp,6
+278,Shrimp Canned,128
+279,Shrimp Fried,52
+280,Shrimp Imitation,29
+281,Skipjack Tuna,407
+282,Snapper,218
+283,Sockeye Salmon,528
+284,Sockeye Salmon Canned,563
+285,Spinach Egg Noodles,211
+286,Spinach Pasta,37
+287,Spinach Spaghetti,182
+288,Spiny Lobster,234
+289,Split Pea Soup,180
+290,Spot,79
+291,Squid,26
+292,Squid Fried,140
+293,Stockpot Soup,201
+294,Sturgeon,107
+295,Sturgeon Smoked,49
+296,Succotash,213
+297,Sucker,147
+298,Surimi,28
+299,Sweet Gefilte Fish,35
+300,Swiss Cheese,98
+301,Swordfish,189
+302,Tahini,86
+303,Tilapia,111
+304,Tilefish,406
+305,Tilsit Cheese,136
+306,Tomato Beef Noodle Soup,281
+307,Tomato Bisque Soup,248
+308,Tomato Rice Soup,240
+309,Tomato Soup,98
+310,Tomato Soup Canned,139
+311,Tomato Vegetable Soup,54
+312,Tripe Soup,148
+313,Trout,118
+314,Tuna Canned,102
+315,Tuna Canned In Oil,331
+316,Tuna Salad,383
+317,Turbot,388
+318,Turkey Noodle Soup,139
+319,Turkey Patty Fried,79
+320,Turkey Pot Pie,699
+321,Turkey Soup,135
+322,Turkey Vegetable Soup,72
+323,Vegetable Beef Soup,128
+324,Vegetable Chicken Soup,166
+325,Vegetable Lasagna,316
+326,Vegetable Soup,149
+327,Vegetarian Fillets,247
+328,Vegetarian Stew,304
+329,Veggie Burger,124
+330,Walleye Pike,148
+331,Whelk,58
+332,Whitefish,265
+333,Whitefish Smoked,147
+334,Whiting,84
+335,Whopper,790
+336,Wild Pink Salmon Oceans,320
+337,Wolffish,294
+338,Wonton Soup,71
+339,Wonton Wrappers,93
+340,Yellowfin Tuna,34
+341,Yellowtail,546

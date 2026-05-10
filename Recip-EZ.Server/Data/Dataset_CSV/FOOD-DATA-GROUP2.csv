@@ -1,0 +1,315 @@
+ID,Food Name,Calories
+0,Eggnog,224
+1,Beer Light,96
+2,Beer,12
+3,Weizenbier,220
+4,Beer Light,9
+5,Beer,142
+6,Root Beer,202
+7,Whiskey Sour Mix,26
+8,Whiskey Sour,158
+9,Tequila Sunrise,232
+10,Daiquiri,112
+11,Pina Colada,245
+12,Whiskey,58
+13,Rum,49
+14,Vodka Smirnoff,13
+15,Coffee Liqueur,96
+16,Gin,53
+17,Dessert Wine Sweet,165
+18,Chenin Blanc White Wine,118
+19,Gamay Red Wine,115
+20,Late Harvest White Wine,172
+21,Gewurztraminer White Wine,119
+22,Burgundy Red Wine,172
+23,Zinfandel Red Wine,129
+24,Muller Thurgau White Wine,112
+25,Mouvedre Red Wine,129
+26,Table Wine,123
+27,Wine Light,73
+28,White Wine,121
+29,Petite Sirah Red Wine,125
+30,Non Alcoholic Wine,2
+31,Pinot Noir Red Wine,121
+32,Pinot Gris Grigio White Wine,122
+33,Riesling White Wine,118
+34,Barbera Red Wine,170
+35,Lemberger Red Wine,118
+36,Merlot Red Wine,122
+37,Sangiovese Red Wine,126
+38,Sauvignon Blanc White Wine,119
+39,Syrah Red Wine,122
+40,Carignane Red Wine,370
+41,Pinot Blanc White Wine,119
+42,Semillon White Wine,121
+43,Dessert Wine Dry,760
+44,Red Wine,125
+45,Cabernet Sauvignon Red Wine,166
+46,Muscat White Wine,123
+47,Cooking Wine,2
+48,Chardonnay White Wine,168
+49,Claret Red Wine,122
+50,Rice Sake,197
+51,Fume Blanc White Wine,121
+52,Cabarnet Franc Red Wine,122
+53,Chocolate Frosting,81
+54,White Sugar,19
+55,Egg Substitute,115
+56,Agave Syrup,21
+57,Splenda Sweetener,336
+58,Vanilla Extract,12
+59,Egg Yolk,27
+60,Granulated Sugar,16
+61,Baking Chocolate,145
+62,Bakers Yeast,18
+63,Fondant,106
+64,Brown Sugar,16
+65,White Frosting Dry,768
+66,Maple Sugar,42
+67,Fructose Sweetener,15
+68,Saccharin Sweetener,360
+69,Egg White,17
+70,Turbinado Sugar,18
+71,Vanilla Frosting,1931
+72,Aspartame Sweetener,365
+73,Egg,80
+74,Pineapple Topping,860
+75,Egg White,26
+76,Egg Yolk,55
+77,Baking Soda,0
+78,Egg,30
+79,Strawberry Topping,53
+80,Bakers Yeast Dry,13
+81,Almond Paste,1040
+82,Cream Of Tartar,8
+83,Popover Dry Mix,631
+84,Egg Substitute Powder,126
+85,Gelatin Powder,17
+86,Tapioca Pearls,544
+87,Baking Powder,2
+88,Egg Boiled,93
+89,Millet Flour,444
+90,Triticale Flour,439
+91,Corn Flour White,414
+92,Rice Flour Brown,574
+93,Sorghum Flour,437
+96,Barley Flour,511
+98,Sesame Flour,658
+99,Whole Grain Wheat Flour,408
+100,Corn Flour Yellow,422
+101,Corn Flour Whole Grain,422
+102,Cottonseed Flour,94
+103,Sunflower Seed Flour,13
+105,Acorn Flour,626
+106,Rice Flour White,578
+107,Sesame Flour,94
+108,Potato Flour,571
+110,Rye Flour,364
+111,Arrowroot Flour,457
+112,Chickpea Flour,356
+113,Wheat Flour,455
+114,Cornstarch,488
+115,Carob Flour,13
+116,Buckwheat Flour,402
+117,Pecan Pie,503
+118,Apple Pie,331
+119,Vanilla Wafer Pie Crust,935
+120,Chocolate Pie Crust,881
+121,Apple Strudel,195
+122,Chocolate Snack Cake,200
+123,Fruit Fried Pie,404
+124,Pumpkin Pie,316
+125,Corn Cake,35
+126,Sponge Snack Cake,157
+127,Danish Pastry With Nuts,280
+128,Chocolate Cream Pie,301
+129,Angel Food Cake,72
+130,Lemon Meringue Pie,362
+131,Danish Pastry With Cinnamon,349
+132,Cinnamon Coffeecake,238
+133,Cheesecake,257
+134,Fruitcake,139
+135,Egg Custard,293
+136,Mince Pie,477
+137,Yellow Cake With Chocolate Frosting,546
+138,Danish Pastry With Fruit,335
+139,White Cake With Coconut Frosting,399
+140,Danish Pastry With Cheese,353
+141,Graham Cracker Pie Crust,917
+142,Blueberry Pie,360
+143,Yellow Cake With Vanilla Frosting,239
+144,Pie Crust,121
+145,Chocolate Cake With Chocolate Frosting,537
+146,Cheese Coffeecake,258
+147,Vanilla Cream Pie,350
+148,Pineapple Cake,367
+149,Peach Pie,262
+150,Fruit Coffeecake,156
+151,Pound Cake,116
+152,Pound Cake Bread,215
+153,White Cake,264
+154,Coffeecake With Chocolate Frosting,298
+155,Popcorn Cake,38
+156,Banana Cream Pie,3190
+157,Baked Apple Pie,91
+158,Sponge Cake,187
+159,Yellow Cake,245
+160,Shortcake,98
+161,Cherry Pie,486
+162,Dutch Apple Pie,397
+163,Chocolate Cake,352
+164,Marshmallow,64
+165,Sugar Apple,72
+166,Toffee,67
+167,Vanilla Fudge With Nuts,123
+168,Peanuts Chocolate Coated,21
+169,Caramel With Nuts Chocolate Coated,66
+170,Gingerbread,263
+171,Rolo Nestle,24
+172,Vanilla Fudge,108
+173,Halavah,328
+174,Praline,189
+175,Fruit Juice Bar,67
+176,Peanut Brittle,138
+177,Butterscotch,21
+178,Chocolate Coffee Beans,155
+179,Nougat With Almonds,56
+180,Carob,135
+181,Peanut Butter Fudge,62
+182,Sugar Coated Almonds,17
+183,Chocolate Coated Marshmallow,118
+184,Raisins Chocolate Coated,390
+185,Chewing Gum Sugarless,5
+186,Chewing Gum,11
+187,Chocolate Syrup,109
+188,Chocolate Fudge Syrup,67
+189,M Ms Milk Chocolate Mars,207
+190,Milk Chocolate With Almonds,216
+191,Chocolate Fudge,70
+192,Milk Chocolate With Rice Cereal,0
+193,M Ms Peanut Chocolate Mars,93
+194,Dark Chocolate,165
+195,Chocolate Semisweet,806
+196,After Eight Mints Nestle,36
+197,Milk Chocolate,37
+198,White Chocolate,162
+199,Chocolate,208
+200,Twix Mars,146
+201,Kit Kat Nestle,62
+202,Snickers Mars,280
+203,Milky Way Mars,264
+204,Clif Bar,235
+205,Gum Drops,18
+206,Skittles Wild Berry Mars,249
+207,Skittles Original Mars,251
+208,Skittles Tropical Mars,251
+209,Fruit Leather,52
+210,Taffy,60
+211,Eisbonbons Mac Iver,23
+212,Caramels,39
+213,Hard Candy,24
+214,Jellybeans,4
+215,Jellies,56
+216,Wheat Germ Toasted,115
+217,Crispy Brown Rice,124
+218,Bran Flakes Asda,109
+219,Amaranth,251
+220,Triticale,645
+221,Barley,42
+222,Bulgur Dry,171
+223,Cottonseed Kernels Roasted,754
+224,Rice Bran,373
+225,Chaptti Roti Indian Bread,491
+226,Quinoa,222
+227,Dar Vida Swiss Original,116
+228,Teff,255
+229,Couscous Dry,650
+230,Weetabix Weetabix,2078
+231,Oat Bran,88
+232,Buckwheat,155
+233,Millet Puffed,74
+234,Oat Bran,23
+235,Popcorn Oil Popped,64
+236,Kamut,251
+237,Wheat Bran,125
+238,Cheese Popcorn,58
+239,Raisin Bran Crunch Kelloggs,90
+240,Couscous,176
+241,Multigrain Cheerios General Mills,4
+242,Bulgur,151
+243,Popcorn Air Popped,31
+244,Teff,708
+245,Spelt,246
+246,Millet,756
+247,Popcorn Unpopped,106
+248,Whole Wheat,150
+249,Wheat Sprouted,214
+250,Whole Wheat Dry,96
+251,Caramel Popcorn,122
+252,Wheat Puffed,44
+253,Roggenmischbrot Sonnenblumenkerne Aldi,82
+254,Wheat Germ,112
+255,Microwave Popcorn,465
+256,Millet,207
+257,Kamut,627
+258,Wheat Durum,651
+259,Sorghum,651
+260,White Wheat,657
+261,Rye,571
+262,Spelt,588
+263,Buckwheat,41
+264,Honey Cereali General Mills,104
+265,Barley,193
+266,Oats,39
+267,Amaranth,37
+268,Semolina,601
+269,Quinoa Dry,221
+270,Wheat Shredded,155
+271,Cattail,5
+272,Peanut Granola Bar,116
+273,Vanilla Bluberry Bar Kind,49
+274,Coconut Granola Bar,150
+275,Almond Granola Bar,119
+276,Chocolate Chip Granola Bar,105
+277,Fruit Granola Bar,82
+278,Granola Bar,99
+279,Peanut Bar,209
+280,Milk Cereal Bar,103
+281,Almond Rice Bar,128
+282,Fruit Nut Squares,55
+283,Rice Wheat Cereal Bar,90
+284,Crisped Rice Bar,113
+285,Brown Rice,685
+286,Rice Pilaf,352
+287,Beef Flavored Rice,657
+288,Wild Rice,166
+289,Wild Rice,571
+290,Congee With Pork Shrimp And Squid Plus Egg,178
+291,White Rice Pasta,246
+292,Chicken Flavored Rice,601
+293,Instant White Rice,361
+294,Rice Crisps,107
+295,Parboiled White Rice,692
+296,Instant White Rice,193
+297,Rice Pilaf,732
+298,Rice Cracker Cake,111
+299,Parboiled White Rice,194
+300,White Rice Steamed,199
+301,Brown Rice Cake,35
+302,Glutinous White Rice,685
+303,White Rice Pasta,600
+304,Glutinous White Rice,169
+305,Brown Rice,218
+306,Beef Flavored Rice,319
+307,White Rice,205
+308,Chicken Flavored Rice,317
+309,White Rice,675
+310,Cheese Imitation,441
+311,Cheshire Cheese,110
+312,Monterey Cheese,421
+313,Edam Cheese,107
+314,Fontina Cheese,420
+315,Monterey Cheese,350
+316,Colby Cheese,445
+317,American Cheese,93
+318,Blue Cheese,106

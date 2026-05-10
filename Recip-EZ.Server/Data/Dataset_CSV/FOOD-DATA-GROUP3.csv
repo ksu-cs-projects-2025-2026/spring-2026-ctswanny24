@@ -1,0 +1,382 @@
+ID,Food Name,Calories
+0,Nectarine,66
+1,Kiwi,51
+2,Pear,8
+3,Pineapple,45
+4,Rowan,253
+5,Grapes,3
+6,Heidelbeeren,17
+7,Prune,316
+8,Tangerine,40
+10,Lemon,1
+11,Banana,134
+12,Berry,5
+13,Apricot,17
+16,Figs,37
+17,Clementine,35
+18,Orange,86
+20,Currants,63
+23,Java Plum,2
+25,Applesauce,102
+27,Plum,30
+29,Peach,59
+30,Melon,64
+31,Plantain,399
+32,Rose Hips,206
+33,Lemons,17
+34,Lime,20
+35,Pomegranate,117
+38,Abiyuch,157
+40,Fruit Salad,312
+41,Grapefruit,53
+42,Japanese Persimmon,118
+44,Apple,18
+45,Cherry,8
+49,Fruit Puree,19
+53,Guava,37
+56,Watermelon,86
+57,Elderberries,106
+58,Kumquat,13
+60,Pokeberry Shoots,33
+61,Breadfruit,227
+68,Carambola Starfruit,26
+69,Chayote,35
+71,White Grapefruit,78
+72,Cherimoya,176
+76,Cranberries,21
+77,Quince,52
+81,Mango,202
+82,Wild Plum,147
+83,Jeijoa,148
+85,Pesca,30
+86,Persimmon,32
+88,Rambutan,175
+91,Pineapples,28
+93,Tangerines,92
+94,Fruit Cocktail,109
+96,Mangosteen,143
+105,Papaya,80
+110,Golden Raisins,498
+111,Raisins Seeded,488
+114,Raisins,90
+118,Longans,5
+120,Lychee,7
+122,Longan,2
+123,Mamey Sapote,217
+124,Waxgourd,19
+125,Jackfruit,33
+126,Loquats,9
+128,Nance,82
+129,Coconut Whole Coconut,3336
+132,Naranjilla Lulo Pulp,30
+133,Coconut Meat,187
+136,Passion Fruit,17
+137,Sapodilla,141
+138,Pummelo,48
+140,Soursop,149
+143,Ohelo Berries,39
+144,Loganberries,81
+146,Durian,51
+147,Coriander Leaves,4
+148,Garden Cress,3
+149,Pasilla Peppers,24
+150,Parsley,1
+151,Ancho Pepper,48
+152,Coriander Seeds,5
+153,Dill Weed,253
+154,Borage,19
+155,Epazote,0
+156,Chives,1
+157,Thyme Fresh,1
+158,Butterbur,4
+159,Wasabi Root,142
+160,Rosemary,4
+161,Ginger Root,2
+162,White Pepper,7
+163,Cloves Ground,6
+164,Paprika,19
+165,Mace Ground,25
+166,Bay Leaf,2
+167,Eppaw,150
+168,Tarragon,2
+169,Ginger Ground,6
+170,Savory Ground,4
+171,Black Pepper,6
+172,Spearmint Fresh,3
+173,Poultry Seasoning,14
+174,Nutmeg Ground,12
+175,Curry Powder,20
+176,Peppermint,1
+177,Salt,0
+179,Sage Ground,2
+180,Garlic Powder,10
+181,Dill Weed Fresh,4
+182,Cardamom,6
+183,Saffron,2
+184,Allspice Ground,5
+185,Parsley Fresh,1
+186,Oregano,265
+187,Marjoram,5
+189,Fireweed Leaves,24
+190,Rosemary Fresh,1
+191,Garlic,4
+192,Cinnamon Ground,6
+193,Chervil,5
+194,Cayenne Pepper,1
+195,Turmeric Ground,8
+196,Mustard,3
+197,Chili Powder,8
+198,Thyme,276
+199,Spearmint,1
+200,Basil,2
+201,Dandelion Greens,35
+202,Basil Fresh,2
+203,Dock,29
+205,Onion Powder,8
+207,Yokan,36
+208,Fava Beans,187
+209,French Beans,631
+210,Chickpeas,352
+211,Yellow Beans,255
+212,Mung Beans,212
+213,White Beans,299
+214,Pink Beans,252
+216,Navy Beans,701
+217,Snap Beans,44
+218,Black Eyed Cowpeas,131
+219,Edamame,189
+221,Hyacinth Beans,227
+222,Cowpeas,185
+223,Pinto Beans,245
+224,Winged Beans,253
+226,Black Turtle Beans,624
+228,Lima Beans,190
+234,Adzuki Beans,648
+236,Pink Lentils,662
+239,Lentils,678
+240,Cranberry Beans,241
+243,Beans,239
+245,Black Beans,227
+247,Mungo Beans,706
+248,Pigeon Peas,703
+250,Yellow Snap Beans,31
+254,Catjang Cowpeas,573
+256,Mothbeans,672
+265,Baby Lima Beans,189
+267,Shellie Beans,74
+268,Yardlong Beans,579
+273,Tamarinds,5
+276,Bacon Beef Steak,146
+277,Lamb Foreshank,912
+278,Bacon,106
+279,Lamb Rib,915
+280,Lamb Shank,912
+281,Scrapple,60
+282,Chicken Nuggets,61
+283,Ground Lamb,886
+284,Lamb Meat,678
+285,Meat Extender,275
+286,Lamb Leg,1043
+287,Lamb Loin,202
+288,Chicken Patty,172
+290,Barbecue Loaf,40
+291,Lamb Sirloin,765
+292,Poultry Salad,26
+298,Ham Salad,97
+300,Lamb Shoulder,1198
+303,Mutton,66
+305,Beef Stick,110
+306,Veal Sirloin,517
+307,Veal Rib,444
+308,Veal Meat,483
+309,Beef Rib,238
+311,Beef Top Loin Filet,323
+312,Beef Under Blade Steak,983
+313,Mock Tender Steak,244
+314,Ground Beef,375
+316,Beef Diced Asda,48
+318,Ground Veal,41
+319,T Bone Steak,1049
+320,Veal Leg Round,531
+321,Beef Top Sirloin Steak,1222
+322,Beef Plate Steak,508
+325,Porterhouse Steak,1170
+326,Veal Shank,513
+327,Veal Breast,753
+328,Corned Beef,53
+329,Rib Eye Steak,680
+330,Veal Shoulder,0
+332,Sirloin Steak,324
+334,Beef Round Steak,385
+335,Chuck Blade Roast,1125
+336,Beef Shoulder Steak,349
+337,Beef Top Blade,184
+341,Chuck Eye Steak,856
+342,Beef Bottom Round Steak,980
+346,Beef Meat,111
+347,Beef Breakfast Strips,92
+348,Beef Brisket,589
+350,Beef Mince Meat Asda,55
+351,Pastrami Beef Fat Free,9
+353,Beef Tenderloin Steak,374
+355,Cured Beef,4
+356,Beef Flank Steak,380
+359,Veal Loin,80
+365,Pastrami Beef,104
+370,Beef Jerky,82
+372,Pork Olive Loaf,66
+373,Beef Luncheon Meat Jellied,31
+374,Turkey Pastrami,38
+375,Pork Salami,41
+376,Canadian Style Bacon,45
+377,Honey Loaf,85
+378,Pork Beef Salami,37
+379,Beef Pork Bologna,92
+381,Pork Breakfast Strips,88
+382,Pickle Pimiento Loaf,86
+383,Luxury Loaf,39
+384,Mortadella,47
+385,Pork Bologna,69
+386,Turkey Salami,9
+387,Pepperoni Beef,10
+388,Peppered Loaf,42
+389,Luncheon Meat Beef,10
+390,Lebanon Bologna,98
+391,Chicken Pork Bologna,94
+392,Turkey Roll,40
+393,Beef Salami,68
+394,Yachtwurst,150
+395,Italian Salami,43
+396,Turkey Ham,38
+397,Turkey Bologna,59
+398,Sliced Turkey Breast,17
+399,Luncheon Meat Pork Beef,99
+400,Beef Bologna,90
+401,Turkey Bacon,313
+402,Ground Emu,178
+403,Ostrich Leg,94
+404,Ostrich Strip,108
+405,Emu Fillet,607
+406,Ostrich Tenderloin,105
+407,Emu Drums,649
+408,Green Turtle,25
+409,Ground Bison,448
+410,Goat Meat,494
+412,Ground Ostrich,180
+413,Ostrich Tip,123
+414,Caribou,210
+417,Ostrich Top Loin,132
+420,Ostrich Round,99
+422,Ostrich Fan,99
+424,Veal Brain,461
+425,Veal Tongue,515
+426,Beef Heart,47
+427,Turkey Liver,100
+428,Veal Thymus,35
+429,Beef Brain,688
+430,Beef Pancreas,602
+431,Beef Tripe,80
+432,Chicken Gizzard,223
+433,Pork Pancreas,537
+434,Beef Tongue,80
+435,Lamb Heart,353
+436,Beef Spleen,447
+437,Veal Kidneys,300
+438,Chicken Heart,268
+439,Lamb Tongue,701
+440,Veal Heart,368
+441,Chicken Liver,76
+442,Lamb Pancreas,541
+443,Veal Spleen,445
+444,Lamb Liver,739
+445,Turkey Gizzard,70
+446,Lamp Spleen,460
+447,Turkey Heart,35
+448,Beef Liver,130
+449,Lamb Lungs,431
+450,Pork Brain,527
+451,Goose Liver,125
+452,Pork Kidneys,211
+453,Lamb Brain,503
+454,Pork Heart,215
+455,Lamb Kidneys,349
+456,Beef Lungs,364
+457,Veal Pancreas,614
+458,Pork Liver,584
+459,Beef Kidneys,45
+460,Turkey Giblets,164
+461,Duck Liver,60
+462,Veal Liver,154
+463,Pork Lungs,297
+464,Veal Lungs,312
+465,Beef Thymus,1215
+466,Ham,46
+467,Pork Meat,283
+469,Pork Top Loin Roasts,3644
+470,Pork Blade Roll,76
+471,Pork Backribs,2399
+472,Pork Spareribs,703
+473,Pork Stomach,44
+474,Honey Smoked Ham,67
+475,Boston Butt Steak,844
+476,Pork Sirloin Chops,140
+477,Pork Country Style Ribs,242
+478,Ham Patties,205
+479,Pork Feet,67
+480,Ground Pork,930
+481,Pork Centre Loin Chops,328
+482,Pork Leg Cap Steak,307
+483,Pork Blade Chops,376
+484,Pork Tenderloin,606
+487,Pork Carcass,1706
+488,Pork Splean,446
+489,Chopped Ham,50
+494,Pork Top Loin Chops,287
+495,Pork Blade Steak Braised,694
+496,Pork Boston Steaks,438
+498,Pickled Pork Hocks,48
+499,Pork Boston Roast,705
+501,Ham Steak,70
+502,Pork Backfat,3683
+504,Pork Arm Picnic,5298
+505,Salt Pork,212
+509,Pork Shoulder,1070
+510,Pork Chitterlings,66
+513,Pork Tail,1089
+514,Pork Centre Rib Roasts,275
+516,Minced Ham,55
+518,Pork Loin,232
+520,Pork Belly,2350
+522,Ham Extra Lean,45
+523,Pork Feet Pickled,635
+526,Pork Skin,154
+528,Pork Blade Steak,664
+531,Pork Ears,184
+532,Pork Tongue,626
+535,Chicken Skin,508
+536,Turkey Breast,3554
+537,Ground Turkey,169
+538,Chicken Wing,52
+539,Turkey Roast,209
+540,Pheasant Meat,1448
+541,Chicken Back,188
+543,Chicken Leg,431
+544,Chicken Feet,975
+545,Turkey Steak,179
+546,Turkey Taco Meat,271
+548,Chicken Meat,1978
+549,Chicken Neck,94
+550,Chicken Drumstick,193
+551,Quail Egg,14
+552,Duck Meat,472
+554,Quail Meat,1028
+555,Goose Meat,427
+556,Chicken Breast,114
+558,Duck Egg,130
+559,Pheasant Breast,484
+561,Squab Meat,585
+563,Turkey Meat,284
+565,Ground Chicken,474
+566,Turkey Wing,426
+569,Chicken Fajita Strips,13
+570,Crispy Chicken Strips Tyson,145

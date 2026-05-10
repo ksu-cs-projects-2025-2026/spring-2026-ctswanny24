@@ -1,0 +1,502 @@
+ID,Food Name,Calories
+0,Margarine,88
+1,Butter,99
+2,Oil,120
+7,Lard,115
+11,Shortening,113
+21,Sour Cream,60
+23,Chicken Fat,115
+25,Bacon Grease,39
+26,Turkey Fat,45
+27,Beef Tallow,115
+28,Goose Fat,45
+29,Duck Fat,44
+30,Mutton Tallow,45
+57,Pasta,308
+58,Noodles,257
+61,Corn Pasta,375
+70,Pasta Sauce,41
+83,Waffle,218
+84,Taco Shell,61
+85,Pastry,1367
+86,Muffin,214
+87,Bread Crumbs,427
+88,Cinnamon Roll,113
+90,Tortilla,467
+91,Croutons,186
+94,Donut,55
+99,Sweet Cinnamon Rolls,309
+102,Pancakes,86
+104,Sweet Cheese Rolls,238
+105,Eclair,234
+110,Keikitos,196
+111,Zwieback,30
+115,Wheat Bran Bread,89
+116,White Bread,77
+117,Oat Bran Bread,71
+118,Bread Natures Own,50
+119,High Protein Bread Dr Zaks,152
+120,Wheat Bread,79
+121,Bread Toasted,117
+123,Vienna Bread Toasted,93
+124,Vienna Bread,92
+125,Protein Bread,47
+126,Banana Bread,186
+127,Rice Bran Bread,66
+128,White Fibre Wonder Bread,95
+129,Focaccia,142
+130,Oat Bran Bread Toasted,70
+131,Rye Bread,83
+132,Wheat Germ Bread,73
+133,Protein Bread Toasted,46
+134,Oatmeal Bread,73
+135,Arepa,215
+136,Raisin Bread Toasted,86
+137,Cracked Wheat Bread,74
+138,Garlic Bread,151
+139,Rye Bread Toasted,82
+140,Bread,128
+142,Pan Dulce Bread,231
+143,Rice Bran Bread Toasted,66
+144,Pita Bread,74
+145,Wheat Germ Bread Toasted,73
+146,Pumpernickel Bread,65
+147,Frybread,502
+148,White Bread Toasted,83
+149,Piki Bread,109
+150,Wheat Bread Toasted,75
+152,Potato Bread,85
+154,Oatmeal Bread Toasted,73
+155,Cheese Bread,196
+156,Pumpernickel Bread Toasted,80
+157,Raisin Bread,88
+158,Pumpernickel Roll,77
+159,Cinnamon Raisin Bagel,71
+161,Rye Dinner Roll,123
+163,Dinner Roll,74
+165,Hotdog Roll,117
+166,Bagel,245
+167,Oat Bran Bagel,176
+168,Pain Au Chocolat De La Boulangerie,235
+172,Biscuit,357
+173,French Roll,105
+174,Oat Bran Dinner Roll,78
+175,Pecan Shortbread Cookies,76
+176,Oatmeal Cookies,113
+177,Chocolate Wafers,485
+178,Vanilla Wafers,353
+180,Gingersnap Cookies,29
+181,Biscotti Abbracci Mulino Bianco,54
+182,Chocolate Chip Cookie,63
+183,Brownie,243
+184,Shortbread Cookies,40
+185,Oatmeal Cookies Raisins,65
+187,Sugar Cookies,72
+188,Chocolate Covered Graham Crackers,68
+189,Raisin Cookies,60
+191,Graham Crackers,355
+193,Vanilla Sandwich Cookie,72
+194,Sugar Wafers Creme Filling,51
+195,Cheese Puffs,197
+196,Saltine Crackers,13
+197,Trail Mix,139
+198,Corn Cones,144
+199,Chocolate Pretzels,50
+200,French Toast Sticks,73
+201,Crackers,82
+202,Sesame Sticks,54
+203,Cheese Crackers,34
+204,Oriental Rice Cracker Mix,143
+205,Breadsticks,103
+206,Milk Crackers,50
+207,Matzo Crackers,98
+209,Granola Bites,23
+211,Tropical Trail Mix,619
+212,Soft Pretzels,389
+213,Corn Tostada Shell,58
+215,Sesame Crunch,9
+216,Trail Mix Chocolate Chips,707
+217,Cracker Meal,440
+218,Puffed Rice,153
+219,Filinchen Gutena,19
+220,Melba Toast Crackers,117
+221,Matzo Crackers Onion,109
+222,Cornnuts,126
+223,Bagel Chips,789
+224,Pretzels,115
+225,Potato,164
+226,Gatto Di Patate Home Made,202
+228,Potato Sticks,188
+230,Vivaldi Potatoes Sainsburys,23
+231,Potato Ham Chowder Soup,192
+232,Russet Potato,292
+234,French Fries,13
+235,Potato Scalloped,216
+236,Cottage Fries,11
+237,Mashed Potatoes,215
+239,Red Potato,149
+240,Potato Pancake,59
+241,Potato Puffs,243
+243,Potatoes Canned,132
+244,Potato Skin,22
+245,Shoestring French Fries,4
+246,Hash Brown Potato,144
+247,Chips Lays,130
+248,Corn Chips,162
+250,Corn Chips Barbecue,1036
+252,Potato Chips,860
+253,Sweet Chilli Kettle Chips,99
+254,Taro Chips,11
+255,Potato Chips Reduced Fat,801
+256,Onion Snacks,150
+257,Potato Chips Cheese,843
+258,Yuca Cassava Chips,9
+263,Sweet Potato Chips,149
+265,Chips,134
+267,Potato Chips Barbecue,970
+268,Pita Chips,137
+269,Potato Chips Sour Cream And Onion,1051
+270,Adobo Fresco,780
+271,Chili Pepper Sauce Red,3
+273,Catsup,19
+274,Chili Pepper Sauce Green,3
+275,Red Wine Vinegar,3
+276,Fish Sauce,6
+277,Coleslaw Dressing Reduced Fat,56
+278,Sour Dressing,21
+279,Guava Sauce,86
+280,Pizza Sauce,136
+282,Nance Syrup,4
+283,French Dressing Reduced Fat,37
+284,Peppercorn Dressing,76
+285,Sorghum Syrup,61
+286,Ranch Dressing,17
+287,Caesar Dressing Low Calorie,17
+288,Sweet Sour Dressing,2
+289,Mayonnaise Imitation,13
+290,Sofrito,488
+291,Turkey Gravy Instant,27
+292,Teriyaki Sauce,16
+293,Tomato Sauce,59
+294,Barbecue Sauce Kraft,28
+295,Cranberry Sauce Sweetened,418
+296,Coleslaw Dressing,62
+297,Onion Gravy,77
+298,Corn Syrup Light,62
+299,Bacon Tomato Dressing,49
+300,Pancake Syrup,53
+301,Balsamic Vinegar,14
+302,Ranch Dressing Reduced Fat,29
+305,Poppyseed Dressing,66
+306,Honey Mustard Dressing,70
+307,French Dressing,21
+308,Vinegar,3
+309,Spray Dressing,13
+311,Mushroom Gravy,119
+312,White Sauce,368
+313,Marinara Pasta Sauce,129
+314,Tomato Sauce Mushrooms,86
+315,Pork Gravy Powder,25
+316,Beef Gravy,123
+317,Green Goddess Dressing,64
+318,Salsa Con Queso,358
+319,Cocktail Sauce,19
+320,Worcestershire Sauce,13
+321,Barbecue Sauce,29
+322,Tomato Sauce Onions,103
+323,Brown Gravy,22
+324,Blue Cheese Dressing Light,14
+325,Spanish Tomato Sauce,81
+326,Oyster Sauce,9
+327,Cheese Sauce,30
+328,Hoisin Sauce,35
+329,Pickle Relish,20
+330,Tomato Sauce Herbs Cheese,144
+332,Mayonnaise Hellmanns,15
+333,Canadian Maple Syrup,76
+334,Maple Syrup,52
+335,Barbecue Sauce Bulls Eye,27
+337,Tomato Ketchup Mp,15
+338,Mayonnaise Light,36
+339,Mayonnaise Dressing,103
+340,Malt Syrup,67
+341,Gravy,86
+342,Cranberry Orange Relish,490
+343,Caesar Dressing,80
+344,Italian Dressing,35
+345,Brown Gravy Instant,25
+346,Roquefort Cheese Dressing,15
+347,Blue Cheese Dressing,71
+348,Duck Sauce,80
+349,Au Jus,38
+350,Corn Syrup Dark,57
+351,Dressing Light,30
+352,Cider Vinegar,3
+353,Tartar Sauce,32
+354,Pepper Hot Sauce,1
+355,Tomato Chili Sauce,6
+356,Turkey Gravy,26
+357,Salsa Sauce,5
+358,Steak Sauce,16
+359,Molasses,58
+361,Plum Sauce,35
+362,Chow Mein Stir Fry Master Foods,26
+363,Beef Gravy Instant,25
+364,Horseradish,2
+365,Grenadine,54
+366,Tabasco Sauce,1
+367,Sweet Sour Sauce,26
+368,Salsa Verde,6
+369,Miso,40
+370,Sprouted Soybean,76
+371,Soy Flour Roasted,375
+372,Soy Flour,330
+373,Green Soybean,127
+374,Azumaya Tofu Vitasoy,316
+375,Soy Proteins Isolate,96
+376,Tofu,246
+377,Bacon Meatless,446
+378,Meatless Chicken Fried,304
+379,Soymilk,109
+380,Soy Vermicelli,463
+381,Tofu Fried,35
+382,Tempeh,320
+383,Koyadofu,81
+384,Meatless Meatloaf,110
+385,Soya Vanille Joghurt Alpro,21
+386,Soybean Curd Cheese,340
+387,Soy Sauce,8
+388,Soybean Roasted,419
+390,Meatless Chicken,376
+391,Soybean,296
+396,Soy Chips,109
+398,Soy Proteins Concentrate,93
+400,Chocolate Soymilk,107
+401,Okara,93
+402,Meatless Meatballs,284
+403,Vanilla Soymilk,131
+404,Soy Meal,414
+409,Vanilla Soymilk Light,83
+412,Natto,169
+413,Chrysanthemum,12
+414,Gourd,100
+415,Cauliflower,3
+416,Red Cabbage,53
+417,Broccoli Raab,9
+418,Napa Cabbage,13
+419,Kelp,2
+420,Shallots,18
+421,Bamboo Shoots,49
+422,Jute,32
+423,Red Lettuce,4
+424,Broccoli,98
+425,Romanesco,20
+426,Eggplant,115
+427,Leeks,54
+428,Lemongrass Citronella,5
+429,Pumpkin,49
+430,Celery,7
+431,Serrano Pepper,2
+432,Nopales,14
+433,Sweet Potato Leaves,22
+435,Asparagus,3
+436,Rutabaga,72
+437,Parsnips,128
+438,Sour Pickles,17
+439,Turnip Greens,29
+440,Jerusalem Artichokes,110
+441,Collard,12
+443,Oriental Radish Dried,314
+444,Tomatillos,42
+445,Taro Shoots,9
+446,Acorn Squash,172
+447,Leeks Dried,10
+448,Cabbage,70
+449,Sweet Red Peppers,19
+451,Cucumber Peeled,16
+452,Purslane,9
+453,Peas Onions,81
+454,Tomato,22
+456,Scots Kale,28
+457,Artichoke,60
+458,Navy Bean Sprouts,70
+459,Sweet Pickles,146
+460,Oriental Radish,25
+462,Irishmoss,2
+463,Drumstick Leaves,25
+464,Winter Squash,39
+466,Chicory Greens,7
+467,,41
+468,Radish Pickled,42
+469,Sweet Onion,106
+470,Salsify,92
+471,Radish Seeds Sprouted,16
+472,Turnips,51
+473,Burdock Root,85
+476,Hot Chile Pepper Dried,2
+478,Crookneck Squash,24
+479,Indian Squash,38
+480,Poi,269
+481,Sesbania Flower,22
+485,Laver Seaweed,1
+486,Mountain Yam,119
+487,Pumpkin Flowers,5
+488,Mustard Greens,15
+489,Arrowhead,12
+490,Japanese Cabbage,45
+491,Mung Bean Sprouts,24
+492,Scallop Squash,29
+493,Pumpkin Leaves,15
+494,Hungarian Pepper,8
+495,Sweet Potato,103
+496,Chinese Cabbage Pe Tsai,12
+497,Taro,116
+498,Yam Bean Jicama,49
+499,Olives,10
+502,Tree Fern,57
+503,Yellow Corn,606
+504,Endive,9
+505,Wakame,36
+506,Tahitian Taro,55
+508,Sweet Green Peppers,30
+509,Chinese Cabbage Pak Choi,20
+510,Agar,1
+511,Watercress,4
+512,Beet Greens,39
+514,New Zealand,8
+515,Okra,4
+516,Yautia Tannier,132
+517,Mustard,29
+518,Rhubarb,278
+519,Beets,58
+520,Drumstick Pods,37
+521,Baby Zucchini,2
+522,Onion,16
+524,Butternut Squash,90
+525,Amaranth Leaves,6
+528,Seaweed,52
+529,Yam,158
+530,Corn Dried,119
+531,Cucumber,23
+532,Arrowroot,78
+533,Cardoon,30
+535,Summer Squash,42
+537,Green Tomato,42
+539,Savoy Cabbage,41
+540,Witloof Chicory,9
+542,Dried Tomatoes,5
+543,Radicchio,15
+544,Mixed Vegetables,118
+545,Yellow Tomato,32
+548,Kale,7
+550,Kohlrabi,72
+551,Lentil Sprouts,82
+552,Carrots,25
+553,Red Chili Peppers,18
+554,Fennel,73
+555,Sweet Corn White,63
+556,Celeriac,66
+557,Hubbard Squash,46
+558,Brussels Sprouts,8
+560,Lambs Quarters,0
+561,Lotus Root,6
+562,Split Peas,672
+564,Corn,99
+565,Radish,1
+566,Stinging Nettles,37
+567,Baby Carrots,5
+568,Sweet Yellow Peppers,50
+569,Taro Leaves,12
+571,Roselle,28
+574,Chicory Roots,65
+577,Pupusas Con Frijoles,289
+578,Mustard Cabbage,36
+582,Cassava,330
+583,Peas Carrots,77
+584,Romaine Lettuce,8
+586,Chowchow Pickles,296
+587,Prairie Turnips,20
+592,Zucchini,44
+594,White Icicle Radish,14
+595,Orange Tomato,18
+598,White Corn,100
+600,Avocado,432
+601,String Beans Wellsley Farms,8
+603,Peas,134
+605,Shallots Dried,3
+606,Green Lettuce,23
+608,Kanpyo Dried,139
+609,Prairie Turnips Boiled,18
+613,Spring Onion Scallions,6
+615,Jalapeno Pepper,4
+618,Spirulina Dried,20
+621,Green Olives Pickled,4
+623,Grape Leaves,13
+624,Dill Pickled Cucumber,17
+625,Skunk Cabbage,11
+626,Banana Pepper,9
+630,Swamp Cabbage,20
+633,Swiss Chard,7
+639,Sweet Corn Yellow,58
+646,Green Chili Pepper,18
+649,Tomato Stewed,97
+653,Jalapeno Peppers Canned,37
+654,Pumpkin Canned,83
+655,Peas Onions Canned,61
+656,Sweet Mashed Potato Canned,258
+657,Hominy Canned,119
+658,Tomato Puree Canned,95
+660,Mixed Vegetables Canned,88
+661,Straw Mushrooms Canned,2
+662,Capers Canned,2
+663,Red Peppers Canned,15
+664,Carrots Canned,104
+665,Tomatoes In Tomato Juice Canned,41
+666,Asparagus Canned,62
+667,Sweet Red Peppers Canned,25
+668,Onions Canned,12
+669,Turnip Greens Canned,27
+670,Hearts Of Palm,9
+671,Canned,44
+672,Sweet Potato Canned,568
+673,Corn Canned,49
+674,Peas Carrots Canned,97
+675,Crookneck Squash Canned,27
+676,Tomatoes Canned,77
+677,Pimento Canned,44
+678,Sweet Green Peppers Canned,25
+679,Peas Canned,57
+680,Chili Peppers Canned,29
+681,Green Peppers Canned,15
+682,Grape Leaves Canned,20
+683,Sauerkraut Canned,27
+684,Beets Canned,69
+685,Stewed Tomatoes Canned,66
+686,Tomato Paste Canned,215
+690,Salad,22
+691,Salad Chicken,70
+692,Potato Salad,358
+693,Taco Salad Taco Bell,906
+694,Iceberg Lettuce,8
+695,Cornsalad,12
+699,Grape Apple Salad Walnuts,191
+700,Salad Cheese,68
+701,Celtuce,1
+702,Arugula,5
+703,Salad Shrimp,71
+704,Coleslaw,292
+705,Shiitake Mushrooms,10
+707,Crimini Mushrooms,1
+708,Mushrooms,15
+709,Portabella Mushrooms Grilled,35
+710,Maitake Mushrooms,0
+711,Shiitake Mushrooms Dried,11
+712,Chanterelle Mushrooms,2
+713,Cloud Ear Fungus Dried,80
+715,Pepeao Dried,72
+716,Truffles,61
+717,Jews Ear,25
+718,Enoki Mushrooms,1
+719,Morel Mushrooms,4
+720,Portabella Mushrooms,19
+721,Oyster Mushroom,5
