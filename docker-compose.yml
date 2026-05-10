@@ -1,0 +1,15 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: recip-ez-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "RecipEZ_dev_2026!"
+    ports:
+      - "1433:1433"
+    volumes:
+      - recip-ez-sqlserver-data:/var/opt/mssql
+
+volumes:
+  recip-ez-sqlserver-data:
+
