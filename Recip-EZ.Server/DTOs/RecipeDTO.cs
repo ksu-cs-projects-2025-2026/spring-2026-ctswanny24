@@ -37,15 +37,14 @@ namespace Recip_EZ.Server.DTOs
         /// </summary>
         public List<string>? RawIngredientList { get; init; }
 
+        /// <summary>
+        /// List of the ingredients in the recipe, standardized to a canonical form. This is used for matching against inventory items and for display purposes.
+        /// </summary>
         public List<string>? CanonIngredients { get; init; }
 
+        /// <summary>
+        /// Gets the collection of priorities associated with the current recipe. Each index of priority matches with the index of the ingredient item in CanonIngredients
+        /// </summary>
         public List<Priority>? Priorities { get; init; }
-
-        public List<Ingredient>? CoreIngredients { get; set; }
-
-        public List<Ingredient>? SupportIngredients { get; set; }
-
-        public List<Ingredient>? OptionalIngredients { get; set; }
-
         }
     }

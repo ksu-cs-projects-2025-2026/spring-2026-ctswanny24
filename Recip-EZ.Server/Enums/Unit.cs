@@ -1,5 +1,8 @@
 ﻿namespace Recip_EZ.Server.Enums
 {
+    /// <summary>
+    /// Enum of measurement units for ingredients in the user's inventory and recipes
+    /// </summary>
     public enum Unit
     {
         // Count / discrete items

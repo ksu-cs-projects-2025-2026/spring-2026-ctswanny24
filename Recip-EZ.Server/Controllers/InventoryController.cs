@@ -163,7 +163,11 @@ namespace Recip_EZ.Server.Controllers
         }
 
         #endregion
-
+        /// <summary>
+        /// Attempts to retrieve the authenticated user's ID from the claims in the JWT token.
+        /// </summary>
+        /// <param name="userId">The authenticated user's ID if found, otherwise 0.</param>
+        /// <returns>True if the user ID was successfully retrieved, otherwise false.</returns>
         private bool TryGetAuthenticatedUserId(out int userId)
         {
             var claimValue = User.FindFirstValue(ClaimTypes.NameIdentifier);

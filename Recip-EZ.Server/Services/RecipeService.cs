@@ -162,10 +162,7 @@ namespace Recip_EZ.Server.Services
                 Source = item.Source ?? string.Empty,
                 RawIngredientList = JsonSerializer.Deserialize<List<string>>(item.RawIngredientList ?? "[]") ?? new List<string>(),
                 CanonIngredients = JsonSerializer.Deserialize<List<string>>(item.CanonIngredients ?? "[]") ?? new List<string>(),
-                Priorities = priorityEnums,
-                CoreIngredients = new List<Ingredient>(),
-                SupportIngredients = new List<Ingredient>(),
-                OptionalIngredients = new List<Ingredient>()
+                Priorities = priorityEnums
             };
         }
 
@@ -184,12 +181,22 @@ namespace Recip_EZ.Server.Services
         private double _supportingWeight = 0.3;
         private double _optionalWeight = 0.1;
 
+        /// <summary>
+        /// Represents an item in the inventory, including its unique identifier and name.
+        /// </summary>
         private sealed class InventoryItem
         {
             public int IngredientId { get; init; }
             public string IngredientName { get; init; } = string.Empty;
         }
 
+        /// <summary>
+        /// Performs heuristic curation of recipes based on the user's inventory.
+        /// </summary>
+        /// <param name="userId">The ID of the user for whom to perform curation.</param>
+        /// <param name="limit">The maximum number of curated recipes to return.</param>
+        /// <param name="minimumMatchPercentage">The minimum match percentage required for a recipe to be included.</param>
+        /// <returns>A list of curated recipe DTOs.</returns>
         public List<CuratedRecipeDTO> HeuristicCuration(int userId, int limit = 25, double minimumMatchPercentage = 0)
         {
             //Get the inventory for the user and also get the aliases for each ingredient.

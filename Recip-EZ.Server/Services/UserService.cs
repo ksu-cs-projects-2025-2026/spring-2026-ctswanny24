@@ -53,8 +53,15 @@ namespace Recip_EZ.Server.Services
                 .FirstOrDefault(u => u.Username == username && u.Password == password);
         }
 
+        /// <summary>
+        /// Attempts to create a new user in the database with the provided username and password.
+        /// </summary>
+        /// <param name="username">The username for the new user</param>
+        /// <param name="password">The password for the new user</param>
+        /// <returns>The newly created user, or null if the registration fails</returns>
         public User? RegisterUser(string username, string password)
         {
+            //Potential to get this finished before 1.0, but will likely be a goal for 1.1 or later.
             return null;
         }
 

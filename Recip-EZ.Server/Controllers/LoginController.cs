@@ -9,10 +9,25 @@ using System.Text;
 
 namespace Recip_EZ.Server.Controllers
 {
+
+    /// <summary>
+    /// Represents the result of a login operation, including user identification, status, and an optional message.
+    /// </summary>
     public class LoginResponse
     {
+        /// <summary>
+        /// The ID of the authenticated user.
+        /// </summary>
         public int UserId { get; init; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the operation completed successfully.
+        /// </summary>
         public bool Success { get; set; }
+
+        /// <summary>
+        /// Gets or sets the message content.
+        /// </summary>
         public string Message { get; set; } = string.Empty;
     }
 
@@ -25,6 +40,12 @@ namespace Recip_EZ.Server.Controllers
         public required string Password { get; set; }
     }
 
+    /// <summary>
+    /// Represents the result of an authentication operation, including user identity and status information.
+    /// </summary>
+    /// <remarks>This class is typically used to return user details and authentication status from
+    /// authentication endpoints or services. It provides basic user information for clients after a successful or
+    /// failed authentication attempt.</remarks>
     public class AuthenticatedUserResponse
     {
         public bool Success { get; set; }
@@ -96,6 +117,13 @@ namespace Recip_EZ.Server.Controllers
             });
         }
 
+        /// <summary>
+        /// Retrieves information about the currently authenticated user.
+        /// </summary>
+        /// <remarks>This endpoint requires authentication. The response includes the user's ID, username,
+        /// and display name as obtained from the current authentication context.</remarks>
+        /// <returns>An <see cref="OkObjectResult"/> containing the authenticated user's details if the user is authorized;
+        /// otherwise, an <see cref="UnauthorizedResult"/> if the user is not authenticated.</returns>
         [Authorize]
         [HttpGet("me")]
         public IActionResult Me()
@@ -118,6 +146,12 @@ namespace Recip_EZ.Server.Controllers
             });
         }
 
+        /// <summary>
+        /// Logs out the current user by removing the authentication cookie from the response.
+        /// </summary>
+        /// <remarks>This action requires the user to be authenticated. After calling this method, the client will no
+        /// longer be authenticated on subsequent requests unless a new login is performed.</remarks>
+        /// <returns>An <see cref="OkObjectResult"/> containing a success flag and a message indicating the logout was successful.</returns>
         [Authorize]
         [HttpPost("logout")]
         public IActionResult Logout()
@@ -133,6 +167,16 @@ namespace Recip_EZ.Server.Controllers
             return Ok(new { Success = true, Message = "Logged out successfully." });
         }
 
+        /// <summary>
+        /// Generates a JSON Web Token (JWT) for the specified user, containing user identity and authentication claims.
+        /// </summary>
+        /// <remarks>The generated token includes claims for the user's identifier, name, and email
+        /// address. The token's expiration and signing credentials are determined by configuration settings. Ensure
+        /// that the configuration contains valid JWT settings for correct token generation.</remarks>
+        /// <param name="user">The user for whom the JWT will be generated. Must not be null and should contain valid user identification
+        /// and authentication information.</param>
+        /// <returns>A string representing the generated JWT, which can be used for authenticating the user in subsequent
+        /// requests.</returns>
         private string GenerateJwtToken(User user)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));

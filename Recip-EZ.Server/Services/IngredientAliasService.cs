@@ -288,6 +288,11 @@ namespace Recip_EZ.Server.Services
             return cleanedPhrase;
         }
 
+        /// <summary>
+        /// Adds an alias to the set of aliases if it is not null, empty, or whitespace. The alias is trimmed and converted to lowercase before being added.
+        /// </summary>
+        /// <param name="aliases">The set of aliases to which the new alias will be added.</param>
+        /// <param name="alias">The alias to be added.</param>
         private void AddAlias(HashSet<string> aliases, string? alias)
         {
             if (string.IsNullOrWhiteSpace(alias))
