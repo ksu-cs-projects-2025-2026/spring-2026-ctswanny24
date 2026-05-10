@@ -169,6 +169,7 @@ namespace Recip_EZ.Server.Services
             };
         }
 
+        #region Heruistic Matching
 
         //Curation Logic V2
         //Attempted Heuristic Matching. 
@@ -189,7 +190,7 @@ namespace Recip_EZ.Server.Services
             public string IngredientName { get; init; } = string.Empty;
         }
 
-        public List<CuratedRecipeDTO> ComplicatedCuration(int userId, int limit = 25, double minimumMatchPercentage = 0)
+        public List<CuratedRecipeDTO> HeuristicCuration(int userId, int limit = 25, double minimumMatchPercentage = 0)
         {
             //Get the inventory for the user and also get the aliases for each ingredient.
             var inventory = GetUserInventory(userId);
@@ -357,7 +358,7 @@ namespace Recip_EZ.Server.Services
 
             for (int i = 0; i < recipe.CanonIngredients?.Count; i++)
             {
-                switch(recipe.Priorities[i])
+                switch(recipe.Priorities![i])
                 {
                     case Priority.Core:
                         if (matchedIndexes.Contains(i))
@@ -420,7 +421,7 @@ namespace Recip_EZ.Server.Services
                 MatchedIngredientCount = matchedIndexes.Count,
                 MissingIngredientCount = (recipe.CanonIngredients?.Count ?? 0) - matchedIndexes.Count,
                 TotalIngredientCount = recipe.CanonIngredients?.Count ?? 0,
-                MatchPercentage = ((double)matchedIndexes.Count / (recipe.CanonIngredients?.Count ?? 1)) * 100, // Avoid division by zero
+                MatchPercentage = Math.Round(((double)matchedIndexes.Count / (recipe.CanonIngredients?.Count ?? 1)) * 100, 2), // Avoid division by zero
                 CanMakeNow = (scores[0] >= 0.75),
                 IsCloseMatch = ((double)matchedIndexes.Count / (recipe.CanonIngredients?.Count ?? 1)) >= 0.5, // Arbitrary threshold for "close match"
                 MatchedCoreIngredients = matchedCoreIngredients,
@@ -471,10 +472,10 @@ namespace Recip_EZ.Server.Services
                 ? 0
                 : ((coreScore * _coreWeight) + (supportingScore * _supportingWeight) + (optionalScore * _optionalWeight)) / activeWeightTotal;
 
-            scores.Add(heuristicScore);
-            scores.Add(coreScore);
-            scores.Add(supportingScore);
-            scores.Add(optionalScore);
+            scores.Add(Math.Round(heuristicScore, 2));
+            scores.Add(Math.Round(coreScore, 2));
+            scores.Add(Math.Round(supportingScore, 2));
+            scores.Add(Math.Round(optionalScore, 2));
 
             return scores;
         }
@@ -518,5 +519,7 @@ namespace Recip_EZ.Server.Services
                 && recipe.Priorities.Count == recipe.CanonIngredients.Count;
         }
 
+
+        #endregion
     }
 }

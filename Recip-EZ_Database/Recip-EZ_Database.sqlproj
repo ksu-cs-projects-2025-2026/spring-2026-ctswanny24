@@ -60,9 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Tables\Users.sql" />
-    <Build Include="Tables\InventoryItem.sql" />
+    <Build Include="Tables\Ingredients.sql" />
     <Build Include="Tables\Recipes.sql" />
-    <Build Include="Tables\UserInventory.sql" />
+    <Build Include="Tables\UserInventories.sql" />
     <Build Include="Tables\IngredientAliases.sql" />
   </ItemGroup>
 </Project>

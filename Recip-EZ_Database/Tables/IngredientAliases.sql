@@ -1,10 +1,6 @@
-﻿CREATE TABLE [dbo].[IngredientAliases]
-(
-	[IngredientAliasId] INT NOT NULL IDENTITY PRIMARY KEY,
-	[IngredientId] INT NOT NULL,
-	[AliasName] NVARCHAR(255) NOT NULL,
-
-	CONSTRAINT FK_IngredientAliases_Ingredients
-		FOREIGN KEY (IngredientId)
-		REFERENCES dbo.Ingredients.(IngredientId)
+﻿CREATE TABLE [dbo].[IngredientAliases] (
+    [IngredientAliasId] INT            IDENTITY (1, 1) NOT NULL,
+    [IngredientId]      INT            NOT NULL,
+    [AliasName]         NVARCHAR (MAX) NOT NULL,
+    CONSTRAINT [PK_IngredientAliases] PRIMARY KEY CLUSTERED ([IngredientAliasId] ASC)
 );

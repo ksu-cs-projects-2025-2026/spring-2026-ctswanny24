@@ -74,7 +74,7 @@ namespace Recip_EZ.Server.Controllers
 
             try
             {
-                var result = _service.ComplicatedCuration(userId, limit, minimumMatchPercentage);
+                var result = _service.HeuristicCuration(userId, limit, minimumMatchPercentage);
                 //var result = _service.ComplicatedCuration(userId, limit, minimumMatchPercentage);
 
                 return Ok(new CuratedRecipesResponse
