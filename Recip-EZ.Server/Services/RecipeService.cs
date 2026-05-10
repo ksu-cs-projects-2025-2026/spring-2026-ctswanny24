@@ -189,7 +189,6 @@ namespace Recip_EZ.Server.Services
             public string IngredientName { get; init; } = string.Empty;
         }
 
-
         public List<CuratedRecipeDTO> ComplicatedCuration(int userId, int limit = 25, double minimumMatchPercentage = 0)
         {
             //Get the inventory for the user and also get the aliases for each ingredient.
@@ -204,6 +203,11 @@ namespace Recip_EZ.Server.Services
             Dictionary<int, HashSet<string>> inventoryAliases = GetInventoryAliases(inventory);
             var recipes = GetAllRecipesAsDTO();
 
+            recipes = recipes
+                .Where(IsValidForCuration)
+                .ToList();
+
+
 
             //Do the same normalization methods for recipe ingredients.
             //Each recipe will have a dictionary where the key is the ingredient index in the raw ingredient list and the value is a hash set of all aliases for that ingredient.
@@ -217,14 +221,25 @@ namespace Recip_EZ.Server.Services
                 recipeMatchResults.Add(recipe.Key, matchedIngredients);
             }
 
-            List<CuratedRecipeDTO> curatedRecipes = new List<CuratedRecipeDTO>();
+            List<CuratedRecipeDTO> curatedRecipes = recipes
+                .Where(recipe => recipeMatchResults.ContainsKey(recipe.RecipeId))
+                .Select(recipe => ToRecipeDTO(recipe, recipeMatchResults[recipe.RecipeId]))
+                .ToList();
 
-            foreach(RecipeDTO recipe in recipes)
-            {
-                curatedRecipes.Add(ToRecipeDTO(recipe, recipeMatchResults[recipe.RecipeId]));
-            }
+            //List<CuratedRecipeDTO> curatedRecipes = new List<CuratedRecipeDTO>();
 
-            return curatedRecipes;
+            //foreach(RecipeDTO recipe in recipes)
+            //{
+            //    curatedRecipes.Add(ToRecipeDTO(recipe, recipeMatchResults[recipe.RecipeId]));
+            //}
+
+            return curatedRecipes
+                .Where(recipe => recipe.MatchPercentage >= Math.Clamp(minimumMatchPercentage, 0, 100))
+                .OrderByDescending(recipe => recipe.CanMakeNow)
+                .ThenByDescending(recipe => recipe.Score)
+                .ThenByDescending(recipe => recipe.MatchPercentage)
+                .Take(limit > 0 ? limit : 25)
+                .ToList();
         }
 
         /// <summary>
@@ -339,6 +354,7 @@ namespace Recip_EZ.Server.Services
             List<string> missingOptionalIngredients = new List<string>();
 
 
+
             for (int i = 0; i < recipe.CanonIngredients?.Count; i++)
             {
                 switch(recipe.Priorities[i])
@@ -441,14 +457,19 @@ namespace Recip_EZ.Server.Services
         {
             List<double> scores = new List<double>();
 
-            double coreScore = (double)counts[0] / (counts[0] + counts[1]);
+            double coreScore = CalculateCategoryScore(counts[0], counts[1]);
+            double supportingScore = CalculateCategoryScore(counts[2], counts[3]);
+            double optionalScore = CalculateCategoryScore(counts[4], counts[5]);
 
-            double supportingScore = (double)counts[2] / (counts[2] + counts[3]);
-
-            double optionalScore = (double)counts[4] / (counts[4] + counts[5]);
+            double activeWeightTotal = 0;
+            activeWeightTotal += HasIngredients(counts[0], counts[1]) ? _coreWeight : 0;
+            activeWeightTotal += HasIngredients(counts[2], counts[3]) ? _supportingWeight : 0;
+            activeWeightTotal += HasIngredients(counts[4], counts[5]) ? _optionalWeight : 0;
 
             //Calculate the final heuristic score using the weights for each category. The weights can be adjusted to give more or less importance to each category.
-            double heuristicScore = (coreScore * _coreWeight) + (supportingScore * _supportingWeight) + (optionalScore * _optionalWeight);
+            double heuristicScore = activeWeightTotal == 0
+                ? 0
+                : ((coreScore * _coreWeight) + (supportingScore * _supportingWeight) + (optionalScore * _optionalWeight)) / activeWeightTotal;
 
             scores.Add(heuristicScore);
             scores.Add(coreScore);
@@ -457,5 +478,45 @@ namespace Recip_EZ.Server.Services
 
             return scores;
         }
+
+        /// <summary>
+        /// Calculates the proportion of matched items within a category based on the number of matched and missing
+        /// items.
+        /// </summary>
+        /// <param name="matchedCount">The number of items that were successfully matched. Must be zero or greater.</param>
+        /// <param name="missingCount">The number of items that were missing or not matched. Must be zero or greater.</param>
+        /// <returns>A double value representing the ratio of matched items to the total number of items. Returns 0 if both
+        /// matched and missing counts are zero.</returns>
+        private double CalculateCategoryScore(int matchedCount, int missingCount)
+        {
+            int totalCount = matchedCount + missingCount;
+            return totalCount == 0 ? 0 : (double)matchedCount / totalCount;
+        }
+
+        /// <summary>
+        /// Determines whether there are any ingredients present based on the specified matched and missing counts.
+        /// </summary>
+        /// <param name="matchedCount">The number of ingredients that are matched or available.</param>
+        /// <param name="missingCount">The number of ingredients that are missing or unavailable.</param>
+        /// <returns>true if the total number of matched and missing ingredients is greater than zero; otherwise, false.</returns>
+        private bool HasIngredients(int matchedCount, int missingCount)
+        {
+            return matchedCount + missingCount > 0;
+        }
+
+        /// <summary>
+        /// Determines whether the specified recipe contains valid ingredient and priority data for curation.
+        /// </summary>
+        /// <param name="recipe">The recipe to validate for curation. Must not be null and must contain non-empty ingredient and priority
+        /// lists of equal length.</param>
+        /// <returns>true if the recipe has non-null, non-empty ingredient and priority lists of equal length; otherwise, false.</returns>
+        private bool IsValidForCuration(RecipeDTO recipe)
+        {
+            return recipe.CanonIngredients != null
+                && recipe.CanonIngredients.Count > 0
+                && recipe.Priorities != null
+                && recipe.Priorities.Count == recipe.CanonIngredients.Count;
+        }
+
     }
 }

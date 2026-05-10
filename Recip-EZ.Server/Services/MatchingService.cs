@@ -27,7 +27,7 @@ namespace Recip_EZ.Server.Services
                 int recipeIngredientIndex = recipeIngredient.Key;
                 HashSet<string> recipeAliases = recipeIngredient.Value;
 
-                if(FindAliasMatch(recipeIngredientIndex, recipeAliases, inventoryAliases))
+                if(FindAliasMatch(recipeAliases, inventoryAliases))
                 {
                     matchedIngredientsIndexList.Add(recipeIngredientIndex);
                 }
@@ -36,7 +36,7 @@ namespace Recip_EZ.Server.Services
             return matchedIngredientsIndexList;
         }
 
-        public bool FindAliasMatch(int recipeIngredientIndex, HashSet<string> recipeAliases, Dictionary<int, HashSet<string>> inventoryAliases)
+        public bool FindAliasMatch(HashSet<string> recipeAliases, Dictionary<int, HashSet<string>> inventoryAliases)
         {
             return inventoryAliases.Values.Any(inventoryAliasesForItem =>
                 recipeAliases.Overlaps(inventoryAliasesForItem));
