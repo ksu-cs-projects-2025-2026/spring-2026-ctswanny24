@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Recip_EZ.Server.Controllers;
 using Recip_EZ.Server.Enums;
 using Recip_EZ.Server.Models;
 using Recip_EZ.Server.Services;
 using Recip_EZ.Tests.TestSupport;
+using System.Security.Claims;
 
 namespace Recip_EZ.Tests.Controllers;
 
@@ -15,11 +18,10 @@ public class ControllerTests
         using var context = TestDbContextFactory.CreateContext();
         context.Ingredients.Add(new Ingredient { IngredientId = 1, Name = "Flour" });
         context.SaveChanges();
-        var controller = new InventoryController(new InventoryService(context));
+        var controller = CreateInventoryController(context, userId: 5);
 
         var result = controller.AddIngredient(new InventoryPayload
         {
-            UserId = 5,
             IngredientId = 1,
             Quantity = 4,
             Unit = nameof(Unit.Cup)
@@ -37,11 +39,10 @@ public class ControllerTests
     public void InventoryController_AddIngredient_InvalidUnit_ThrowsArgumentException()
     {
         using var context = TestDbContextFactory.CreateContext();
-        var controller = new InventoryController(new InventoryService(context));
+        var controller = CreateInventoryController(context, userId: 5);
 
         Assert.Throws<ArgumentException>(() => controller.AddIngredient(new InventoryPayload
         {
-            UserId = 5,
             IngredientId = 1,
             Quantity = 4,
             Unit = "NotAUnit"
@@ -52,7 +53,7 @@ public class ControllerTests
     public void InventoryController_DeleteMissingInventoryItem_ReturnsNotFound()
     {
         using var context = TestDbContextFactory.CreateContext();
-        var controller = new InventoryController(new InventoryService(context));
+        var controller = CreateInventoryController(context, userId: 5);
 
         var result = controller.DeleteInventoryItem(404);
 
@@ -64,9 +65,22 @@ public class ControllerTests
     {
         using var context = TestDbContextFactory.CreateContext();
         var aliasService = new IngredientAliasService(context);
-        var controller = new RecipeController(new RecipeService(context, aliasService));
+        var matchingService = new MatchingService(context, aliasService);
+        var controller = new RecipeController(new RecipeService(context, aliasService, matchingService))
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, "77")
+                    }, "TestAuth"))
+                }
+            }
+        };
 
-        var result = controller.FetchCuratedRecipes(userId: 77);
+        var result = controller.FetchCuratedRecipes();
 
         var okResult = Assert.IsType<OkObjectResult>(result);
         var response = Assert.IsType<CuratedRecipesResponse>(okResult.Value);
@@ -89,7 +103,13 @@ public class ControllerTests
             CreatedOn = DateTime.UtcNow
         });
         context.SaveChanges();
-        var controller = new LoginController(new UserService(context));
+        var controller = new LoginController(new UserService(context), CreateJwtConfig())
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
 
         var result = controller.Login(new LoginRequest { Username = "demo", Password = "secret" });
 
@@ -100,15 +120,56 @@ public class ControllerTests
     }
 
     [Fact]
-    public void LoginController_Login_InvalidCredentials_PropagatesServiceException()
+    public void LoginController_Login_InvalidCredentials_ReturnsUnauthorized()
     {
         using var context = TestDbContextFactory.CreateContext();
-        var controller = new LoginController(new UserService(context));
+        var controller = new LoginController(new UserService(context), CreateJwtConfig())
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
 
-        Assert.Throws<Exception>(() => controller.Login(new LoginRequest
+        var result = controller.Login(new LoginRequest
         {
             Username = "missing",
             Password = "wrong"
-        }));
+        });
+
+        var unauthorizedResult = Assert.IsType<UnauthorizedObjectResult>(result);
+        var response = Assert.IsType<LoginResponse>(unauthorizedResult.Value);
+        Assert.False(response.Success);
+        Assert.Equal("Check your username and password and try again.", response.Message);
+    }
+
+    private static InventoryController CreateInventoryController(Recip_EZ.Server.Data.RecipEzDbContext context, int userId)
+    {
+        return new InventoryController(new InventoryService(context))
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                    {
+                        new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                    }, "TestAuth"))
+                }
+            }
+        };
+    }
+
+    private static IConfiguration CreateJwtConfig()
+    {
+        return new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["Jwt:Key"] = "unit-test-secret-key-that-is-long-enough",
+                ["Jwt:Issuer"] = "RecipEZ.Tests",
+                ["Jwt:Audience"] = "RecipEZ.Tests",
+                ["Jwt:DurationInMinutes"] = "60"
+            })
+            .Build();
     }
 }

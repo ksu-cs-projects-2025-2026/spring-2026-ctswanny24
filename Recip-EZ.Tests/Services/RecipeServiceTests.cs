@@ -120,46 +120,74 @@ public class RecipeServiceTests
     }
 
     [Fact]
-    public void GetCuratedRecipesForUser_UserWithoutInventory_ReturnsEmptyList()
+    public void HeuristicCuration_UserWithoutInventory_ReturnsEmptyList()
     {
         using var context = TestDbContextFactory.CreateContext();
         SeedRecipes(context);
         var service = CreateService(context);
 
-        var recipes = service.GetCuratedRecipesForUser(userId: 999);
+        var recipes = service.HeuristicCuration(userId: 999);
 
         Assert.Empty(recipes);
     }
 
     [Fact]
-    public void GetCuratedRecipesForUser_RanksCompleteMatchesBeforePartialMatches()
+    public void HeuristicCuration_RanksCompleteMatchesBeforePartialMatches()
     {
         using var context = TestDbContextFactory.CreateContext();
         SeedInventoryForUser(context, userId: 7);
         SeedRecipes(context);
         var service = CreateService(context);
 
-        var recipes = service.GetCuratedRecipesForUser(userId: 7, limit: 10);
+        var recipes = service.HeuristicCuration(userId: 7, limit: 10);
 
-        Assert.Equal(2, recipes.Count);
+        Assert.Equal(3, recipes.Count);
         Assert.Equal("Chicken Dinner", recipes[0].RecipeName);
         Assert.True(recipes[0].CanMakeNow);
         Assert.Equal(100, recipes[0].MatchPercentage);
+        Assert.Equal(1, recipes[0].Score);
+        Assert.Equal(1, recipes[0].CoreScore);
+        Assert.Empty(recipes[0].MissingCoreIngredients);
         Assert.Equal("Tomato Soup", recipes[1].RecipeName);
         Assert.False(recipes[1].CanMakeNow);
-        Assert.Equal(50, recipes[1].MatchPercentage);
+        Assert.Equal(33.33, recipes[1].MatchPercentage);
+        Assert.Equal(0.6, recipes[1].Score);
+        Assert.Equal(1, recipes[1].CoreScore);
+        Assert.Equal(0, recipes[1].SupportingScore);
+        Assert.Equal(0, recipes[1].OptionalScore);
     }
 
     [Fact]
-    public void GetCuratedRecipesForUser_ClampsMinimumMatchPercentageAndFiltersWeakMatches()
+    public void HeuristicCuration_ReturnsCategorySpecificMatchedAndMissingIngredients()
     {
         using var context = TestDbContextFactory.CreateContext();
         SeedInventoryForUser(context, userId: 7);
         SeedRecipes(context);
         var service = CreateService(context);
 
-        var highThresholdRecipes = service.GetCuratedRecipesForUser(userId: 7, minimumMatchPercentage: 75);
-        var aboveMaxThresholdRecipes = service.GetCuratedRecipesForUser(userId: 7, minimumMatchPercentage: 1000);
+        var recipes = service.HeuristicCuration(userId: 7, limit: 10);
+
+        var recipe = Assert.Single(recipes.Where(recipe => recipe.RecipeName == "Tomato Soup"));
+        Assert.Equal(new[] { "tomatoes" }, recipe.MatchedCoreIngredients);
+        Assert.Empty(recipe.MissingCoreIngredients);
+        Assert.Empty(recipe.MatchedSupportingIngredients);
+        Assert.Equal(new[] { "cream" }, recipe.MissingSupportingIngredients);
+        Assert.Empty(recipe.MatchedOptionalIngredients);
+        Assert.Equal(new[] { "basil" }, recipe.MissingOptionalIngredients);
+        Assert.Equal(new[] { "tomatoes" }, recipe.MatchedIngredients);
+        Assert.Equal(new[] { "cream", "basil" }, recipe.MissingIngredients);
+    }
+
+    [Fact]
+    public void HeuristicCuration_ClampsMinimumMatchPercentageAndFiltersWeakMatches()
+    {
+        using var context = TestDbContextFactory.CreateContext();
+        SeedInventoryForUser(context, userId: 7);
+        SeedRecipes(context);
+        var service = CreateService(context);
+
+        var highThresholdRecipes = service.HeuristicCuration(userId: 7, minimumMatchPercentage: 75);
+        var aboveMaxThresholdRecipes = service.HeuristicCuration(userId: 7, minimumMatchPercentage: 1000);
 
         var recipe = Assert.Single(highThresholdRecipes);
         Assert.Equal("Chicken Dinner", recipe.RecipeName);
@@ -167,22 +195,23 @@ public class RecipeServiceTests
     }
 
     [Fact]
-    public void GetCuratedRecipesForUser_NonPositiveLimit_DefaultsToTwentyFive()
+    public void HeuristicCuration_NonPositiveLimit_DefaultsToTwentyFive()
     {
         using var context = TestDbContextFactory.CreateContext();
         SeedInventoryForUser(context, userId: 7);
         SeedRecipes(context);
         var service = CreateService(context);
 
-        var recipes = service.GetCuratedRecipesForUser(userId: 7, limit: 0);
+        var recipes = service.HeuristicCuration(userId: 7, limit: 0);
 
-        Assert.Equal(2, recipes.Count);
+        Assert.Equal(3, recipes.Count);
     }
 
     private static RecipeService CreateService(Recip_EZ.Server.Data.RecipEzDbContext context)
     {
         var aliasService = new IngredientAliasService(context);
-        return new RecipeService(context, aliasService);
+        var matchingService = new MatchingService(context, aliasService);
+        return new RecipeService(context, aliasService, matchingService);
     }
 
     private static void SeedInventoryForUser(Recip_EZ.Server.Data.RecipEzDbContext context, int userId)
@@ -207,23 +236,39 @@ public class RecipeServiceTests
                 RecipeName = "Chicken Dinner",
                 Ingredients = "[\"Chicken Breasts\",\"Rice\"]",
                 Instructions = "[\"Cook chicken\",\"Serve with rice\"]",
-                RawIngredientList = "[\"boneless chicken breasts\",\"rice\"]"
+                RawIngredientList = "[\"boneless chicken breasts\",\"rice\"]",
+                CanonIngredients = "[\"chicken breast\",\"rice\"]",
+                Priorities = "[\"Core\",\"Core\"]"
             },
             new Recipe
             {
                 RecipeId = 2,
                 RecipeName = "Tomato Soup",
-                Ingredients = "[\"Tomatoes\",\"Cream\"]",
+                Ingredients = "[\"Tomatoes\",\"Cream\",\"Basil\"]",
                 Instructions = "[\"Simmer\"]",
-                RawIngredientList = "[\"tomatoes\",\"cream\"]"
+                RawIngredientList = "[\"tomatoes\",\"cream\",\"basil\"]",
+                CanonIngredients = "[\"tomatoes\",\"cream\",\"basil\"]",
+                Priorities = "[\"Core\",\"Supporting\",\"Optional\"]"
             },
             new Recipe
             {
                 RecipeId = 3,
+                RecipeName = "Garlic Bread",
+                Ingredients = "[\"Bread\",\"Garlic\"]",
+                Instructions = "[\"Toast\"]",
+                RawIngredientList = "[\"bread\",\"garlic\"]",
+                CanonIngredients = "[\"bread\",\"garlic\"]",
+                Priorities = "[\"Core\",\"Supporting\"]"
+            },
+            new Recipe
+            {
+                RecipeId = 4,
                 RecipeName = "Air Pie",
                 Ingredients = "[]",
                 Instructions = "[]",
-                RawIngredientList = "[]"
+                RawIngredientList = "[]",
+                CanonIngredients = "[]",
+                Priorities = "[]"
             });
         context.SaveChanges();
     }

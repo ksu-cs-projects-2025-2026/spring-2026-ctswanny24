@@ -1,13 +1,13 @@
 .recipesPage {
     display: grid;
-    gap: 1.4rem;
+    gap: 1.15rem;
 }
 
 .recipesHeader {
     display: flex;
     justify-content: space-between;
     gap: 1.25rem;
-    align-items: end;
+    align-items: center;
     text-align: left;
     background:
         radial-gradient(circle at top left, rgba(255, 204, 128, 0.34), transparent 28%),
@@ -16,17 +16,17 @@
 
 .recipesHeader h1 {
     margin: 0.25rem 0 0.5rem;
-    max-width: 14ch;
+    max-width: 22ch;
     color: #5a3716;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    line-height: 0.98;
+    font-size: clamp(1.9rem, 3.6vw, 2.7rem);
+    line-height: 1.05;
 }
 
 .recipesEyebrow {
     margin: 0;
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    font-size: 0.72rem;
     font-weight: 700;
     color: #a45a12;
 }
@@ -35,6 +35,7 @@
     margin: 0;
     max-width: 60ch;
     color: #6d4b29;
+    font-size: 0.95rem;
 }
 
 .recipesHighlights {
@@ -46,7 +47,7 @@
 
 .recipesHighlights div,
 .recipesEmptyState {
-    border-radius: 20px;
+    border-radius: 14px;
     background: rgba(255, 250, 244, 0.74);
     border: 1px solid rgba(112, 79, 41, 0.1);
 }
@@ -54,17 +55,19 @@
 .recipesHighlights div {
     display: grid;
     gap: 0.2rem;
-    padding: 1rem 1.1rem;
+    padding: 0.85rem 0.95rem;
 }
 
 .recipesHighlights strong {
-    font-size: 1.45rem;
+    font-size: 1.05rem;
     color: #2f5b46;
+    line-height: 1.2;
 }
 
 .recipesHighlights span,
 .recipesEmptyState p {
     color: #76533c;
+    font-size: 0.86rem;
 }
 
 .recipesEmptyState {

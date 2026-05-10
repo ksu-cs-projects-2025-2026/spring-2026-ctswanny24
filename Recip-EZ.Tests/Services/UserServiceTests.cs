@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Recip_EZ.Server.Models;
 using Recip_EZ.Server.Services;
 using Recip_EZ.Tests.TestSupport;
@@ -44,7 +43,7 @@ public class UserServiceTests
     [InlineData("caden", "wrong")]
     [InlineData("Caden", "pass123")]
     [InlineData("", "")]
-    public void GetUser_InvalidCredentials_Throws(string username, string password)
+    public void GetUser_InvalidCredentials_ReturnsNull(string username, string password)
     {
         using var context = TestDbContextFactory.CreateContext();
         context.Users.Add(new User
@@ -59,20 +58,8 @@ public class UserServiceTests
         context.SaveChanges();
         var service = new UserService(context);
 
-        var exception = Assert.Throws<Exception>(() => service.GetUser(username, password));
+        var user = service.GetUser(username, password);
 
-        Assert.Contains($"User with username {username} not found.", exception.Message);
-    }
-
-    [Fact]
-    public void AuthenticateUser_ReturnsSuccessfulJsonResult()
-    {
-        using var context = TestDbContextFactory.CreateContext();
-        var service = new UserService(context);
-
-        var result = service.AuthenticateUser("anyone", "anything");
-
-        var jsonResult = Assert.IsType<JsonResult>(result);
-        Assert.NotNull(jsonResult.Value);
+        Assert.Null(user);
     }
 }

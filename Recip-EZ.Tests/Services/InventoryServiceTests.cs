@@ -100,7 +100,7 @@ public class InventoryServiceTests
         context.SaveChanges();
         var service = new InventoryService(context);
 
-        service.DeleteItem(15);
+        service.DeleteItem(15, userId: 1);
 
         Assert.Empty(context.UserInventories);
     }
@@ -111,7 +111,7 @@ public class InventoryServiceTests
         using var context = TestDbContextFactory.CreateContext();
         var service = new InventoryService(context);
 
-        var exception = Assert.Throws<Exception>(() => service.DeleteItem(404));
+        var exception = Assert.Throws<Exception>(() => service.DeleteItem(404, userId: 1));
 
         Assert.Equal("Item not found", exception.Message);
     }

@@ -53,6 +53,11 @@ namespace Recip_EZ.Server.Services
                 .FirstOrDefault(u => u.Username == username && u.Password == password);
         }
 
+        public User? RegisterUser(string username, string password)
+        {
+            return null;
+        }
+
         #endregion
     }
 }
