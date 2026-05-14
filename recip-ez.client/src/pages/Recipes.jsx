@@ -14,7 +14,7 @@ export default function Recipes() {
 
         const fetchRecipes = async () => {
             try {
-                const response = await axios.get("https://localhost:7111/api/recipe/curated", {
+                const response = await axios.get("/api/recipe/curated", {
                     params: {
                         limit: 24,
                         minimumMatchPercentage: 0
@@ -35,7 +35,7 @@ export default function Recipes() {
                 }
 
                 try {
-                    const fallbackResponse = await axios.get("https://localhost:7111/api/recipe/placeholders");
+                    const fallbackResponse = await axios.get("/api/recipe/placeholders");
 
                     if (mounted) {
                         setRecipes(fallbackResponse.data);

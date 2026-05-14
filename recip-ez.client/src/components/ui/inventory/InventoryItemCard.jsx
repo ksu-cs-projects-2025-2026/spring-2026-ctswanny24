@@ -14,7 +14,7 @@ export default function InventoryItemCard({ inventoryItem, onDelete }) {
     const deleteButton = async () => {
         try {
             const id = parseInt(inventoryItem.userInventoryId, 10);
-            const response = await axios.delete(`https://localhost:7111/api/Inventory/${id}`);
+            const response = await axios.delete(`/api/Inventory/${id}`);
 
             if (response.data.success) {
                 onDelete(id);
@@ -30,13 +30,13 @@ export default function InventoryItemCard({ inventoryItem, onDelete }) {
             sx={{
                 height: "100%",
                 borderRadius: 4,
-                background: "linear-gradient(180deg, #fffdf9 0%, #fff3e4 100%)",
-                boxShadow: "0 16px 34px rgba(104, 71, 30, 0.1)"
+                background: "linear-gradient(180deg, #fbfdff 0%, #eaf4ff 100%)",
+                boxShadow: "0 16px 34px rgba(37, 78, 130, 0.1)"
             }}
         >
             <CardContent sx={{ display: "grid", gap: 1.2 }}>
                 <Stack direction="row" spacing={1} alignItems="center" useFlexGap flexWrap="wrap">
-                    <Chip label="In pantry" size="small" color="success" variant="outlined" />
+                    <Chip label="In pantry" size="small" color="primary" variant="outlined" />
                     <Chip label={inventoryItem.unit} size="small" variant="outlined" />
                 </Stack>
 

@@ -25,7 +25,7 @@ function InventoryAdditionCard() {
         };
 
         try {
-            const response = await axios.post("https://localhost:7111/login", foodItem)
+            const response = await axios.post("/api/login", foodItem)
 
             if (response.data.success) {
                 setMessage("Success");

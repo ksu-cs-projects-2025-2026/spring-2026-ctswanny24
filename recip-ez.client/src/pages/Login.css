@@ -11,8 +11,8 @@
     align-content: center;
     text-align: left;
     background:
-        radial-gradient(circle at top left, rgba(255, 204, 147, 0.35), transparent 27%),
-        linear-gradient(160deg, #fff7ea 0%, #fce4c9 100%);
+        radial-gradient(circle at top left, rgba(93, 162, 232, 0.28), transparent 27%),
+        linear-gradient(160deg, #f4faff 0%, #dcecff 100%);
 }
 
 .loginEyebrow {
@@ -21,7 +21,7 @@
     letter-spacing: 0.16em;
     font-size: 0.8rem;
     font-weight: 800;
-    color: #ad691d;
+    color: #1f66b4;
 }
 
 .loginIntro h1 {
@@ -29,13 +29,13 @@
     max-width: 11ch;
     font-size: clamp(2.2rem, 5vw, 4rem);
     line-height: 0.98;
-    color: #4d2c1a;
+    color: #173f73;
 }
 
 .loginIntro p {
     margin: 0;
     max-width: 54ch;
-    color: #73513c;
+    color: #526f91;
 }
 
 .loginHighlights {
@@ -50,16 +50,16 @@
     gap: 0.15rem;
     padding: 1rem;
     border-radius: 20px;
-    background: rgba(255, 251, 245, 0.72);
-    border: 1px solid rgba(124, 90, 52, 0.1);
+    background: rgba(247, 251, 255, 0.76);
+    border: 1px solid rgba(48, 91, 148, 0.1);
 }
 
 .loginHighlights strong {
-    color: #2f5b46;
+    color: #1f66b4;
 }
 
 .loginHighlights span {
-    color: #75523c;
+    color: #526f91;
 }
 
 .loginFormColumn {

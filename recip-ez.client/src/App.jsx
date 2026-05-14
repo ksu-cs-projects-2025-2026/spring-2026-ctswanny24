@@ -20,6 +20,9 @@ function App() {
         case "/login":
             Component = Login
             break
+        case "/register":
+            Component = Login
+            break
         default:
             Component = Home
             break

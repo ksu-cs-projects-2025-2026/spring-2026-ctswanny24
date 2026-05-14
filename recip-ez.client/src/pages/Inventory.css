@@ -10,8 +10,8 @@
     align-items: end;
     text-align: left;
     background:
-        radial-gradient(circle at top right, rgba(198, 229, 203, 0.35), transparent 25%),
-        linear-gradient(135deg, #fff6e8 0%, #ffe9cf 100%);
+        radial-gradient(circle at top right, rgba(123, 187, 249, 0.3), transparent 25%),
+        linear-gradient(135deg, #f4faff 0%, #dcecff 100%);
 }
 
 .inventoryEyebrow {
@@ -20,13 +20,13 @@
     letter-spacing: 0.16em;
     font-size: 0.8rem;
     font-weight: 800;
-    color: #b06d1e;
+    color: #1f66b4;
 }
 
 .inventoryHeader h1 {
     margin: 0;
     max-width: 16ch;
-    color: #4e2d1a;
+    color: #173f73;
     font-size: clamp(2rem, 5vw, 3.5rem);
     line-height: 0.98;
 }
@@ -43,20 +43,20 @@
     gap: 0.2rem;
     padding: 1rem 1.1rem;
     border-radius: 20px;
-    background: rgba(255, 250, 244, 0.74);
-    border: 1px solid rgba(112, 79, 41, 0.1);
+    background: rgba(247, 251, 255, 0.78);
+    border: 1px solid rgba(48, 91, 148, 0.1);
 }
 
 .inventoryHeaderStats strong {
     font-size: 1.6rem;
-    color: #2f5b46;
+    color: #1f66b4;
 }
 
 .inventoryHeaderStats span,
 .inventoryCollectionHeader p,
 .inventoryMessage,
 .inventoryEmptyState p {
-    color: #76523c;
+    color: #526f91;
 }
 
 .inventoryMessage {
@@ -92,16 +92,16 @@
     letter-spacing: 0.16em;
     font-size: 0.78rem;
     font-weight: 800;
-    color: #b06d1e;
+    color: #1f66b4;
 }
 
 .inventoryFormHeader h2 {
     margin: 0;
-    color: #4e2d1a;
+    color: #173f73;
 }
 
 .inventoryFormHeader span {
-    color: #78553e;
+    color: #526f91;
 }
 
 .inventoryFormField {
@@ -110,7 +110,7 @@
 }
 
 .inventoryFormField label {
-    color: #5e3a25;
+    color: #315b89;
     font-weight: 700;
 }
 
@@ -125,30 +125,30 @@
     width: 100%;
     padding: 0.9rem 1rem;
     border-radius: 18px;
-    border: 1px solid rgba(116, 84, 48, 0.16);
-    background: rgba(255, 251, 246, 0.95);
-    color: #452c1e;
+    border: 1px solid rgba(48, 91, 148, 0.16);
+    background: rgba(248, 252, 255, 0.96);
+    color: #17324f;
 }
 
 .inventoryFormField input:focus,
 .inventoryFormField select:focus {
-    outline: 2px solid rgba(47, 91, 70, 0.24);
-    border-color: rgba(47, 91, 70, 0.35);
+    outline: 2px solid rgba(31, 102, 180, 0.24);
+    border-color: rgba(31, 102, 180, 0.35);
 }
 
 .inventorySubmitButton {
     padding: 0.95rem 1.2rem;
     border: none;
     border-radius: 999px;
-    background: linear-gradient(135deg, #2f5b46 0%, #578b65 100%);
-    color: #fff7ef;
+    background: linear-gradient(135deg, #4e9bea 0%, #1f66b4 100%);
+    color: #f7fbff;
     font-weight: 700;
-    box-shadow: 0 15px 28px rgba(47, 91, 70, 0.18);
+    box-shadow: 0 15px 28px rgba(31, 102, 180, 0.18);
 }
 
 .inventoryFormMessage {
     margin: 0;
-    color: #75523b;
+    color: #526f91;
 }
 
 .inventoryCollectionHeader {
@@ -158,7 +158,7 @@
 .inventoryCollectionHeader h2,
 .inventoryEmptyState h3 {
     margin: 0;
-    color: #4e2d1a;
+    color: #173f73;
 }
 
 .inventoryCollectionHeader p,
@@ -169,8 +169,8 @@
 .inventoryEmptyState {
     padding: 1.4rem;
     border-radius: 22px;
-    background: linear-gradient(180deg, rgba(255, 248, 238, 0.95), rgba(253, 240, 224, 0.92));
-    border: 1px dashed rgba(145, 106, 67, 0.22);
+    background: linear-gradient(180deg, rgba(248, 252, 255, 0.96), rgba(234, 244, 255, 0.93));
+    border: 1px dashed rgba(48, 91, 148, 0.24);
 }
 
 @media (max-width: 980px) {

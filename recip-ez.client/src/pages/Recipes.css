@@ -10,14 +10,14 @@
     align-items: center;
     text-align: left;
     background:
-        radial-gradient(circle at top left, rgba(255, 204, 128, 0.34), transparent 28%),
-        linear-gradient(135deg, #fff6df 0%, #ffe8cf 100%);
+        radial-gradient(circle at top left, rgba(93, 162, 232, 0.28), transparent 28%),
+        linear-gradient(135deg, #f4faff 0%, #dcecff 100%);
 }
 
 .recipesHeader h1 {
     margin: 0.25rem 0 0.5rem;
     max-width: 22ch;
-    color: #5a3716;
+    color: #173f73;
     font-size: clamp(1.9rem, 3.6vw, 2.7rem);
     line-height: 1.05;
 }
@@ -28,13 +28,13 @@
     letter-spacing: 0.1em;
     font-size: 0.72rem;
     font-weight: 700;
-    color: #a45a12;
+    color: #1f66b4;
 }
 
 .recipesMessage {
     margin: 0;
     max-width: 60ch;
-    color: #6d4b29;
+    color: #526f91;
     font-size: 0.95rem;
 }
 
@@ -48,8 +48,8 @@
 .recipesHighlights div,
 .recipesEmptyState {
     border-radius: 14px;
-    background: rgba(255, 250, 244, 0.74);
-    border: 1px solid rgba(112, 79, 41, 0.1);
+    background: rgba(247, 251, 255, 0.78);
+    border: 1px solid rgba(48, 91, 148, 0.1);
 }
 
 .recipesHighlights div {
@@ -60,13 +60,13 @@
 
 .recipesHighlights strong {
     font-size: 1.05rem;
-    color: #2f5b46;
+    color: #1f66b4;
     line-height: 1.2;
 }
 
 .recipesHighlights span,
 .recipesEmptyState p {
-    color: #76533c;
+    color: #526f91;
     font-size: 0.86rem;
 }
 
@@ -77,7 +77,7 @@
 
 .recipesEmptyState h2 {
     margin: 0 0 0.35rem;
-    color: #4d2e1a;
+    color: #173f73;
 }
 
 @media (max-width: 960px) {

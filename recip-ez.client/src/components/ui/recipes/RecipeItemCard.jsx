@@ -13,11 +13,11 @@ function getRecipeStatus(recipe, isCurated) {
     }
 
     if (recipe.canMakeNow) {
-        return { label: "Ready to Make", color: "success" };
+        return { label: "Ready to Make", color: "primary" };
     }
 
     if (recipe.isCloseMatch) {
-        return { label: "Close Match", color: "warning" };
+        return { label: "Close Match", color: "info" };
     }
 
     return { label: "Needs More Items", color: "default" };
@@ -72,8 +72,8 @@ export default function RecipeItemCard({ recipe, isCurated = false }) {
             sx={{
                 height: "100%",
                 borderRadius: 2.5,
-                background: "linear-gradient(180deg, #fffdf8 0%, #fff4e8 100%)",
-                boxShadow: "0 18px 44px rgba(84, 58, 20, 0.12)"
+                background: "linear-gradient(180deg, #fbfdff 0%, #eaf4ff 100%)",
+                boxShadow: "0 18px 44px rgba(37, 78, 130, 0.12)"
             }}
         >
             <CardContent sx={{ display: "grid", gap: 1.75, padding: 2.25 }}>
@@ -107,7 +107,7 @@ export default function RecipeItemCard({ recipe, isCurated = false }) {
 
                 {isCurated && (
                     <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
-                        <Chip label={`Core ${formatScore(recipe.coreScore)}`} color="success" variant="outlined" size="small" />
+                        <Chip label={`Core ${formatScore(recipe.coreScore)}`} color="primary" variant="outlined" size="small" />
                         <Chip label={`Supporting ${formatScore(recipe.supportingScore)}`} color="primary" variant="outlined" size="small" />
                         <Chip label={`Optional ${formatScore(recipe.optionalScore)}`} color="default" variant="outlined" size="small" />
                     </Stack>
@@ -120,7 +120,7 @@ export default function RecipeItemCard({ recipe, isCurated = false }) {
                         </Typography>
                         <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
                             {matchedIngredients.map((ingredient) => (
-                                <Chip key={`${recipe.recipeId}-match-${ingredient}`} label={ingredient} size="small" color="success" variant="outlined" />
+                                <Chip key={`${recipe.recipeId}-match-${ingredient}`} label={ingredient} size="small" color="primary" variant="outlined" />
                             ))}
                         </Stack>
                     </div>
@@ -142,7 +142,7 @@ export default function RecipeItemCard({ recipe, isCurated = false }) {
                                 recipeId={recipe.recipeId}
                                 label="Supporting"
                                 ingredients={missingSupportingIngredients}
-                                color="warning"
+                                color="info"
                             />
                             <IngredientChipList
                                 recipeId={recipe.recipeId}

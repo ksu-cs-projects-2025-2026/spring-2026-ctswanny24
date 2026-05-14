@@ -1,14 +1,23 @@
 import LoginCard from "../components/ui/login/LoginCard";
+import RegistrationCard from "../components/ui/login/RegistrationCard";
 import "./Login.css";
 
 export default function Login() {
+    const isRegistering = window.location.pathname === "/register";
+
     return (
         <section className="loginLayout">
             <div className="loginIntro pagePanel">
-                <p className="loginEyebrow">Your kitchen, remembered</p>
-                <h1>Sign in and turn ingredient tracking into better dinner decisions.</h1>
+                <p className="loginEyebrow">{isRegistering ? "Start fresh" : "Your kitchen, remembered"}</p>
+                <h1>
+                    {isRegistering
+                        ? "Create an account and start matching recipes to your kitchen."
+                        : "Sign in and turn ingredient tracking into better dinner decisions."}
+                </h1>
                 <p>
-                    Once you log in, Recip-EZ can tie your inventory to recipe matching and keep your kitchen state personalized.
+                    {isRegistering
+                        ? "Once your account is ready, Recip-EZ can keep your pantry and recipe matches connected."
+                        : "Once you log in, Recip-EZ can tie your inventory to recipe matching and keep your kitchen state personalized."}
                 </p>
 
                 <div className="loginHighlights">
@@ -28,7 +37,7 @@ export default function Login() {
             </div>
 
             <div className="loginFormColumn">
-                <LoginCard />
+                {isRegistering ? <RegistrationCard /> : <LoginCard />}
             </div>
         </section>
     );

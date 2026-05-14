@@ -35,7 +35,7 @@ export default function Navbar() {
         const fetchAuthenticatedUser = async () => {
             try {
                 //Grabbing the authenticated user (if any)
-                const response = await axios.get("https://localhost:7111/api/login/me");
+                const response = await axios.get("/api/login/me");
 
                 //If the component is still mounted and we got a successful response, update the authUser state
                 if (mounted && response.data.success) {
@@ -79,7 +79,7 @@ export default function Navbar() {
     //as well as sets the menu options back to Login / Register
     const handleLogout = async () => {
         try {
-            await axios.post("https://localhost:7111/api/login/logout");
+            await axios.post("/api/login/logout");
             setAuthUser(null);
             handleMenuClose();
             window.location.href = "/";
@@ -155,9 +155,9 @@ export default function Navbar() {
                             minWidth: 180,
                             borderRadius: "20px",
                             padding: "0.35rem",
-                            background: "rgba(255, 252, 247, 0.98)",
-                            border: "1px solid rgba(126, 92, 46, 0.12)",
-                            boxShadow: "0 18px 36px rgba(92, 65, 34, 0.14)"
+                            background: "rgba(248, 252, 255, 0.98)",
+                            border: "1px solid rgba(48, 91, 148, 0.12)",
+                            boxShadow: "0 18px 36px rgba(37, 78, 130, 0.14)"
                         }
                     }}
                 >
@@ -168,7 +168,7 @@ export default function Navbar() {
                             <MenuItem key="login" onClick={() => goTo("/login")}>
                                 Log In
                             </MenuItem>,
-                            <MenuItem key="register" onClick={() => goTo("/login")}>
+                            <MenuItem key="register" onClick={() => goTo("/register")}>
                                 Register
                             </MenuItem>
                         ]

@@ -58,11 +58,31 @@ namespace Recip_EZ.Server.Services
         /// </summary>
         /// <param name="username">The username for the new user</param>
         /// <param name="password">The password for the new user</param>
+        /// <param name="firstName">The first name for the new user</param>
+        /// <param name="lastName">The last name for the new user</param>
         /// <returns>The newly created user, or null if the registration fails</returns>
-        public User? RegisterUser(string username, string password)
+        public User? RegisterUser(string username, string password, string firstName, string lastName)
         {
-            //Potential to get this finished before 1.0, but will likely be a goal for 1.1 or later.
-            return null;
+            var normalizedUsername = username.Trim();
+
+            if (_context.Users.Any(u => u.Username == normalizedUsername))
+            {
+                return null;
+            }
+
+            var user = new User
+            {
+                Username = normalizedUsername,
+                Password = password,
+                FirstName = firstName.Trim(),
+                LastName = lastName.Trim(),
+                CreatedOn = DateTime.UtcNow
+            };
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            return user;
         }
 
         #endregion

@@ -12,7 +12,7 @@ export default function Inventory() {
     useEffect(() => {
         const fetchInventory = async () => {
             try {
-                const response = await axios.get("https://localhost:7111/api/Inventory/userInventory");
+                const response = await axios.get("/api/Inventory/userInventory");
 
                 if (response.data.success) {
                     setInventory(response.data.inventory);

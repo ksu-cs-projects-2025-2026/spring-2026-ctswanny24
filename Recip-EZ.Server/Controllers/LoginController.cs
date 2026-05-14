@@ -41,6 +41,17 @@ namespace Recip_EZ.Server.Controllers
     }
 
     /// <summary>
+    /// Class that represents the registration request information.
+    /// </summary>
+    public class RegisterRequest
+    {
+        public required string FirstName { get; set; }
+        public required string LastName { get; set; }
+        public required string Username { get; set; }
+        public required string Password { get; set; }
+    }
+
+    /// <summary>
     /// Represents the result of an authentication operation, including user identity and status information.
     /// </summary>
     /// <remarks>This class is typically used to return user details and authentication status from
@@ -114,6 +125,61 @@ namespace Recip_EZ.Server.Controllers
                 Success = true,
                 UserId = user.UserId,
                 Message = "Login successful."
+            });
+        }
+
+        /// <summary>
+        /// Creates a new user and signs them in when registration succeeds.
+        /// </summary>
+        /// <param name="registrationData">The account information submitted by the client.</param>
+        /// <returns>Sets the auth cookie when registration is successful.</returns>
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] RegisterRequest registrationData)
+        {
+            if (string.IsNullOrWhiteSpace(registrationData.Username)
+                || string.IsNullOrWhiteSpace(registrationData.Password)
+                || string.IsNullOrWhiteSpace(registrationData.FirstName)
+                || string.IsNullOrWhiteSpace(registrationData.LastName))
+            {
+                return BadRequest(new LoginResponse
+                {
+                    Success = false,
+                    Message = "Fill out all registration fields and try again."
+                });
+            }
+
+            var user = _userService.RegisterUser(
+                registrationData.Username,
+                registrationData.Password,
+                registrationData.FirstName,
+                registrationData.LastName);
+
+            if (user == null)
+            {
+                return Conflict(new LoginResponse
+                {
+                    Success = false,
+                    Message = "An account with that email already exists."
+                });
+            }
+
+            var tokenString = GenerateJwtToken(user);
+            var duration = _config.GetValue<int>("Jwt:DurationInMinutes");
+
+            Response.Cookies.Append("recip-ez-auth", tokenString, new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.UtcNow.AddMinutes(duration),
+                IsEssential = true
+            });
+
+            return Created(string.Empty, new LoginResponse
+            {
+                Success = true,
+                UserId = user.UserId,
+                Message = "Registration successful."
             });
         }
 

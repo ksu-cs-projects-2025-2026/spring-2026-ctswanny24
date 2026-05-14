@@ -3,8 +3,8 @@
     min-height: 100%;
     border-radius: 28px;
     padding: 0.6rem;
-    background: linear-gradient(180deg, rgba(255, 252, 247, 0.96), rgba(252, 239, 224, 0.94));
-    box-shadow: 0 22px 48px rgba(100, 71, 34, 0.12);
+    background: linear-gradient(180deg, rgba(248, 252, 255, 0.97), rgba(234, 244, 255, 0.94));
+    box-shadow: 0 22px 48px rgba(37, 78, 130, 0.12);
 }
 
 .loginCardHeader {
@@ -17,12 +17,12 @@
     letter-spacing: 0.15em;
     font-size: 0.76rem;
     font-weight: 800;
-    color: #a86722;
+    color: #1f66b4;
 }
 
 .loginCardTitle {
     font-size: 1.7rem;
-    color: #4b2b18;
+    color: #173f73;
 }
 
 .loginCardContent {
@@ -35,6 +35,12 @@
     gap: 1rem;
 }
 
+.loginNameFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.8rem;
+}
+
 .loginField {
     display: grid;
     gap: 0.4rem;
@@ -42,38 +48,38 @@
 
 .loginField label {
     font-weight: 700;
-    color: #603a24;
+    color: #315b89;
 }
 
 .loginField input {
     width: 100%;
     padding: 0.95rem 1rem;
     border-radius: 18px;
-    border: 1px solid rgba(114, 83, 47, 0.15);
-    background: rgba(255, 252, 248, 0.96);
-    color: #41291c;
+    border: 1px solid rgba(48, 91, 148, 0.15);
+    background: rgba(248, 252, 255, 0.96);
+    color: #17324f;
 }
 
 .loginField input:focus {
-    outline: 2px solid rgba(47, 91, 70, 0.24);
-    border-color: rgba(47, 91, 70, 0.34);
+    outline: 2px solid rgba(31, 102, 180, 0.24);
+    border-color: rgba(31, 102, 180, 0.34);
 }
 
 .loginMessage {
     margin: 0;
-    color: #7a543d;
+    color: #526f91;
 }
 
 .loginPrimaryButton {
     height: 3rem;
     border-radius: 999px;
-    background: linear-gradient(135deg, #2f5b46 0%, #508266 100%);
-    color: #fff8f0;
+    background: linear-gradient(135deg, #4e9bea 0%, #1f66b4 100%);
+    color: #f7fbff;
     font-weight: 700;
 }
 
 .loginPrimaryButton:hover {
-    background: linear-gradient(135deg, #274c3b 0%, #47765d 100%);
+    background: linear-gradient(135deg, #2f83dc 0%, #174f8f 100%);
 }
 
 .loginDebugPanel {
@@ -92,14 +98,20 @@
     gap: 0.15rem;
     padding: 0.9rem 1rem;
     border-radius: 18px;
-    background: rgba(255, 247, 237, 0.82);
-    border: 1px solid rgba(118, 85, 50, 0.1);
+    background: rgba(247, 251, 255, 0.84);
+    border: 1px solid rgba(48, 91, 148, 0.1);
 }
 
 .loginUserRow strong {
-    color: #4d2c1a;
+    color: #173f73;
 }
 
 .loginUserRow span {
-    color: #78543d;
+    color: #526f91;
+}
+
+@media (max-width: 520px) {
+    .loginNameFields {
+        grid-template-columns: 1fr;
+    }
 }

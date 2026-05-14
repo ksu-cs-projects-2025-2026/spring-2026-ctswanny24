@@ -21,7 +21,7 @@ function LoginCard() {
         const loginData = { username: email, password: password };
 
         try {
-            const response = await axios.post("https://localhost:7111/api/login", loginData);
+            const response = await axios.post("/api/login", loginData);
 
             if (response.data.success) {
                 setMessage("Login successful. Your kitchen is ready.");

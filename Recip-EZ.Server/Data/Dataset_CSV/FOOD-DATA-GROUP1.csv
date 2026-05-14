@@ -47,16 +47,12 @@ ID,Food Name,Calories
 46,Caviar,42
 47,Cheddar Cheese,113
 48,Cheese Lasagna,316
-49,Cheese Pizza,285
-50,Cheese Pizza,278
 51,Cheese Pizza,260
 52,Cheese Ravioli Canned,186
 53,Cheese Soup,203
 54,Cheese Spread,708
 55,Cheese Tortellini,332
 56,Cheeseburger,292
-57,Cheeseburger,380
-58,Cheeseburger,313
 59,Chicken Bouillon Dry,11
 60,Chicken Box,70
 61,Chicken Broth,12
@@ -149,8 +145,6 @@ ID,Food Name,Calories
 148,Florida Pompano,185
 149,Flounder,112
 150,French Fries,222
-151,French Fries,207
-152,French Fries,378
 153,French Toast Sticks,73
 154,Fried Rice,228
 155,Fruit Jam,56
@@ -169,8 +163,6 @@ ID,Food Name,Calories
 168,Halibut,362
 169,Ham And Cheese Spread,37
 170,Hamburger,255
-171,Hamburger,258
-172,Hamburger,251
 173,Hand Breaded Chicken Tenders,57
 174,Herring,290
 175,Herring Kippered,87

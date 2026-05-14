@@ -3,6 +3,24 @@ import axios from "axios";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
+function normalizeIngredientOption(option) {
+    if (!option || typeof option !== "object") {
+        return null;
+    }
+
+    const ingredientId = option.ingredientId ?? option.IngredientId;
+    const name = option.name ?? option.Name;
+
+    if (!ingredientId || !name) {
+        return null;
+    }
+
+    return {
+        ingredientId,
+        name
+    };
+}
+
 function AddInventoryItem({ onAdd }) {
     const [ingredients, setIngredients] = useState([]);
     const [ingredientId, setIngredientId] = useState("");
@@ -13,10 +31,16 @@ function AddInventoryItem({ onAdd }) {
     useEffect(() => {
         const fetchIngredients = async () => {
             try {
-                const response = await axios.get("https://localhost:7111/api/Inventory/ingredients");
-                setIngredients(response.data);
+                const response = await axios.get("/api/Inventory/ingredients");
+                const ingredientOptions = Array.isArray(response.data)
+                    ? response.data.map(normalizeIngredientOption).filter(Boolean)
+                    : [];
+
+                setIngredients(ingredientOptions);
             } catch (err) {
                 console.error(err);
+                setIngredients([]);
+                setMessage("Unable to load ingredients for search.");
             }
         };
 
@@ -56,7 +80,7 @@ function AddInventoryItem({ onAdd }) {
         };
 
         try {
-            const response = await axios.post("https://localhost:7111/api/Inventory/add", payload);
+            const response = await axios.post("/api/Inventory/add", payload);
             setMessage(response.data.message);
 
             if (response.data.success && response.data.inventory) {
@@ -91,7 +115,8 @@ function AddInventoryItem({ onAdd }) {
                 <Autocomplete
                     disablePortal
                     options={ingredients}
-                    getOptionLabel={(option) => option.name}
+                    getOptionLabel={(option) => option?.name ?? ""}
+                    isOptionEqualToValue={(option, value) => option.ingredientId === value.ingredientId}
                     value={ingredients.find((item) => item.ingredientId === parseInt(ingredientId, 10)) || null}
                     renderInput={(params) => (
                         <TextField
@@ -100,7 +125,7 @@ function AddInventoryItem({ onAdd }) {
                             sx={{
                                 "& .MuiOutlinedInput-root": {
                                     borderRadius: "18px",
-                                    backgroundColor: "rgba(255, 251, 246, 0.95)"
+                                    backgroundColor: "rgba(248, 252, 255, 0.96)"
                                 }
                             }}
                         />

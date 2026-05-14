@@ -1,9 +1,9 @@
 .appShell {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(255, 211, 150, 0.42), transparent 28%),
-    radial-gradient(circle at top right, rgba(200, 234, 208, 0.32), transparent 24%),
-    linear-gradient(180deg, #fff9f1 0%, #f7efe3 55%, #f3eadf 100%);
+    radial-gradient(circle at top left, rgba(93, 162, 232, 0.28), transparent 28%),
+    radial-gradient(circle at top right, rgba(142, 198, 255, 0.24), transparent 24%),
+    linear-gradient(180deg, #f3f8ff 0%, #edf5ff 55%, #e8f1fb 100%);
 }
 
 .siteNavWrap {
@@ -21,10 +21,10 @@
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  border: 1px solid rgba(126, 92, 46, 0.12);
+  border: 1px solid rgba(48, 91, 148, 0.14);
   border-radius: 999px;
-  background: rgba(255, 250, 244, 0.84);
-  box-shadow: 0 18px 45px rgba(104, 72, 30, 0.12);
+  background: rgba(247, 251, 255, 0.86);
+  box-shadow: 0 18px 45px rgba(37, 78, 130, 0.12);
   backdrop-filter: blur(18px);
 }
 
@@ -32,7 +32,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.05rem;
-  color: #5c3821;
+  color: #173f73;
 }
 
 .siteTitle {
@@ -43,7 +43,7 @@
 
 .siteTagline {
   font-size: 0.78rem;
-  color: #8a6142;
+  color: #526f91;
 }
 
 .navLinks,
@@ -59,48 +59,48 @@
 .navLink {
   padding: 0.7rem 1rem;
   border-radius: 999px;
-  color: #70472b;
+  color: #315b89;
   transition: background-color 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .navLink:hover {
-  background: rgba(245, 194, 126, 0.2);
-  color: #4f2f18;
+  background: rgba(92, 154, 225, 0.16);
+  color: #173f73;
   transform: translateY(-1px);
 }
 
 .navLink.isActive {
-  background: linear-gradient(135deg, #f4b768 0%, #d97b4d 100%);
-  color: #fffaf5;
-  box-shadow: 0 10px 24px rgba(193, 109, 53, 0.24);
+  background: linear-gradient(135deg, #4e9bea 0%, #1f66b4 100%);
+  color: #f7fbff;
+  box-shadow: 0 10px 24px rgba(31, 102, 180, 0.24);
 }
 
 .navActionButton {
   padding: 0.72rem 1.1rem;
   border-radius: 999px;
-  background: #2f5b46;
-  color: #f9f4ec;
-  box-shadow: 0 12px 22px rgba(47, 91, 70, 0.2);
+  background: #1f66b4;
+  color: #f7fbff;
+  box-shadow: 0 12px 22px rgba(31, 102, 180, 0.2);
 }
 
 .navActionButton:hover {
-  color: #f9f4ec;
-  background: #244737;
+  color: #f7fbff;
+  background: #174f8f;
 }
 
 .navMenuTrigger {
   padding: 0.72rem 1.1rem !important;
   border-radius: 999px !important;
-  background: #2f5b46 !important;
-  color: #f9f4ec !important;
-  box-shadow: 0 12px 22px rgba(47, 91, 70, 0.2) !important;
+  background: #1f66b4 !important;
+  color: #f7fbff !important;
+  box-shadow: 0 12px 22px rgba(31, 102, 180, 0.2) !important;
   text-transform: none !important;
   font-weight: 700 !important;
   letter-spacing: 0.01em !important;
 }
 
 .navMenuTrigger:hover {
-  background: #244737 !important;
+  background: #174f8f !important;
 }
 
 .appContent {
@@ -112,9 +112,9 @@
 .pagePanel {
   padding: 1.35rem;
   border-radius: 20px;
-  border: 1px solid rgba(116, 82, 43, 0.12);
-  background: rgba(255, 252, 247, 0.78);
-  box-shadow: 0 20px 50px rgba(111, 82, 43, 0.08);
+  border: 1px solid rgba(48, 91, 148, 0.12);
+  background: rgba(248, 252, 255, 0.82);
+  box-shadow: 0 20px 50px rgba(37, 78, 130, 0.08);
   backdrop-filter: blur(14px);
 }
 

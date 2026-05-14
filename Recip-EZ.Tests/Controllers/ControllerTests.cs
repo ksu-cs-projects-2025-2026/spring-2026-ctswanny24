@@ -143,6 +143,68 @@ public class ControllerTests
         Assert.Equal("Check your username and password and try again.", response.Message);
     }
 
+    [Fact]
+    public void LoginController_Register_ValidPayload_ReturnsCreated()
+    {
+        using var context = TestDbContextFactory.CreateContext();
+        var controller = new LoginController(new UserService(context), CreateJwtConfig())
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
+
+        var result = controller.Register(new RegisterRequest
+        {
+            Username = "new@example.com",
+            Password = "secret",
+            FirstName = "New",
+            LastName = "User"
+        });
+
+        var createdResult = Assert.IsType<CreatedResult>(result);
+        var response = Assert.IsType<LoginResponse>(createdResult.Value);
+        Assert.True(response.Success);
+        Assert.Single(context.Users);
+    }
+
+    [Fact]
+    public void LoginController_Register_DuplicateUsername_ReturnsConflict()
+    {
+        using var context = TestDbContextFactory.CreateContext();
+        context.Users.Add(new User
+        {
+            UserId = 12,
+            Username = "demo",
+            Password = "secret",
+            FirstName = "Demo",
+            LastName = "User",
+            CreatedOn = DateTime.UtcNow
+        });
+        context.SaveChanges();
+        var controller = new LoginController(new UserService(context), CreateJwtConfig())
+        {
+            ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
+
+        var result = controller.Register(new RegisterRequest
+        {
+            Username = "demo",
+            Password = "secret",
+            FirstName = "Other",
+            LastName = "User"
+        });
+
+        var conflictResult = Assert.IsType<ConflictObjectResult>(result);
+        var response = Assert.IsType<LoginResponse>(conflictResult.Value);
+        Assert.False(response.Success);
+        Assert.Equal("An account with that email already exists.", response.Message);
+    }
+
     private static InventoryController CreateInventoryController(Recip_EZ.Server.Data.RecipEzDbContext context, int userId)
     {
         return new InventoryController(new InventoryService(context))

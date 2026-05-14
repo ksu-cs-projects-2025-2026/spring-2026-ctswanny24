@@ -62,4 +62,40 @@ public class UserServiceTests
 
         Assert.Null(user);
     }
+
+    [Fact]
+    public void RegisterUser_NewUsername_CreatesUser()
+    {
+        using var context = TestDbContextFactory.CreateContext();
+        var service = new UserService(context);
+
+        var user = service.RegisterUser(" new@example.com ", "pass123", "New", "User");
+
+        Assert.NotNull(user);
+        Assert.Equal("new@example.com", user.Username);
+        Assert.Equal("New", user.FirstName);
+        Assert.Single(context.Users);
+    }
+
+    [Fact]
+    public void RegisterUser_ExistingUsername_ReturnsNull()
+    {
+        using var context = TestDbContextFactory.CreateContext();
+        context.Users.Add(new User
+        {
+            UserId = 3,
+            Username = "caden",
+            Password = "pass123",
+            FirstName = "Caden",
+            LastName = "Tester",
+            CreatedOn = DateTime.UtcNow
+        });
+        context.SaveChanges();
+        var service = new UserService(context);
+
+        var user = service.RegisterUser("caden", "other", "Other", "User");
+
+        Assert.Null(user);
+        Assert.Single(context.Users);
+    }
 }
