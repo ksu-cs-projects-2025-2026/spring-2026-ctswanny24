@@ -10,6 +10,23 @@ The project uses:
 - SQL Server LocalDB for the default development database
 - Optional Docker SQL Server support
 
+Every time the Server part is started, the database is purged, recreated, and reseeded with the data in Data/Dataset_CSV
+If you want to see a seeded inventory, use the login 
+Username: Ctswanny24@gmail.com
+Password: 1234z
+
+If you want to test the register feature (newer and a little more finicky)
+- Insert names into the slots for them
+- Insert your email
+- Insert your password and confirm it
+- Click log-in.
+
+Due to the fact that the application is purged and seeded on startup, a new registered account isn't tracked if the server is stopped and run again.
+I intended to make sure that each time the project was started and stopped, it could be tested and controlled. 
+in the future, this could be changed, and new things could be added to the CSV files before closing.
+
+There is a bug in the ingredient search that doesn't fully narrow down an item until a typo is made, then the ingredients are more filtered. 
+
 
 1. Required Software
 --------------------
